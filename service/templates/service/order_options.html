@@ -1,0 +1,146 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block content %}
+
+<div class="container put-footer-bottom">
+    {% include 'service/includes/admin_tab.html' %}
+    <div class="container col-xl-12 mx-auto mt-3 pb-2 mb-4" style="border-bottom: 1px solid #d0d0d0;">
+        <h2 class="fw-light mt-4 mb-4">Mavjud kitob turlari</h2>
+        <div class="table-responsive-xl">
+            <table class="table table-hover table-striped table-dark text-center text-light fw-light align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Sana</th>
+                        <th scope="col">Plastik prujinalangan (rangsiz)</th>
+                        <th scope="col">Plastik prujinalangan (rangli)</th>
+                        <th scope="col">Metal prujinalangan (rangsiz)</th>
+                        <th scope="col">Metal prujinalangan (rangli)</th>
+                        <th scope="col">Yelimlangan yumshoq muqovali (rangsiz)</th>
+                        <th scope="col">Yelimlangan yumshoq muqovali (rangli)</th>
+                        <th scope="col">Yelimlangan qattiq muqovali (rangsiz)</th>
+                        <th scope="col">Yelimlangan qattiq muqovali (rangli)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in res_s %}
+                        <tr>
+                            <th scope="row">{{ res.date|date:'d-M' }}</th>
+                            {% if res.ringed_colorless %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.ringed_color %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.metal_ringed_colorless %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.metal_ringed_color %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.g_soft_colorless %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.g_soft_color %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.g_hard_colorless %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.g_hard_color %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container col-xl-12 mx-auto mt-3 pb-2 mb-4" style="border-bottom: 1px solid #d0d0d0;">
+        <h2 class="fw-light mt-4 mb-4">Mavjud ranglar</h2>
+        <div class="table-responsive-xl">
+            <table class="table table-hover text-center table-dark table-striped fw-light text-light align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Sana</th>
+                        <th scope="col">Ko'k</th>
+                        <th scope="col">Qizil</th>
+                        <th scope="col">Qora</th>
+                        <th scope="col">Rangsiz</th>
+                        <th scope="col">Sariq</th>
+                        <th scope="col">Yashil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in res_s %}
+                        <tr>
+                            <th scope="row">{{ res.date|date:'d-M' }}</th>
+                            {% if res.blue %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.red %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.black %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.transparent %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.yellow %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                            {% if res.green %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% else %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container col-xl-12 mx-auto mt-4 pb-4 mb-5" style="border-bottom: 1px solid #d0d0d0;">
+        <h2 class="fw-light mb-4">Kitob turlari va ranglarni yangilash</h2>
+        <form class="form-control bg-dark fw-light text-light" action="{% url 'order_options' %}"
+              novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" name="submit" class="btn btn-warning">
+                    Tayyor &check;
+                </button>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

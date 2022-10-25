@@ -1,0 +1,49 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+{% block page_header %}
+<div class="container mt-4 mb-4 text-center">
+    <h1 class="fw-light">Shikoyat turini tanlang</h1>
+</div>
+{% endblock page_header %}
+<div class="container put-footer-bottom">
+    <div class="container row col-md-12 pb-4" style="border-top: 1px solid #d0d0d0;
+                                                border-bottom: 1px solid #d0d0d0;">
+        <div class="card-group pt-4">
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/website.jpg' %}" class="card-img content"
+                height="200">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Sayt haqida
+                    </h2>
+                    <a class="btn btn-warning-card" href="{% url 'complain_site' %}">Bildirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/books.jpg' %}" class="card-img content"
+                height="200">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Kitoblar haqida
+                    </h2>
+                    <a class="btn btn-warning-card" href="{% url 'complain_books' %}">Bildirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/question.jpg' %}" class="card-img content"
+                height="200">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Boshqa
+                    </h2>
+                    <a class="btn btn-warning-card" href="{% url 'complain_other' %}">Bildirish &raquo;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

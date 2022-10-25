@@ -1,0 +1,113 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom ps-3 pe-3">
+    <div class="container header-container text-center pt-4 pb-4 mb-4">
+        <h1 class="fw-light">Mening buyurtmalarim</h1>
+    </div>
+    {% if orders %}
+        <div class="table-responsive-xl">
+            <table class="table table-hover table-dark table-striped text-center fw-light">
+                <thead>
+                    <tr>
+                        <th scope="col">Buyurtma raqami</th>
+                        <th scope="col">Kitob</th>
+                        <th scope="col">Prujina ranggi</th>
+                        <th scope="col">Old muqova ranggi</th>
+                        <th scope="col">Orqa muqova ranggi</th>
+                        <th scope="col">O'lchami</th>
+                        <th scope="col">Kitoblar soni</th>
+                        <th scope="col">Xaridor telefon raqami</th>
+                        <th scope="col">Xaridor Email manzili</th>
+                        <th scope="col">To'lov turi</th>
+                        <th scope="col">Buyurtma berilgan sana</th>
+                        <th scope="col">Holati</th>
+                        <th scope="col">Manzil</th>
+                        <th scope="col">Yetkazildi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <th scope="row">{{ order.order_number }}</th>
+                            {% if order.book %}
+                                <td>{{ order.book }}</td>
+                            {% else %}
+                                <td>{{ order.custom_book }}</td>
+                            {% endif %}
+                            {% if order.ring_color %}
+                                <td>{{ order.ring_color }}</td>
+                            {% else %}
+                                <td style="color: red">Mavjud emas</td>
+                            {% endif %}
+                            {% if order.front_cover_color %}
+                                <td>{{ order.front_cover_color }}</td>
+                            {% else %}
+                                <td style="color: red">Mavjud emas</td>
+                            {% endif %}
+                            {% if order.back_cover_color %}
+                                <td>{{ order.back_cover_color }}</td>
+                            {% else %}
+                                <td style="color: red">Mavjud emas</td>
+                            {% endif %}
+                            <td>{{ order.size }}</td>
+                            <td>{{ order.number }}</td>
+                            <td>
+                                <a class="l-3" data-bs-toggle="tooltip"
+                                   data-bs-custom-class="custom-tooltip"
+                                   data-bs-title="Xaridor telefon raqami"
+                                   data-bs-content="{{ order.customer_number }}">
+                                    Ko'rish
+                                </a>
+                            </td>
+                            {% if order.customer_email %}
+                                <td>
+                                    <a class="l-3" data-bs-toggle="tooltip"
+                                       data-bs-custom-class="custom-tooltip"
+                                       data-bs-title="Xaridor Email manzili"
+                                       data-bs-content="{{ order.customer_email }}">
+                                        Ko'rish
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td style="color: red">Mavjud emas</td>
+                            {% endif %}
+                            <td>{{ order.payment }}</td>
+                            <td>{{ order.date_ordered|date:'d-m-Y H:i' }}</td>
+                            <td>{{ order.status }}</td>
+                            <td>
+                                <a class="l-3" data-bs-toggle="tooltip"
+                                   data-bs-custom-class="custom-tooltip"
+                                   data-bs-title="Manzil"
+                                   data-bs-content="{{ order.place_to_get }}">
+                                    Ko'rish
+                                </a>
+                            </td>
+                            {% if order.delivered %}
+                                <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                            {% elif not order.delivered %}
+                                <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    <a class="btn btn-warning fw-light mb-5" href="{% url 'order_source' %}">Buyurtma berish &raquo;</a>
+    {% elif not orders %}
+        <div class="container text-center mt-5 mb-5" style="max-width: 100%">
+            <h2 class="fw-light">Voy! Hali ham buyurtma bermaganga o'xshaysiz...</h2>
+            <a class="btn btn-warning fw-light mt-5 mb-5" href="{% url 'order_source' %}">Buyurtma berish &raquo;</a>
+        </div>
+    {% endif %}
+</div>
+<script>
+    $(document).ready(function(){
+        $('[data-bs-toggle="tooltip"]').popover({
+            placement : 'bottom',
+            trigger : 'hover'
+        });
+    });
+</script>
+{% endblock content %}

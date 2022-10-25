@@ -1,0 +1,41 @@
+{% extends 'service/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    <div class="container col-xl-12 mb-5" style="max-width: 100%">
+        <div class="row">
+            <div class="col-xl-2 ad-col">
+                <div class="card mx-auto ad-cards">
+                    <h4 class="fw-light">Reklama</h4>
+                </div>
+            </div>
+            <div class="col-xl-8 main-col">
+                {% block page_header %}
+                <div class="container header-container text-center mt-4 pb-3">
+                    <h1 class="fw-light">Administratura bilan bog'lanish</h1>
+                </div>
+                {% endblock page_header %}
+                <form class="form-control form-itself bg-dark text-light fw-light"
+                      novalidate action="{% url 'contact' %}" method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <button class="btn btn-warning fw-light" type="submit">
+                            Yuborish &raquo;
+                        </button>
+                        <a class="btn btn-warning button-fix fw-light"
+                        href="/">Asosiy sahifaga qaytish</a>
+                    {% endbuttons %}
+                </form>
+            </div>
+            <div class="col-xl-2 ad-col">
+                <div class="card mx-auto ad-cards">
+                    <h4 class="fw-light">Reklama</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

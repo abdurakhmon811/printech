@@ -1,0 +1,61 @@
+{% extends 'service/base.html' %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/includes/admin_tab.html' %}
+    <div class="container col-xl-12 pt-4 ps-4 pe-4 pb-4" style="max-width: 100%;">
+        <h1 class="fw-light">Murojaatlar</h1>
+        <h3 class="fw-light">Murojaatlar soni: {{ contacts_num }}</h3>
+    </div>
+    <div class="container col-xl-12 table-cont-dec pt-4 pb-2 mb-5" style="max-width: 100%;">
+        {% if contacts %}
+            <div class="table-responsive-xl">
+                <table class="table table-striped table-dark fw-light text-light text-center align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Murojaat raqami</th>
+                            <th scope="col">Foydalanuvchi</th>
+                            <th scope="col">Ariza berilgan sana</th>
+                            <th scope="col">Telofon raqami</th>
+                            <th scope="col">Telegram sahifasi</th>
+                            <th scope="col">Sarlavha</th>
+                            <th scope="col">Xabar</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contact in contacts %}
+                            <tr>
+                                <th scope="col">{{ contact.id }}</th>
+                                <td>{{ contact.applicant }}</td>
+                                <td>{{ contact.date_made|date:'d-m-Y H:i' }}</td>
+                                <td>{{ contact.phone_number }}</td>
+                                <td>{{ contact.telegram }}</td>
+                                <td>{{ contact.title }}</td>
+                                <td>
+                                    <a class="fw-light l-3" data-bs-toggle="tooltip"
+                                       data-bs-title="Xabar"
+                                       data-bs-content="{{ contact.message }}"
+                                       data-bs-custom-class="custom-tooltip">Ko'rish</a>
+                                </td>
+                                <td><a class="btn btn-danger fw-light"
+                                       href="{% url 'ask_del_contact' contact.id %}">O'chirish</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <h2 class="fw-light text-center mt-4 mb-5">Murojaatlar mavjud emas...</h2>
+        {% endif %}
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('[data-bs-toggle="tooltip"]').popover({
+            placement : 'bottom',
+            trigger : 'hover'
+        });
+    });
+</script>
+{% endblock content %}

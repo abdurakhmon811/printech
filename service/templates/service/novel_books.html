@@ -1,0 +1,44 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+{% block page_header %}
+<div class="container text-center mt-4 mb-4">
+    <h1 class="fw-light">Romanlar bo'limi</h1>
+</div>
+{% endblock page_header %}
+<div class="container put-footer-bottom">
+    <div class="container pt-4 pb-4 col-md-12 row mb-3" style="border-top: 1px solid #d0d0d0;
+                                                     border-bottom: 1px solid #d0d0d0;">
+        {% for book in books %}
+            <div class="card-group mx-auto" style="max-width: 323px;">
+                <div class="card mt-2 border-dark bg-dark">
+                    <img src="{{ book.image_url }}" height="400" alt="" class="card-img-top image-cust">
+                    <div class="card-body">
+                        <h5 class="card-title fw-light text-light">Kitob kodi: {{ book.name_coded }}</h5>
+                        <p class="card-text fw-light text-light">{{ book.chars }}</p>
+                        <p class="card-text fw-light text-light">Betlar soni - {{ book.pages }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <p
+                        class="card-text fw-light text-light"
+                        >Narxi - {{ book.price.amount }} {{ book.price.currency }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <center><h2 class="fw-light">Afsuski, hozircha bo'limda kitoblar mavjud emas!</h2></center>
+        {% endfor %}
+    </div>
+    <div class="container col-md-12 mb-5">
+        <div class="row mx-auto">
+            <div class="col me-0" style="max-width: 180px;">
+                <a class="btn btn-warning fw-light" role="button" href="{% url 'order_source' %}">Buyurtma berish &raquo;</a>
+            </div>
+            <div class="col" style="max-width: 210px;">
+                <a class="btn btn-warning fw-light" role="button" href="{% url 'myorders' %}">Mening buyurtmalarim</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

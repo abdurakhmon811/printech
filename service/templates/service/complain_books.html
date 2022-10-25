@@ -1,0 +1,18 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    <div class="container col-xl-8">
+        <form class="form-control bg-dark text-light fw-light" action="{% url 'complain_books' %}"
+              novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button class="btn btn-warning fw-light" type="submit">Yuborish &raquo;</button>
+                <a class="btn btn-warning button-fix-2 fw-light" href="/">Asosiy sahifaga qaytish</a>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+{% endblock content %}

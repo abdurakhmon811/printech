@@ -1,0 +1,53 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    <div class="container mb-5" style="max-width: 100%;">
+        <div class="row">
+            <div class="col-xl-2 ad-col">
+                <div class="card mx-auto ad-cards">
+                    <h4 class="fw-light">Reklama</h4>
+                </div>
+            </div>
+            <div class="col-xl-8 main-col-2">
+                {% block page_header %}
+                    <div class="container header-container text-center mt-4 pb-3 mb-4">
+                        <h1 class="fw-light">Buyurtmalar bo'limi</h1>
+                    </div>
+                {% endblock page_header %}
+                <div class="row">
+                    <div class="card-group">
+                        <div class="card text-bg-dark" style="border-radius: .0rem">
+                            <img src="{% static 'images/site3.jpg' %}" class="card-img content" height="200">
+                            <div class="card-img-overlay">
+                                <h2 class="card-title text-light fw-light">
+                                    Saytdagi kitoblardan buyurtma berish
+                                </h2>
+                                <a class="btn btn-warning-card fw-light" href="{% url 'order_site' %}"
+                                >Buyurtma berish &raquo;</a>
+                            </div>
+                        </div>
+                        <div class="card text-bg-dark" style="border-radius: .0rem">
+                            <img src="{% static 'images/self.jpg' %}" class="card-img content" height="200">
+                            <div class="card-img-overlay">
+                                <h2 class="card-title text-light fw-light">
+                                    O'zimdagi kitoblardan buyurtma berish
+                                </h2>
+                                <a class="btn btn-warning-card fw-light" href="{% url 'order_users' %}"
+                                >Buyurtma berish &raquo;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 ad-col">
+                <div class="card mx-auto ad-cards">
+                    <h4 class="fw-light">Reklama</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

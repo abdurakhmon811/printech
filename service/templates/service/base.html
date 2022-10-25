@@ -1,0 +1,1108 @@
+{% load static %}
+
+{{ '<' }}{{ '!DOCTYPE html>' }}
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="EI=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{% block title %}PRINTECH{% endblock title %}</title>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/site.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/stylesheet.css' %}">
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
+        <script language="JavaScript" type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <style type="text/css">
+            .jumbotron {
+                margin-top: 0px;
+                background-image: url('static/images/jumb2.jpg');
+                background-size: cover;
+            }
+            .btn-primary {
+                --bs-btn-color: #000000;
+                --bs-btn-bg: #FF9700;
+                --bs-btn-border-color: #FF9700;
+                --bs-btn-border-radius: .7rem;
+                --bs-btn-hover-color: #000000;
+                --bs-btn-hover-bg: #FFBA56;
+                --bs-btn-hover-border-color: #FFBA56;
+                --bs-btn-focus-shadow-rgb: #FFBA56;
+                --bs-btn-active-color: #000000;
+                --bs-btn-active-bg: #FFBA56;
+                --bs-btn-active-border-color: #FFBA56;
+            }
+            .btn-warning {
+                --bs-btn-color: #000000;
+                --bs-btn-bg: #FF9700;
+                --bs-btn-border-color: #FF9700;
+                --bs-btn-border-radius: .7rem;
+                --bs-btn-hover-color: #FFFFFF;
+                --bs-btn-hover-bg: #FF9700;
+                --bs-btn-hover-border-color: #FF9700;
+                --bs-btn-focus-shadow-rgb: #FFBA56;
+                --bs-btn-active-color: #FFFFFF;
+                --bs-btn-active-bg: #FFBA56;
+                --bs-btn-active-border-color: #FFBA56;
+                transition: all 0.1s ease-in-out;
+            }
+            .btn-warning:hover {
+                transform: scale(1.05);
+            }
+            .btn-warning:active {
+                transform: scale(0.8);
+            }
+            .btn-warning-card {
+                --bs-btn-color: #000000;
+                --bs-btn-bg: #FF9700;
+                --bs-btn-border-color: #FF9700;
+                --bs-btn-border-radius: .7rem;
+                --bs-btn-hover-color: #FFFFFF;
+                --bs-btn-hover-bg: #FF9700;
+                --bs-btn-hover-border-color: #FF9700;
+                --bs-btn-focus-shadow-rgb: #FFBA56;
+                --bs-btn-active-color: #FFFFFF;
+                --bs-btn-active-bg: #FFBA56;
+                --bs-btn-active-border-color: #FFBA56;
+                position: absolute;
+                bottom: 10px;
+                left: 15px;
+                transition: all 0.1s ease-in-out;
+            }
+            .btn-warning-card:hover {
+                transform: scale(1.05);
+            }
+            .btn-warning-card:active {
+                transform: scale(0.8);
+            }
+            .btn-dark {
+                --bs-btn-color: #FFFFFF;
+                --bs-btn-bg: #212529;
+                --bs-btn-border-color: #212529;
+                --bs-btn-border-radius: .7rem;
+                --bs-btn-hover-color: #FFFFFF;
+                --bs-btn-hover-bg: #5E5E5E;
+                --bs-btn-hover-border-color: #5E5E5E;
+                --bs-btn-focus-shadow-rgb: #5E5E5E;
+                --bs-btn-active-color: #FFFFFF;
+                --bs-btn-active-bg: #5E5E5E;
+                --bs-btn-active-border-color: #5E5E5E;
+            }
+            .btn-info {
+                --bs-btn-color: #000000;
+                --bs-btn-bg: #FF9700;
+                --bs-btn-border-color: #FF9700;
+                --bs-btn-border-radius: .0rem;
+                --bs-btn-hover-color: #FFFFFF;
+                --bs-btn-hover-bg: #FF9700;
+                --bs-btn-hover-border-color: #FF9700;
+                --bs-btn-focus-shadow-rgb: #FFBA56;
+                --bs-btn-active-color: #FFFFFF;
+                --bs-btn-active-bg: #FFBA56;
+                --bs-btn-active-border-color: #FFBA56;
+            }
+            .btn-danger {
+                --bs-btn-color: #000000;
+                --bs-btn-bg: #C80000;
+                --bs-btn-border-color: #C80000;
+                --bs-btn-border-radius: .7rem;
+                --bs-btn-hover-color: #FFFFFF;
+                --bs-btn-hover-bg: #C80000;
+                --bs-btn-hover-border-color: #C80000;
+                --bs-btn-focus-shadow-rgb: #F50000;
+                --bs-btn-active-color: #FFFFFF;
+                --bs-btn-active-bg: #F50000;
+                --bs-btn-active-border-color: #F50000;
+                transition: all 0.1s ease-in-out;
+            }
+            .btn-danger:hover {
+                transform: scale(1.05);
+            }
+            .btn-danger:active {
+                transform: scale(0.8);
+            }
+            .card {
+                --bs-card-border-color: #FFFFFF;
+                --bs-card-border-radius: .8rem;
+                position: relative;
+            }
+            .news-card {
+                border-radius: .9rem;
+            }
+            .content {
+                background-repeat; no-repeat;
+                filter: brightness(50%);
+                object-fit: cover;
+            }
+            .content-printers {
+                background-repeat; no-repeat;
+                object-fit: cover;
+                background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('static/images/printers.jpg');
+            }
+            .content-contact {
+                background-repeat; no-repeat;
+                object-fit: cover;
+                background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('static/images/contact.jpg');
+            }
+            .image-cust {
+                background-repeat; no-repeat;
+                background-size: cover;
+                border-radius: .9rem;
+            }
+            .container {
+                margin: auto;
+            }
+            .img-left {
+                float: left;
+                width: 40px;
+            }
+            .custom {
+                max-width: 100%;
+                padding-bottom: 30px;
+                padding-right: 0px;
+            }
+            @media only screen and (max-width: 1200px) {
+                .card-text-cust {
+                    display: none;
+                }
+            }
+            @media only screen and (min-width: 1200px) {
+                .cust-link {
+                    display: none;
+                }
+            }
+            .modal {
+                --bs-modal-bg: #212529;
+                border-radius: .9rem;
+            }
+            .modal-header {
+                border-bottom: 1px solid #7C7C7C;
+            }
+            .close {
+                position: absolute;
+                left: 97.5%;
+            }
+            @media only screen and (max-width: 322px) {
+                .close {
+                    left: 90%;
+                    bottom: 30%
+                }
+            }
+            @media only screen and (min-width: 322px) and (max-width: 576px) {
+                .close {
+                    left: 93%;
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .close {
+                    left: 95%;
+                }
+            }
+            @media only screen and (min-width: 768px) and (max-width: 1024px) {
+                .close {
+                    left: 96%;
+                }
+            }
+            .alert-warning {
+                text-align: start;
+                border-radius: .0rem;
+                background-color: #FFC500;
+                position: relative;
+                margin-bottom: 0px;
+                border-color: #FFC500;
+            }
+            .alert-danger {
+                text-align: start;
+                border-radius: 0px;
+                background-color: #D10000;
+                border-color: #D10000;
+                color: #580000;
+                margin-bottom: 0px;
+            }
+            .form-control:focus {
+                border-color: transparent;
+                box-shadow: 0 0 0 0.0rem rgba(0, 0, 0, 0);
+            }
+            @media only screen and (max-width: 576px) {
+                .offcanvas {
+                    max-width: 270px;
+                }
+            }
+            .margin-set {
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            @media only screen and (max-width: 576px) {
+                .margin-set {
+                    margin-top: 0px;
+                    margin-bottom: 50px;
+                }
+            }
+            html, body {
+                height: 100%;
+            }
+            .footer-container {
+                background: #ff4545;
+                max-width: 100%;
+                margin-bottom: 0px;
+                padding-top: 40px;
+                padding-bottom: 40px;
+                background-repeat; no-repeat;
+                object-fit: cover;
+                background: #212529;
+                color: #d0d0d0;
+                border-top: 1px solid #d0d0d0;
+                position: absolute;
+                bottom; 0;
+                height: 370px;
+            }
+            @media only screen and (max-width: 768px) {
+                .footer-container {
+                    height: 490px;
+                }
+            }
+            @media only screen and (min-width: 768px) and (max-width: 900px) {
+                .footer-container {
+                    height: 500px;
+                }
+            }
+            .put-footer-bottom {
+                min-height: calc(100% - 370px);
+                max-width: 100%;
+                padding: 0px;
+            }
+            @media only screen and (max-width: 576px) {
+                .put-footer-bottom {
+                    min-height: calc(100% - 470px);
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 577px) and (max-width: 767px) {
+                .put-footer-bottom {
+                    min-height: calc(100% - 470px);
+                    max-width: 100%;
+                }
+            }
+            .row-for-icons {
+                display: flex;
+                justify-content: center;
+            }
+            a {
+                color: #d0d0d0;
+                text-decoration: none;
+            }
+            a:hover {
+                color: orange;
+            }
+            .card-hover {
+                transition: all .2s ease-in-out;
+            }
+            .card-hover:hover {
+                background-color: #EDEDED;
+                transform: scale(1.05);
+            }
+            .link-hover {
+                color: #000;
+                border-bottom: 1px solid #000;
+            }
+            .link-hover:hover {
+                color: orange;
+                border-bottom: 1px solid orange;
+            }
+            .link-hover-2 {
+                color: #fff;
+                border-bottom: 1px solid #fff;
+            }
+            .link-hover-2:hover {
+                color: orange;
+                border-bottom: 1px solid orange;
+            }
+            .l-3 {
+                color: #fff;
+                border-bottom: 1px solid #fff;
+            }
+            .l-3:hover {
+                color: #fff;
+            }
+            .loader {
+                display: flex;
+                justify-content: center;
+                left: 50%;
+                position: absolute;
+                text-align: center;
+                top: 50%;
+            }
+            .loader-align-center {
+                align-items: center;
+                height: 100%;
+            }
+            .loader::after {
+                content: '';
+                width: 40px;
+                height: 40px;
+                border: 5px solid transparent;
+                border-top-color: #f8b810;
+                border-bottom-color: #ed6a24;
+                border-radius: 50%;
+                animation: loader 2s ease-in-out infinite alternate;
+            }
+            @keyframes loader {
+                to {
+                    transform: scale(1.5) rotate(4turn);
+                }
+            }
+            .form-control {
+                border-radius: .7rem;
+                background-color: #3d3d3d;
+                border-color: transparent;
+                color: #d0d0d0;
+            }
+            .form-control:focus {
+                background-color: #3d3d3d;
+                border-color: transparent;
+                color: #d0d0d0;
+            }
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover,
+            input:-webkit-autofill:focus,
+            input:-webkit-autofill:active {
+                transition: background-color 5000s ease-in-out 0s;
+                -webkit-text-fill-color: #d0d0d0 !important;
+            }
+            input, select, textarea {
+                background: #3d3d3d;
+            }
+            .ad-card-col {
+                max-width: 100%;
+            }
+            @media only screen and (max-width: 576px) {
+                .ad-card-col {
+                    max-width: 100%;
+                    margin: auto;
+                    height: 350px;
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .ad-card-col {
+                    max-width: 100%;
+                    margin: auto;
+                    height: 370px;
+                }
+            }
+            @media only screen and (min-width: 768px) and (max-width: 1200px) {
+                .ad-card-col {
+                    max-width: 100%;
+                    margin: auto;
+                    height: 380px;
+                }
+            }
+            .ad-card {
+                max-width: 250px;
+                border-radius: .0rem;
+                border: 4px dashed #A90000;
+                height: 400px;
+                margin-top: 40px;
+                margin-right: 30px;
+                margin-left: 30px;
+                margin-bottom: 40px;
+                margin: auto;
+            }
+            @media only screen and (max-width: 576px) {
+                .ad-card {
+                    max-width: calc(100% - 50px);
+                    margin: auto;
+                    height: 120px;
+                    border-radius: .0rem;
+                    border: 4px dashed #A90000;
+                    margin-bottom: 20px;
+                }
+            }
+            @media only screen and (min-width: 577px) and (max-width: 768px) {
+                .ad-card {
+                    max-width: calc(100% - 50px);
+                    margin: auto;
+                    height: 150px;
+                    border-radius: .0rem;
+                    border: 4px dashed #A90000;
+                    margin-bottom: 15px;
+                }
+            }
+            @media only screen and (min-width: 769px) and (max-width: 1200px) {
+                .ad-card {
+                    max-width: calc(100% - 400px);
+                    height: 130px;
+                    border-radius: .0rem;
+                    border: 4px dashed #A90000;
+                    margin-top: 40px;
+                    margin: auto;
+                    margin-bottom: 50px;
+                }
+            }
+            .index-card {
+                border: 1px solid #d0d0d0;
+                border-radius: .9rem;
+                max-width: 90%;
+                margin: auto;
+                margin-bottom: 30px;
+            }
+            @media only screen and (max-width: 576px) {
+                .index-card {
+                    margin-bottom: 40px;
+                }
+            }
+            @media only screen and (min-width: 769px) and (max-width: 1200px) {
+                .index-card {
+                    border: 1px solid #d0d0d0;
+                    border-radius: .9rem;
+                    max-width: 60%;
+                }
+            }
+            .border-index-card {
+                border-bottom: 1px solid #d0d0d0;
+            }
+            .column-cust-big-dnews {
+                max-width: 70%;
+            }
+            @media only screen and (max-width: 576px) {
+                .column-cust-big-dnews {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .column-cust-big-dnews {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 768px) and (max-width: 1024px) {
+                .column-cust-big-dnews {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 1024px) and (max-width: 1200px) {
+                .column-cust-big-dnews {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 1200px) {
+                .column-cust-big-dnews {
+                    max-width: 70%;
+                }
+            }
+            .column-cust-small-dnews {
+                max-width: 30%;
+                margin-left: 0px;
+            }
+            @media only screen and (max-width: 576px) {
+                .column-cust-small-dnews {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .column-cust-small-dnews {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 768px) and (max-width: 1024px) {
+                .column-cust-small-dnews {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 1024px) and (max-width: 1200px) {
+                .column-cust-small-dnews {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 1200px) {
+                .column-cust-small-dnews {
+                    max-width: 30%;
+                }
+            }
+            .dnews-image-cust {
+                object-fit: cover;
+                background-size: cover;
+                max-height: 500px;
+                width: 100%;
+            }
+            @media only screen and (max-width: 576px) {
+                .dnews-image-cust {
+                    object-fit: cover;
+                    background-size: cover;
+                    max-height: 250px;
+                    width: 100%;
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .dnews-image-cust {
+                    object-fit: cover;
+                    background-size: cover;
+                    max-height: 400px;
+                    width: 100%;
+                }
+            }
+            @media only screen and (min-width: 576px) {
+                .body-container {
+                    margin-left: 0px;
+                    margin-right: 0px;
+                    padding-right: 10px;
+                    padding-left: 10px;
+                    max-width: 100%;
+                }
+            }
+            .pub-container {
+                max-width: 400px;
+                margin-left: 0px;
+            }
+            @media only screen and (max-width: 576px) {
+                .pub-container {
+                    max-width: 250px;
+                    margin-left: 0px;
+                }
+            }
+            .icon-container {
+                max-width: 400px;
+                margin-left: 0px;
+                margin-bottom: 30px;
+            }
+            @media only screen and (max-width: 576px) {
+                .icon-container {
+                    max-width: 250px;
+                    margin-left: 0px;
+                    margin-bottom: 25px;
+                }
+            }
+            .icon-sets {
+                height: 30px;
+            }
+            @media only screen and (max-width: 576px) {
+                .icon-sets {
+                    height: 25px;
+                }
+            }
+            .image-container-dnews {
+                max-width: 100%;
+                padding-top: 0px;
+                padding-right: 0px;
+                padding-left: 0px;
+                padding-bottom: 20px;
+                border-radius: 0px;
+                border-bottom: 1px solid #d0d0d0;
+            }
+            .custs-for-ads-dnews {
+                margin-top: 250px;
+                margin-right: 25px;
+                margin-left: 25px;
+                margin-bottom: 100px;
+                margin: auto;
+                height: 70%;
+                border: 5px dashed #A90000;
+                border-radius: .0rem;
+            }
+            @media only screen and (max-width: 576px) {
+                .custs-for-ads-dnews {
+                    margin-top: 30px;
+                    margin-right: 10px;
+                    margin-left: 10px;
+                    margin-bottom: 40px;
+                    height: 100px;
+                    border: 2px dashed #A90000;
+                    border-radius: .0rem;
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .custs-for-ads-dnews {
+                    margin-top: 30px;
+                    margin-right: 15px;
+                    margin-left: 15px;
+                    margin-bottom: 40px;
+                    height: 110px;
+                    border: 2px dashed #A90000;
+                    border-radius: .0rem;
+                }
+            }
+            @media only screen and (min-width: 768px) and (max-width: 1024px) {
+                .custs-for-ads-dnews {
+                    margin-top: 35px;
+                    margin-right: 30px;
+                    margin-left: 30px;
+                    margin-bottom: 45px;
+                    height: 120px;
+                    border: 4px dashed #A90000;
+                    border-radius: .0rem;
+                }
+            }
+            @media only screen and (min-width: 1024px) and (max-width: 1200px) {
+                .custs-for-ads-dnews {
+                    margin-top: 40px;
+                    margin-right: 35px;
+                    margin-left: 35px;
+                    margin-bottom: 45px;
+                    height: 130px;
+                    border: 4px dashed #A90000;
+                    border-radius: .0rem;
+                }
+            }
+            @media only screen and (min-width: 1200px) {
+                .custs-for-ads-dnews {
+                    margin-top: 300px;
+                    margin-right: 25px;
+                    margin-left: 25px;
+                    height: 700px;
+                    border: 5px dashed #A90000;
+                    border-radius: .0rem;
+                }
+            }
+            .ad-col {
+                max-width: 20%;
+            }
+            @media only screen and (max-width: 320px) {
+                .ad-col {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (min-width: 320px) and (max-width: 1200px) {
+                .ad-col {
+                    max-width: 100%;
+                }
+            }
+            .main-col {
+                max-width: 70%;
+                padding-bottom: 27px;
+                border-bottom: 1px solid #d0d0d0;
+            }
+            @media only screen and (max-width: 320px) {
+                .main-col {
+                    max-width: 100%;
+                    padding-right: 0px;
+                    padding-left: 0px;
+                    padding-bottom: 27px;
+                    border-bottom: 1px solid #d0d0d0;
+                }
+            }
+            @media only screen and (min-width: 320px) and (max-width: 1200px) {
+                .main-col {
+                    max-width: 100%;
+                    padding-right: 0px;
+                    padding-left: 0px;
+                    padding-bottom: 27px;
+                    border-bottom: 1px solid #d0d0d0;
+                }
+            }
+            .form-itself {
+                max-width: 90%;
+                margin: auto;
+                margin-top: 3%;
+            }
+            .ad-cards {
+                max-width: 200px;
+                height: 400px;
+                margin: auto;
+                margin-top: 150px;
+                margin-left: 15px;
+                margin-right: 15px;
+                border-radius: .0rem;
+                border: 5px dashed #A90000;
+                text-align: center;
+            }
+            @media only screen and (max-width: 320px) {
+                .ad-cards {
+                    max-width: 300px;
+                    margin: auto;
+                    max-height: 100px;
+                    margin-top: 20px;
+                }
+            }
+            @media only screen and (min-width: 320px) and (max-width: 1200px) {
+                .ad-cards {
+                    max-width: 1000px;
+                    margin: auto;
+                    height: 150px;
+                    margin-top: 25px;
+                }
+            }
+            .main-col-2 {
+                max-width: 70%;
+                padding-bottom: 24px;
+                border-bottom: 1px solid #d0d0d0;
+            }
+            @media only screen and (max-width: 320px) {
+                .main-col-2 {
+                    max-width: 100%;
+                    padding-bottom: 27px;
+                    border-bottom: 1px solid #d0d0d0;
+                }
+            }
+            @media only screen and (min-width: 320px) and (max-width: 1200px) {
+                .main-col-2 {
+                    max-width: 100%;
+                    padding-bottom: 27px;
+                    border-bottom: 1px solid #d0d0d0;
+                }
+            }
+            .header-container {
+                max-length: 100%;
+                border-bottom: 1px solid #d0d0d0;
+                padding-left: 0px;
+                padding-right: 0px;
+                margin-left: 0px;
+                margin-right: 0px;
+                margin: auto;
+            }
+            @media only screen and (max-width: 337px) {
+                .button-fix {
+                    margin-top: 10px;
+                }
+            }
+            @media only screen and (max-width: 327px) {
+                .button-fix-2 {
+                    margin-top: 10px;
+                }
+            }
+            .scale {
+                transition: all 0.1s ease-in-out;
+            }
+            .scale:hover {
+                transform: scale(1.05);
+            }
+            .scale:active {
+                transform: scale(0.8);
+            }
+            .footer-col {
+                max-width: 14%;
+            }
+            @media only screen and (max-width: 900px) {
+                .footer-col {
+                    max-width: 100%;
+                }
+            }
+            @media only screen and (max-width: 991px) {
+                .d-f-92 {
+                    display: none;
+                }
+            }
+            @media only screen and (min-width: 992px) {
+                .d-f-91 {
+                    display: none;
+                }
+            }
+            .not-found-img {
+                max-width: 400px;
+            }
+            @media only screen and (max-width: 576px) {
+                .not-found-img {
+                    max-width: 200px;
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .not-found-img {
+                    max-width: 300px;
+                }
+            }
+            .form-check-input {
+                transition: all 0.1s ease-in-out;
+            }
+            .form-check-input:hover {
+                transform: scale(1.4);
+            }
+            .form-check-input:active {
+                transform: scale(0.8);
+            }
+            .form-check-input:checked {
+                background-color: #ed6a24;
+                border-color: #ed6a24;
+            }
+            .form-check-input:focus {
+                box-shadow: 0 0 0 0.3rem rgba(200,120,100,.25);
+            }
+            .tab-link {
+                color: #fff;
+            }
+            .tab-link:hover {
+                color: orange;
+            }
+            .custom-tooltip {
+              --bs-popover-max-width: 200px;
+              --bs-popover-border-color: orange;
+              --bs-popover-header-bg: orange;
+              --bs-popover-header-color: #fff;
+              --bs-popover-body-padding-x: 1rem;
+              --bs-popover-body-padding-y: .5rem;
+            }
+            .welcome-pic {
+                max-height: 500px;
+            }
+            @media only screen and (max-width: 320px) {
+                .welcome-pic {
+                    max-height: 100px;
+                }
+            }
+            @media only screen and (min-width: 320px) and (max-width: 576px) {
+                .welcome-pic {
+                    max-height: 200px;
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .welcome-pic {
+                    max-height: 300px;
+                }
+            }
+            @media only screen and (min-width: 768px) and (max-width: 1200px) {
+                .welcome-pic {
+                    max-height: 400px;
+                }
+            }
+            .post-card {
+                max-width: 22.5%;
+                background-color: #212529;
+                text-color: #fff;
+                padding: 0px;
+            }
+            @media only screen and (max-width: 320px) {
+                .post-card {
+                    margin: auto;
+                    max-width: 90%
+                }
+            }
+            @media only screen and (min-width: 320px) and (max-width: 576px) {
+                .post-card {
+                    margin: auto;
+                    max-width: 90%
+                }
+            }
+            @media only screen and (min-width: 576px) and (max-width: 768px) {
+                .post-card {
+                    margin: auto;
+                    max-width: 45%
+                }
+            }
+            @media only screen and (min-width: 769px) and (max-width: 1200px) {
+                .post-card {
+                    margin: auto;
+                    max-width: 30%
+                }
+            }
+            .form-dec {
+                border-top: 1px solid #d0d0d0;
+                border-bottom: 1px solid #d0d0d0;
+            }
+            .table-cont-dec {
+                border-top: 1px solid #d0d0d0;
+                border-bottom: 1px solid #d0d0d0;
+            }
+            .exin-card {
+                background-color: #212529;
+                padding: 0px;
+                position: relative;
+            }
+            .exin-card:hover {
+                background-color: #4E4F4F;
+            }
+            @media only screen and (max-width: 1200px) {
+                .top-m {
+                    margin-top: 5px;
+                }
+            }
+            .align-r {
+                position: absolute;
+                right: 16px;
+                bottom: 13px;
+            }
+            .ask-card {
+                background-color: #212529;
+                position: relative;
+            }
+            .align-rs {
+                position: absolute;
+                right: 16px;
+            }
+            @media only screen and (max-width: 294px) {
+                .make-top-2 {
+                    margin-top: 5px;
+                }
+            }
+            @media only screen and (max-width: 487px) {
+                .make-top {
+                    margin-top: 5px;
+                }
+            }
+        </style>
+    </head>
+    <body id="{% block body-id %}body{% endblock body-id %}">
+    {% include 'service/includes/messages.html' %}
+    <div class="loader"></div>
+    <nav class="navbar fixed-top navbar-expand-lg bg-dark" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/"><img src="{% static 'images/printech_mod.png' %}" class="scale"
+                                                      alt="" width="130" height="30"></a>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#button"
+                    aria-controls="offcanvasDarkNavbar"
+                    style="background-color: transparent; color: transparent; border-color: transparent;">
+                    <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" data-bs-backdrop="dynamic"
+                 id="button" aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <img class="offcanvas-title"
+                         src="{% static 'images/printech_mod.png' %}"
+                         width="130" height="30">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="d-f-91 mb-2">
+                        <form class="d-flex" role="search" action="{% url 'search' %}" method="get">
+                            <input class="form-control form-control-sm me-2 fw-light"
+                                   type="search" placeholder="Qidirish" aria-label="Search" name="searched">
+                            <button class="btn btn-sm btn-warning fw-light" type="submit">Qidirish</button>
+                        </form>
+                    </div>
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link fw-light text-light scale"
+                                                href="/">Asosiy sahifa</a></li>
+                        <li class="nav-item"><a class="nav-link fw-light text-light scale"
+                                                href="{% url 'contact' %}">Bog'lanish</a></li>
+                        <li class="nav-item"><a class="nav-link fw-light text-light scale"
+                                                href="{% url 'book_categories' %}">Kutubxona</a></li>
+                        <li class="nav-item"><a class="nav-link fw-light text-light scale"
+                                                href="{% url 'blogposts' %}">Maqolalar</a></li>
+                        <li class="nav-item"><a class="nav-link fw-light text-light scale"
+                                                href="{% url 'create_site' %}">Sayt yaratish</a></li>
+                        <li class="nav-item"><a class="nav-link fw-light text-light scale"
+                                                href="{% url 'complaint_category' %}">Shikoyat</a></li>
+                        <li class="nav-item"><a class="nav-link fw-light text-light scale"
+                                                href="{% url 'view_news' %}">Yangiliklar</a></li>
+                    </ul>
+                    {% if user.is_superuser %}
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link fw-light text-light scale"
+                                   href="{% url 'welcome_admin' %}">Boshqarma</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-1">
+                        <li class="nav-item d-f-92"><a class="nav-link" type="button" data-bs-target="#modalnav"
+                                                data-bs-toggle="modal">
+                            <img src="{% static 'images/search2.jpg' %}" height="20" class="scale">
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link fw-light text-light scale"
+                                                href="{% url 'myorders' %}">Mening buyurtmalarim</a></li>
+                        <li class="nav-item"><a class="nav-link active fw-light scale"
+                                                style="color: #FF9700"
+                                                href="{% url 'contact' %}">Kirish</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="modal modal-lg fade" tabindex="-1" id="modalnav"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="mt-3 mb-3">
+                        <form class="d-flex" role="search" action="{% url 'search' %}" method="get">
+                            <input class="form-control me-2 fw-light"
+                                   type="search" placeholder="Qidirish" aria-label="Search" name="searched">
+                            <button class="btn btn-warning fw-light" type="submit">Qidirish</button>
+                            <button type="button"
+                                    class="btn btn-danger fw-light ms-2" data-bs-dismiss="modal">Yopish</button>
+                        </form>
+                        <div class="container">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        {% block content %}
+        {% endblock content %}
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script>
+            $(window).on('load', function () {
+                $('.loader').hide();
+            })
+        </script>
+        <div class="container footer-container">
+            <div class="container col-md-10 mb-5">
+                <form class="d-flex" role="search" action="{% url 'search' %}" method="get">
+                    <input class="form-control me-2 fw-light"
+                           type="search" placeholder="Qidirish" aria-label="Search" name="searched">
+                    <button class="btn btn-warning fw-light" type="submit">Qidirish</button>
+                </form>
+            </div>
+            <div class="container text-center col-md-12 mb-5">
+                <div class="row mx-auto">
+                    <div class="col-xl footer-col mx-auto">
+                        <a class="fw-light" href="{% url 'contact' %}">
+                            Bog'lanish
+                        </a>
+                    </div>
+                    <div class="col-xl footer-col mx-auto">
+                        <a class="fw-light" href="{% url 'book_categories' %}">
+                            Kutubxona
+                        </a>
+                    </div>
+                    <div class="col-xl footer-col mx-auto">
+                        <a class="fw-light" href="{% url 'complaint_category' %}">
+                            Shikoyat
+                        </a>
+                    </div>
+                    <div class="col-xl footer-col mx-auto">
+                        <a class="fw-light" href="{% url 'view_news' %}">
+                            Yangliklar
+                        </a>
+                    </div>
+                    <div class="col-xl footer-col mx-auto">
+                        <a  class="fw-light" href="{% url 'blogposts' %}">
+                            Maqolalar
+                        </a>
+                    </div>
+                    <div class="col-xl footer-col mx-auto">
+                        <a class="fw-light" href="{% url 'create_site' %}">
+                            Sayt yaratish
+                        </a>
+                    </div>
+                    <div class="col-xl footer-col mx-auto">
+                        <a class="fw-light" href="{% url 'myorders' %}">
+                            Mening buyurtmalarim
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <center>
+                    <p class="fw-light">&copy; PRINTECH {% now 'Y' %}</p>
+                </center>
+                <div class="container col-md-4 text-center">
+                    <h5 class="mb-4 fw-light">Biz ijtimoiy tarmoqlarda</h5>
+                    <div class="row row-for-icons">
+                        <div class="col" style="max-width: 80px;">
+                            <a href="mailto:abd20020811@gmail.com">
+                                <img src="{% static 'images/gmail.png' %}" class="scale"
+                            height="30"></a>
+                        </div>
+                        <div class="col" style="max-width: 80px;">
+                            <a href="https://linkedin.com/in/abdurakhmon-omonov-668474172">
+                                <img src="{% static 'images/linkedin.png' %}" class="scale"
+                            height="30"></a>
+                        </div>
+                        <div class="col" style="max-width: 80px;">
+                            <a href="https://telegram.me/abduraxmonomonov">
+                                <img src="{% static 'images/telegra.png' %}" class="scale"
+                            height="30"></a>
+                        </div>
+                        <div class="col" style="max-width: 80px;">
+                            <a href="/">
+                                <img src="{% static 'images/twitter.jpg' %}" class="scale"
+                            height="30"></a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

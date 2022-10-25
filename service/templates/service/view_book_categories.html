@@ -1,0 +1,437 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    <div class="container-fluid text-center p-0">
+        <div class="alert alert-warning alert-dismissable" role="alert">
+            Eslatma! Kutubxonadagi aksariyat kitoblar Ingliz tilida.
+            <button type="button" class="btn-close close"
+                    data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    {% block page_header %}
+        <center>
+            <h1 class="fw-light mt-4">Onlayn kutubxonamizga xush kelibsiz!</h1>
+            <h4 class="fw-light mt-4 mb-4">Kitoblar bo'limini tanlang</h4>
+        </center>
+    {% endblock page_header %}
+    <div class="container row mb-5 pb-4" style="border-top: 1px solid #d0d0d0;
+                                           border-bottom:  1px solid #d0d0d0;">
+        <div class="card-group pt-4 ps-0 pe-0">
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/es.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Aniq Fanlar
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Aniq fanlar turiga kiradigan Matematika, Fizika, Kimyo va Biologiya kabi fanlar ba'zilarga qiyin
+                        tuyulishi mumkin lekin ular biz yashab turgan Yer sayyorasining asosi hisoblanadi va eng qiziq
+                        narsalar ham aynan shu fanlarda
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Aniq fanlar turiga kiradigan Matematika, Fizika, Kimyo va Biologiya kabi
+                                        fanlar ba'zilarga qiyin tuyulishi mumkin lekin ular biz yashab turgan Yer
+                                        sayyorasining asosi hisoblanadi va eng qiziq narsalar ham aynan shu fanlarda
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'exact_science_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/it.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Axborot Texnologiyalari (IT)
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Vaqt o'tgani sari Axborot Texnologiyalari (IT) shunaqanggi shiddatda rivojlanib borayapti-ki,
+                        bugungi kunda ushbu sohada hech bo'lmaganda eng sodda tushunchalarga ega bo'lmagan
+                        insonning ertangi kunini tasavvur qilish qiyin
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect12" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect12" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Vaqt o'tgani sari Axborot Texnologiyalari (IT) shunaqanggi shiddatda rivojlanib
+                                        borayapti-ki, bugungi kunda ushbu sohada hech bo'lmaganda eng sodda tushunchalarga
+                                        ega bo'lmagan insonning ertangi kunini tasavvur qilish qiyin
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'it_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/m.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Detektiv
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Oramizda Detektiv hikoyalar ya'ni qotillik, jinoyat va shu kabi mavzularga qiziqadiganlar
+                        yo'q emas. Ushbu bo'lim siz uchun ayni muddao
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect13" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect13" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Oramizda Detektiv hikoyalar ya'ni qotillik, jinoyat va shu kabi
+                                        mavzularga qiziqadiganlar yo'q emas. Ushbu bo'lim siz uchun ayni muddao
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'mystery_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-group ps-0 pe-0">
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/fantasy.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Fantastika
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Fantastika ham inson hayotida o'zining muhim bo'lgan jihatiga ega, inson fantaziyasini boyitadi va
+                        ijodiylik(kreativlik) qobiliyatini oshiradi va bu esa kelajakda kerak bo'lishi mumkin deyilsa
+                        mubolag'a bo'lmaydi
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect14" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect14" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Fantastika ham inson hayotida o'zining muhim bo'lgan jihatiga ega, inson
+                                        fantaziyasini boyitadi va ijodiylik(kreativlik) qobiliyatini oshiradi va bu
+                                        esa kelajakda kerak bo'lishi mumkin deyilsa mubolag'a bo'lmaydi
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'fantasy_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/sf.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Ilmiy Fantastika
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Kelajakda, sodir bo'lishi mumkin bo'lgan ammo hozirda faqat FANTASTIKA deb qaraladigan Ilmiy
+                        Fantastikaga qiziquvchilar, ayni shu bo'limdan qiziqadigan kitoblaringizni topishingiz mumkin
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect15" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect15" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Kelajakda, sodir bo'lishi mumkin bo'lgan ammo hozirda faqat FANTASTIKA deb
+                                        qaraladigan Ilmiy Fantastikaga qiziquvchilar, ayni shu bo'limdan qiziqadigan
+                                        kitoblaringizni topishingiz mumkin
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'science_fiction_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-group ps-0 pe-0">
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/ss2.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Qisqa Hikoyalar
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Uyda zerikib qolganingizda qisqa hikoyalar siz bilan doim hamroh bo'lishga tayyor bo'ladi.
+                        Hamrohingizni shu bo'limdan topishingiz mumkin.
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect16" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect16" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Uyda zerikib qolganingizda qisqa hikoyalar siz bilan doim hamroh bo'lishga
+                                        tayyor bo'ladi. Hamrohingizni shu bo'limdan topishingiz mumkin.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'short_story_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/n.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Romanlar
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Dam olish kunlarini choyxona yoki do'stlar davrasida ha deb o'tkazavergandan ko'ra, bir roman olib
+                        o'qib chiqsangiz foydaliroq tushunchalarga ega bo'lishingiz muqarrar
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect17" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect17" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Dam olish kunlarini choyxona yoki do'stlar davrasida ha deb o'tkazavergandan ko'ra,
+                                        bir roman olib o'qib chiqsangiz foydaliroq tushunchalarga ega bo'lishingiz muqarrar
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'novel_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/r.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Romantika
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Albatta romantikaga qiziqadiganlar yo'q emas, shuningdek bu janr haqida ko'p gapirishni hojati yo'q,
+                        shunchaki bo'limga kiring va yoqtirgan kitobingizni tanlang
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect18" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect18" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Albatta romantikaga qiziqadiganlar yo'q emas, shuningdek bu janr haqida ko'p
+                                        gapirishni hojati yo'q, shunchaki bo'limga kiring va yoqtirgan kitobingizni tanlang
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'romance_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-group ps-0 pe-0">
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/aa.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Sarguzashtlar
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Dunyo kezish - ajoyib, lekin hammani ham buni qilishga qurbi yetmaydi, lekin bu muammo emas
+                        ushbu bo'limdagi kitoblar bilan taasurot olamingizdagi istagan joyingizga borishingiz va turli tuman
+                        sarguzashtlarni boshdan kechirishingiz mumkin
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect19" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect19" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Dunyo kezish - ajoyib, lekin hammani ham buni qilishga qurbi yetmaydi, lekin
+                                        bu muammo emas ushbu bo'limdagi kitoblar bilan taasurot olamingizdagi istagan
+                                        joyingizga borishingiz va turli tuman sarguzashtlarni boshdan kechirishingiz mumkin
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'adventure_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/hf.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Tarixiy Fantastika
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Tarixiy fantastika - ilmiy jihatdan amalga oshishi mumkin bo'lmagan, jumladan qiziqarli bo'lgan
+                        janrlardan biri. Bo'limdagi kitoblar tarixiy fantaziyangizni oshirish uchun ulkan hissa qo'shadi
+                        degan ummiddamiz
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect20" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect20" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Tarixiy fantastika - ilmiy jihatdan amalga oshishi mumkin bo'lmagan, jumladan
+                                        qiziqarli bo'lgan janrlardan biri. Bo'limdagi kitoblar tarixiy fantaziyangizni
+                                        oshirish uchun ulkan hissa qo'shadi degan ummiddamiz
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'historical_fiction_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/l.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Til
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Bugungi kunda eng dolzarb mavzulardan biri - til o'rganish juda ommalashib bormoqda. Bo'limdagi
+                        kitoblar bilan tillarni bir necha kunda yoki oyda o'rganib olasiz demaymiz, ammo harakat qilsangiz
+                        ular sizga katta yordam bo'lishadi
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect21" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect21" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Bugungi kunda eng dolzarb mavzulardan biri - til o'rganish juda ommalashib bormoqda.
+                                        Bo'limdagi kitoblar bilan tillarni bir necha kunda yoki oyda o'rganib olasiz
+                                        demaymiz, ammo harakat qilsangiz ular sizga katta yordam bo'lishadi
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'language_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+            <div class="card text-bg-dark" style="border-radius: .0rem;">
+                <img src="{% static 'images/cf.jpg' %}" class="card-img content" height="300">
+                <div class="card-img-overlay">
+                    <h2 class="card-title text-light fw-light">
+                        Zamonaviy Fantastika
+                    </h2>
+                    <p class="card-text-cust text-light fw-light">
+                        Zamonaviy Fantastika deb nomlanadigan ushbu janrdagi kitoblar aslida haqiqatni targ'ib qiluvchi
+                        janrlardan biri hisoblanadi. Bo'limga kiring va albatta qiziqarli kitob topasiz
+                    </p>
+                    <a class="cust-link link-hover-2 fw-light" data-bs-toggle="modal"
+                       data-bs-target="#aboutsect22" href="">Bo'lim haqida</a>
+                    <div class="modal fade text-light" id="aboutsect22" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title fw-light">Bo'lim haqida</h4>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="fw-light">
+                                        Zamonaviy Fantastika deb nomlanadigan ushbu janrdagi kitoblar aslida haqiqatni
+                                        targ'ib qiluvchi janrlardan biri hisoblanadi. Bo'limga kiring va albatta qiziqarli
+                                        kitob topasiz
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-warning-card" href="{% url 'contemporary_fiction_books' %}">Kirish &raquo;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

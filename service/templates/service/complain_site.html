@@ -1,0 +1,28 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+{% block page_header %}
+<div class="container  mt-4 text-center">
+    <h1 class="fw-light">Sayt haqidagi norozichiliklar uchun murojaat</h1>
+</div>
+{% endblock page_header %}
+<div class="container put-footer-bottom">
+    <div class="container col-md-8 mt-4 mb-5 pt-4 pb-4"
+         style="border-top: 1px solid #d0d0d0; border-bottom: 1px solid #d0d0d0;">
+        <form action="{% url 'complain_site' %}" method="post" novalidate
+              class="form-control bg-dark text-light fw-light">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" name="submit" class="btn btn-warning fw-light">
+                    Yuborish &raquo;
+                </button>
+                <a class="btn btn-warning button-fix-2 fw-light" href="/">
+                    Asosiy sahifaga qaytish
+                </a>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+{% endblock content %}

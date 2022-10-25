@@ -1,0 +1,63 @@
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container bg-dark fw-light" style="max-width: 100%;">
+    <ul class="nav nav-pills nav-fill pt-3 pb-3">
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page" href="{% url 'welcome_admin' %}">Bosh sahifa</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page" href="{% url 'check_orders' %}">Buyurtmalar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page"
+               href="{% url 'order_options' %}">Buyurtma variantlari</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link disabled" aria-current="page" href="">Foydalanuvchilar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link disabled" aria-current="page" href="">Hisobotlar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page" href="{% url 'check_books' %}">Kitoblar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page"
+               href="{% url 'choose_ex_in' %}">Kirimlar/Chiqimlar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page" href="{% url 'check_blogposts' %}">Maqolalar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page"
+               href="{% url 'check_contacts' %}">Murojaatlar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale disabled" aria-current="page"
+               href="">Narxlash</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page"
+            href="{% url 'resources' %}">Resurslar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page"
+               href="{% url 'check_web_applies' %}">Sayt ochish bo'yicha so'rovlar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page" href="{% url 'check_complaints' %}">Shikoyatlar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale disabled" aria-current="page"
+               href="">Sotilgan kitoblar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale" aria-current="page" href="{% url 'check_news' %}">Yangiliklar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tab-link scale disabled" aria-current="page" href="">Zararlar</a>
+        </li>
+    </ul>
+</div>
+{% endblock content %}

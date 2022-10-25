@@ -1,0 +1,14 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/includes/admin_tab.html' %}
+    <div class="container col-xl-8 text-center pt-5 pb-5">
+        <img src="{% static 'images/attention.jpg' %}" height="150">
+        <h4 class="fw-light mt-4">Quyi kategoriyani o'chirish mumkin emas!</h4>
+        <h5 class="fw-light">Avval shu quyi kategoriyaga bog'langan daromadlarni barchasini o'chiring</h5>
+        <a class="btn btn-warning fw-light mt-4" href="{% url 'income_subcats' %}">Orqaga qaytish</a>
+    </div>
+</div>
+{% endblock content %}

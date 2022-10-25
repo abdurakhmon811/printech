@@ -1,0 +1,20 @@
+{% extends 'service/base.html' %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/includes/admin_tab.html' %}
+    <div class="container col-xl-4 mt-5 pt-5 pb-5 mb-5">
+        <div class="card ask-card">
+            <div class="card-body" style="border-color: #d0d0d0">
+                <h4 class="fw-light text-light">Murojaatni o'chirishga ishonchingiz komilmi?</h4>
+            </div>
+            <div class="card-footer" style="border-color: #d0d0d0">
+                <a class="btn btn-danger fw-light"
+                   href="{% url 'check_web_applies' %}">Yo'q</a>
+                <a class="btn btn-warning fw-light align-rs"
+                   href="{% url 'del_webapp' apply.id %}">Ha</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
