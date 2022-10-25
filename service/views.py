@@ -507,7 +507,8 @@ def add_account(request):
         form = AccountForm(data=request.POST)
         if form.is_valid():
             new_account = form.save(commit=False)
-            if new_account.name in list_of_accounts:
+            item = str(findstring(new_account.name, list_of_accounts))
+            if re.fullmatch(new_account.name, item, flags=re.IGNORECASE):
                 form.add_error('name', "Ushbu hisob mavjud!")
                 messages.error(request, "Mavjud hisob kiritildi!")
             else:
@@ -528,6 +529,7 @@ def edit_account(request, account_id):
     check_super_user(request)
 
     acc = get_object_or_404(Account, pk=account_id)
+    name_of_account = acc.name
     accounts = Account.objects.all()
     list_of_accounts = []
     for account in accounts:
@@ -539,9 +541,13 @@ def edit_account(request, account_id):
         form = AccountForm(data=request.POST, instance=acc)
         if form.is_valid():
             edited_account = form.save(commit=False)
+            item = str(findstring(edited_account.name, list_of_accounts))
             if not form.has_changed():
                 return redirect('choose_ex_in')
-            elif edited_account.name in list_of_accounts:
+            elif re.fullmatch(edited_account.name, name_of_account, flags=re.IGNORECASE):
+                edited_account.save()
+                return redirect('choose_ex_in')
+            elif re.fullmatch(edited_account.name, item, flags=re.IGNORECASE):
                 form.add_error('name', "Ushbu hisob mavjud!")
                 messages.error(request, "Mavjud hisob kiritildi!")
             else:
@@ -589,7 +595,8 @@ def expense_categories(request):
         form = CategoryExForm(data=request.POST)
         if form.is_valid():
             new_cat = form.save(commit=False)
-            if new_cat.category in list_of_cats:
+            item = str(findstring(new_cat.category, list_of_cats))
+            if re.fullmatch(new_cat.name, item, flags=re.IGNORECASE):
                 form.add_error('category', "Ushbu kategoriya mavjud!")
                 messages.error(request, "Mavjud kategoriya kiritildi!")
             else:
@@ -612,6 +619,7 @@ def edit_excategory(request, excategory_id):
     check_super_user(request)
 
     cat = get_object_or_404(CategoryEx, pk=excategory_id)
+    name_of_cat = cat.category
     cats = CategoryEx.objects.all()
     list_of_cats = []
     for a_cat in cats:
@@ -623,9 +631,13 @@ def edit_excategory(request, excategory_id):
         form = CategoryExForm(data=request.POST, instance=cat)
         if form.is_valid():
             edited_cat = form.save(commit=False)
+            item = str(findstring(edited_cat.category, list_of_cats))
             if not form.has_changed():
                 return redirect('expense_categories')
-            elif edited_cat.category in list_of_cats:
+            elif re.fullmatch(edited_cat.category, name_of_cat, flags=re.IGNORECASE):
+                edited_cat.save()
+                return redirect('expense_categories')
+            elif re.fullmatch(edited_cat.category, item, flags=re.IGNORECASE):
                 form.add_error('category', "Ushbu kategoriya mavjud!")
                 messages.error(request, "Mavjud kategoriya kiritildi!")
             else:
@@ -673,7 +685,8 @@ def expense_subcats(request):
         form = SubCategoryExForm(data=request.POST)
         if form.is_valid():
             new_subcat = form.save(commit=False)
-            if new_subcat.subcategory in list_of_subcats:
+            item = str(findstring(new_subcat.subcategory, list_of_subcats))
+            if re.fullmatch(new_subcat.subcategory, item, flags=re.IGNORECASE):
                 form.add_error('subcategory', "Ushbu quyi kategoriya mavjud!")
                 messages.error(request, "Mavjud quyi kategoriya kiritildi!")
             else:
@@ -696,6 +709,7 @@ def edit_exsubcat(request, exsubcategory_id):
     check_super_user(request)
 
     subcat = get_object_or_404(SubCategoryEx, pk=exsubcategory_id)
+    name_of_subcat = subcat.subcategory
     subcats = SubCategoryEx.objects.all()
     list_of_subcats = []
     for a_subcat in subcats:
@@ -707,9 +721,13 @@ def edit_exsubcat(request, exsubcategory_id):
         form = SubCategoryExForm(data=request.POST, instance=subcat)
         if form.is_valid():
             edited_subcat = form.save(commit=False)
+            item = str(findstring(edited_subcat.subcategory, list_of_subcats))
             if not form.has_changed():
                 return redirect('expense_subcats')
-            elif edited_subcat.subcategory in list_of_subcats:
+            elif re.fullmatch(edited_subcat.subcategory, name_of_subcat, flags=re.IGNORECASE):
+                edited_subcat.save()
+                return redirect('expense_subcats')
+            elif re.fullmatch(edited_subcat.subcategory, item, flags=re.IGNORECASE):
                 form.add_error('subcategory', "Ushbu quyi kategoriya mavjud!")
                 messages.error(request, "Mavjud quyi kategoriya kiritildi!")
             else:
@@ -757,7 +775,8 @@ def income_categories(request):
         form = CategoryInForm(data=request.POST)
         if form.is_valid():
             new_cat = form.save(commit=False)
-            if new_cat.category in list_of_cats:
+            item = str(findstring(new_cat.category, list_of_cats))
+            if re.fullmatch(new_cat.category, item, flags=re.IGNORECASE):
                 form.add_error('category', "Ushbu kategoriya mavjud!")
                 messages.error(request, "Mavjud kategoriya kiritildi!")
             else:
@@ -780,6 +799,7 @@ def edit_incategory(request, incategory_id):
     check_super_user(request)
 
     cat = get_object_or_404(CategoryIn, pk=incategory_id)
+    name_of_cat = cat.category
     cats = CategoryIn.objects.all()
     list_of_cats = []
     for a_cat in cats:
@@ -791,9 +811,13 @@ def edit_incategory(request, incategory_id):
         form = CategoryInForm(data=request.POST, instance=cat)
         if form.is_valid():
             edited_cat = form.save(commit=False)
+            item = str(findstring(edited_cat.category, list_of_cats))
             if not form.has_changed():
                 return redirect('income_categories')
-            elif edited_cat.category in list_of_cats:
+            elif re.fullmatch(edited_cat.category, name_of_cat, flags=re.IGNORECASE):
+                edited_cat.save()
+                return redirect('income_categories')
+            elif re.fullmatch(edited_cat.category, item, flags=re.IGNORECASE):
                 form.add_error('category', "Ushbu kategoriya mavjud!")
                 messages.error(request, "Mavjud kategoriya kiritildi!")
             else:
@@ -841,7 +865,8 @@ def income_subcats(request):
         form = SubCategoryInForm(data=request.POST)
         if form.is_valid():
             new_subcat = form.save(commit=False)
-            if new_subcat.subcategory in list_of_subcats:
+            item = str(findstring(new_subcat.subcategory, list_of_subcats))
+            if re.fullmatch(new_subcat.subcategory, item, flags=re.IGNORECASE):
                 form.add_error('subcategory', "Ushbu quyi kategoriya mavjud!")
                 messages.error(request, "Mavjud quyi kategoriya kiritildi!")
             else:
@@ -864,6 +889,7 @@ def edit_insubcat(request, insubcategory_id):
     check_super_user(request)
 
     subcat = get_object_or_404(SubCategoryIn, pk=insubcategory_id)
+    name_of_subcat = subcat.subcategory
     subcats = SubCategoryIn.objects.all()
     list_of_subcats = []
     for a_subcat in subcats:
@@ -875,9 +901,13 @@ def edit_insubcat(request, insubcategory_id):
         form = SubCategoryInForm(data=request.POST, instance=subcat)
         if form.is_valid():
             edited_subcat = form.save(commit=False)
+            item = str(findstring(edited_subcat.subcategory, list_of_subcats))
             if not form.has_changed():
                 return redirect('income_subcats')
-            elif edited_subcat.subcategory in list_of_subcats:
+            elif re.fullmatch(edited_subcat.subcategory, name_of_subcat, flags=re.IGNORECASE):
+                edited_subcat.save()
+                return redirect('income_subcats')
+            elif re.fullmatch(edited_subcat.subcategory, item, flags=re.IGNORECASE):
                 form.add_error('subcategory', "Ushbu quyi kategoriya mavjud!")
                 messages.error(request, "Mavjud quyi kategoriya kiritildi!")
             else:
@@ -1299,14 +1329,23 @@ def rtypes(request):
     check_super_user(request)
 
     types = RType.objects.all()
+    list_of_types = []
+    for a_type in types:
+        list_of_types.append(a_type.type)
 
     if request.method != 'POST':
         form = RTypeForm()
     else:
         form = RTypeForm(data=request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('resources')
+            new_type = form.save(commit=False)
+            item = str(findstring(new_type.type, list_of_types))
+            if re.fullmatch(new_type.type, item, flags=re.IGNORECASE):
+                form.add_error('type', "Ushbu resurs mavjud!")
+                messages.error(request, "Mavjud resurs kiritildi!")
+            else:
+                new_type.save()
+                return redirect('resources')
         else:
             messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
 
@@ -1715,6 +1754,14 @@ def check_user(request, user):
         pass
     else:
         raise Http404
+
+
+def findstring(string, array):
+    """An assisting function returning the string found in the provided list, ignoring the case."""
+
+    for item in array:
+        if re.fullmatch(string, item, flags=re.IGNORECASE):
+            return string
 
 
 def provide_dicts(objs):

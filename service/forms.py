@@ -44,6 +44,7 @@ class AccountForm(forms.ModelForm):
             'means': MoneyWidget(choices=currencies, attrs={
                 'class': 'form-control',
                 'placeholder': 'Mavjud miqdor',
+                'required': True,
             }),
         }
 
@@ -1355,7 +1356,7 @@ class RTypeForm(forms.ModelForm):
         labels = {
             'type': "Resurs nomi",
             'size': "Turli o'lchamlari mavjud/O'lchamlari mavjud",
-            'color': "Turli ranggi mavjud",
+            'color': "Turli ranglari mavjud",
         }
         error_messages = {
             'type': {
@@ -1693,6 +1694,13 @@ class TransactionForm(forms.ModelForm):
 
     class Meta:
 
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
         model = Transaction
         fields = [
             'acc_1', 'acc_2', 'amount',
@@ -1722,5 +1730,5 @@ class TransactionForm(forms.ModelForm):
             }),
             'amount': MoneyWidget(attrs={
                 'class': 'form-control',
-            }),
+            }, choices=currencies),
         }
