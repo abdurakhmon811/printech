@@ -79,10 +79,13 @@
                                 </td>
                                 {% if order.customer_email %}
                                     <td>
-                                        <a class="fw-light l-3" data-bs-toggle="tooltip"
+                                        <a class="fw-light l-3"
+                                           data-bs-toggle="tooltip"
                                            data-bs-title="Mijoz Email manzili"
                                            data-bs-content="{{ order.customer_email }}"
-                                           data-bs-custom-class="custom-tooltip">Ko'rish</a>
+                                           data-bs-custom-class="custom-tooltip">
+                                            Ko'rish
+                                        </a>
                                     </td>
                                 {% else %}
                                     <td style="color: red">Mavjud emas</td>

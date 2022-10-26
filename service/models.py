@@ -302,6 +302,13 @@ class LType(models.Model):
 class Loss(models.Model):
     """A model handling the losses in business."""
 
+    currencies = [
+        ('EUR', 'EUR'),
+        ('RUB', 'RUB'),
+        ('USD', 'USD'),
+        ('UZS', 'UZS'),
+    ]
+
     class Meta:
 
         verbose_name = 'Loss'
@@ -311,12 +318,14 @@ class Loss(models.Model):
     # The name attribute is for books
     name = models.CharField(max_length=100, null=True, blank=True)
     size = models.CharField(max_length=10, null=True, blank=True)
-    type = models.CharField(max_length=15, null=True, blank=True)
+    type = models.CharField(max_length=50, null=True, blank=True)
     color = models.CharField(max_length=50, null=True, blank=True)
     amount = models.CharField(max_length=50, null=True)
     reason = models.CharField(max_length=100, null=True)
     time_loss = models.DateField(auto_now_add=False, null=True)
     loser = models.ForeignKey(User, on_delete=models.PROTECT)
+    worth = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS',
+                       currency_choices=currencies, null=True)
 
     objects = models.Manager()
 

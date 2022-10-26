@@ -26,6 +26,6 @@ def highlight_searched(text, val):
 
 
 @register.filter
-def separate_with_comma(value):
+def separate_with_space(value):
     """Separate money values with commas."""
     return format(value, ',').replace(',', ' ')

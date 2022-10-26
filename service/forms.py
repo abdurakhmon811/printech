@@ -753,26 +753,34 @@ class IncomeForm(forms.ModelForm):
 
 
 class LossForm(forms.ModelForm):
-    """A form for adding losses made in business."""
+    """A form for adding losses happened in business."""
 
     class Meta:
+
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
 
         model = Loss
         fields = [
             'ltype', 'name', 'size', 'type',
             'color', 'amount', 'reason', 'time_loss',
-            'loser',
+            'loser', 'worth',
         ]
         labels = {
-            'ltype': "Resurs nomi",
+            'ltype': "Zararga tushgan resurs nomi",
             'name': "Kitob nomi",
             'size': "O'lchami",
             'type': "Turi",
             'color': "Ranggi",
-            'amount': "Miqdori/Soni/O'lchami",
+            'amount': "Miqdori/Soni",
             'reason': "Sabab",
             'time_loss': "Sana",
             'loser': "Ma'sul shaxs",
+            'worth': "Qiymati"
         }
         error_messages = {
             'ltype': {
@@ -791,6 +799,9 @@ class LossForm(forms.ModelForm):
             'loser': {
                 'required': "Forma to'ldirilmadi!",
             },
+            'worth': {
+                'required': "Forma to'ldirilmadi!",
+            }
         }
         widgets = {
             'ltype': forms.Select(attrs={
@@ -802,7 +813,7 @@ class LossForm(forms.ModelForm):
             }),
             'size': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'A3/A4/A5/...'
+                'placeholder': 'A4/20mm/...'
             }),
             'type': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -814,7 +825,7 @@ class LossForm(forms.ModelForm):
             }),
             'amount': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': '50 gram/50ta/50sm/...'
+                'placeholder': '50 gram/50ta/...'
             }),
             'reason': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -827,6 +838,10 @@ class LossForm(forms.ModelForm):
             'loser': forms.Select(attrs={
                 'class': 'form-control',
             }),
+            'worth': MoneyWidget(attrs={
+                'class': 'form-control',
+                'required': True,
+            }, choices=currencies),
         }
 
 
@@ -840,7 +855,7 @@ class LTypeForm(forms.ModelForm):
             'type', 'size', 'color',
         ]
         labels = {
-            'type': "Resurs nomi",
+            'type': "Zararga tushgan resurs nomi",
             'size': "Turli o'lchamlari mavjud/O'lchamlari mavjud",
             'color': "Turli ranglari mavjud",
         }
@@ -1346,7 +1361,7 @@ class ResourceForm(forms.ModelForm):
 
 
 class RTypeForm(forms.ModelForm):
-    """A form for adding loss types to the model Loss."""
+    """A form for adding resource types to the model Resource."""
 
     class Meta:
         model = RType

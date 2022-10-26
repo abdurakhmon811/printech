@@ -6,91 +6,94 @@
 <div class="container put-footer-bottom">
     {% include 'service/includes/admin_tab.html' %}
     <div class="container col-xl-12 pt-4 ps-4 pe-4 pb-4" style="max-width: 100%;">
-        <h1 class="fw-light">Resurslar haqidagi ma'lumotlar</h1>
+        <h1 class="fw-light">Zararlar haqidagi ma'lumotlar</h1>
     </div>
-    <div class="container col-xl-12 table-cont-dec pt-4 pb-4" style="max-width: 100%;">
-        {% if res_s %}
+    <div class="container col-xl-12 table-cont-dec pt-4 pb-2" style="max-width: 100%;">
+        {% if losses %}
             <div class="table-responsive-xl">
                 <table class="table table-hover table-striped table-dark align-middle fw-light text-light text-center">
                     <thead>
                         <tr>
                             <th scope="col">Resurs nomi</th>
+                            <th scope="col">Kitob nomi</th>
                             <th scope="col">O'lchami</th>
                             <th scope="col">Turi</th>
                             <th scope="col">Ranggi</th>
                             <th scope="col">Miqdori/Soni</th>
-                            <th scope="col">Sotib olingan sana</th>
+                            <th scope="col">Sababi</th>
+                            <th scope="col">Sana</th>
+                            <th scope="col">Ma'sul shaxs</th>
                             <th scope="col">Qiymati</th>
-                            <th scope="col">So'nggi marta ishlatilgan sana</th>
-                            <th scope="col">Ishlatilgan miqdor</th>
-                            <th scope="col">Foydalanuvchi</th>
-                            <th scope="col">Mavjud</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for res in res_s %}
-                            <tr class="clickable-row" data-href="{% url 'edit_resource' res.id %}">
-                                <th scope="col">{{ res.rtype }}</th>
-                                {% if res.size %}
-                                    <td>{{ res.size }}</td>
+                        {% for loss in losses %}
+                            <tr class="clickable-row" data-href="{% url 'edit_loss' loss.id %}">
+                                <th scope="col">{{ loss.ltype }}</th>
+                                {% if loss.name %}
+                                    <td>{{ loss.name }}</td>
                                 {% else %}
                                     <td style="color: red">Mavjud emas</td>
                                 {% endif %}
-                                {% if res.type %}
-                                    <td>{{ res.type }}</td>
+                                {% if loss.size %}
+                                    <td>{{ loss.size }}</td>
                                 {% else %}
                                     <td style="color: red">Mavjud emas</td>
                                 {% endif %}
-                                {% if res.color %}
-                                    <td>{{ res.color }}</td>
+                                {% if loss.type %}
+                                    <td>{{ loss.type }}</td>
                                 {% else %}
                                     <td style="color: red">Mavjud emas</td>
                                 {% endif %}
-                                <td>{{ res.amount }}</td>
-                                <td>{{ res.time_bought|date:'d-m-Y' }}</td>
-                                <td>{{ res.worth.amount|separate_with_space }} {{ res.worth.currency }}</td>
-                                {% if res.last_used_date %}
-                                    <td>{{ res.last_used_date|date:'d-m-Y' }}</td>
+                                {% if loss.color %}
+                                    <td>{{ loss.color }}</td>
                                 {% else %}
                                     <td style="color: red">Mavjud emas</td>
                                 {% endif %}
-                                {% if res.amount_used %}
-                                    <td>{{ res.amount_used }}</td>
-                                {% else %}
-                                    <td style="color: red">Mavjud emas</td>
-                                {% endif %}
-                                <td>{{ res.user }}</td>
-                                <td>{{ res.available }}</td>
+                                <td>{{ loss.amount }}</td>
+                                <td>
+                                    <a class="fw-light l-3"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-title="Sababi"
+                                       data-bs-content="{{ loss.reason }}"
+                                       data-bs-custom-class="custom-tooltip">
+                                        Ko'rish
+                                    </a>
+                                </td>
+                                <td>{{ loss.time_loss|date:'d-m-Y' }}</td>
+                                <td>{{ loss.loser }}</td>
+                                <td>{{ loss.worth.amount|separate_with_space }} {{ loss.worth.currency }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         {% else %}
-            <h2 class="fw-light text-center pt-4 pb-4">Resurslar mavjud emas...</h2>
+            <h2 class="fw-light text-center pt-4 pb-4">Zararlar mavjud emas...</h2>
         {% endif %}
     </div>
     <div class="container col-xl-8 pt-4 pb-4 mb-5" style="border-bottom: 1px solid #d0d0d0;">
         <h1 class="fw-light pt-4 ps-4 pb-4">Ma'lumot kiritish</h1>
-        <form class="form-control bg-dark fw-light text-light" action="{% url 'resources' %}"
+        <form class="form-control bg-dark fw-light text-light" action="{% url 'losses' %}"
                 novalidate method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
             {% buttons %}
                 <button type="submit" class="btn btn-warning fw-light">Kiritish &check;</button>
-                <a class="btn btn-warning fw-light" href="{% url 'rtypes' %}">Resurs nomini kiritish</a>
+                <a class="btn btn-warning fw-light" href="{% url 'ltypes' %}">Zarar nomini kiritish</a>
             {% endbuttons %}
         </form>
     </div>
 </div>
 <script>
     $(window).on('load', function (e) {
+        $('#id_name').parent().hide();
         $('#id_size').parent().hide();
         $('#id_color').parent().hide();
     });
     $('select').on('change', function (e) {
         var types_dicts = {{ dicts|safe }}
-        var sel = document.getElementById("id_rtype")
+        var sel = document.getElementById("id_ltype")
         var val = sel.options[sel.selectedIndex].value
         var text = sel.options[sel.selectedIndex].text
         var selected_dict;
@@ -107,10 +110,25 @@
                 $('#id_size').parent().slideUp("slow");
                 $('#id_color').parent().slideDown("slow");
             };
+
+            if (text.toUpperCase() === 'KITOB') {
+                $('#id_name').parent().slideDown("slow");
+            } else {
+                $('#id_name').parent().slideUp("slow");
+            };
         } else {
+            $('#id_name').parent().slideUp("slow");
             $('#id_size').parent().slideUp("slow");
             $('#id_color').parent().slideUp("slow");
         };
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        $('[data-bs-toggle="tooltip"]').popover({
+            placement : 'bottom',
+            trigger : 'hover'
+        });
     });
 </script>
 <script>

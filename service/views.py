@@ -38,7 +38,8 @@ def contact(request):
             new_reference.applicant = request.user
             new_reference.save()
             return redirect('success_contact')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -199,7 +200,8 @@ def create_site(request):
             new_application.client = request.user
             new_application.save()
             return redirect('success_create')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -231,7 +233,8 @@ def complain_site(request):
             new_complaint.complainant = request.user
             new_complaint.save()
             return redirect('success_complaint')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -251,7 +254,8 @@ def complain_books(request):
             new_complaint.complainant = request.user
             new_complaint.save()
             return redirect('success_complaint')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -271,7 +275,8 @@ def complain_other(request):
             new_complaint.complainant = request.user
             new_complaint.save()
             return redirect('success_complaint')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -345,7 +350,8 @@ def edit_order(request, order_number):
             if form.is_valid():
                 form.save()
                 return redirect('check_orders')
-            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+            else:
+                messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
         context = {
             'form': form,
@@ -360,7 +366,8 @@ def edit_order(request, order_number):
             if form.is_valid():
                 form.save()
                 return redirect('check_orders')
-            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+            else:
+                messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
         context = {
             'form': form,
@@ -393,7 +400,8 @@ def order_options(request):
         if form.is_valid():
             form.save()
             return redirect('order_options')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -428,7 +436,8 @@ def add_book(request):
         if form.is_valid():
             form.save()
             return redirect('check_books')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -450,7 +459,8 @@ def edit_book(request, book_id):
         if form.is_valid():
             form.save()
             return redirect('check_books')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -955,7 +965,8 @@ def make_expense(request):
             acc.save()
             new_expense.save()
             return redirect('choose_ex_in')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1329,6 +1340,7 @@ def rtypes(request):
     check_super_user(request)
 
     types = RType.objects.all()
+    types_num = len(types)
     list_of_types = []
     for a_type in types:
         list_of_types.append(a_type.type)
@@ -1352,6 +1364,7 @@ def rtypes(request):
     context = {
         'form': form,
         'types': types,
+        'types_num': types_num,
     }
     return render(request, 'service/rtypes.html', context)
 
@@ -1362,14 +1375,30 @@ def edit_rtype(request, rtype_id):
     check_super_user(request)
 
     rtype = get_object_or_404(RType, pk=rtype_id)
+    name_of_type = rtype.type
+    types = RType.objects.all()
+    list_of_types = []
+    for a_type in types:
+        list_of_types.append(a_type.type)
 
     if request.method != 'POST':
         form = RTypeForm(instance=rtype)
     else:
         form = RTypeForm(data=request.POST, instance=rtype)
         if form.is_valid():
-            form.save()
-            return redirect('rtypes')
+            edited_type = form.save(commit=False)
+            item = str(findstring(edited_type.type, list_of_types))
+            if not form.has_changed():
+                return redirect('rtypes')
+            elif re.fullmatch(edited_type.type, name_of_type, flags=re.IGNORECASE):
+                edited_type.save()
+                return redirect('rtypes')
+            elif re.fullmatch(edited_type.type, item, flags=re.IGNORECASE):
+                form.add_error('type', "Ushbu resurs mavjud!")
+                messages.error(request, "Mavjud resurs kiritildi!")
+            else:
+                edited_type.save()
+                return redirect('rtypes')
         else:
             messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
 
@@ -1399,7 +1428,7 @@ def resources(request):
 
     check_super_user(request)
 
-    res_s = Resource.objects.all().order_by('-time_bought')
+    res_s = Resource.objects.all()
     rtype_objs = RType.objects.all()
     dicts = provide_dicts(rtype_objs)
 
@@ -1607,13 +1636,169 @@ def delete_news(request, news_id):
     return render(request, 'service/news_deleted.html')
 
 
+def ltypes(request):
+    """A view providing the content for the page for checking and adding loss types."""
+
+    check_super_user(request)
+
+    types = LType.objects.all()
+    types_num = len(types)
+    list_of_types = []
+    for a_type in types:
+        list_of_types.append(a_type.type)
+
+    if request.method != 'POST':
+        form = LTypeForm()
+    else:
+        form = LTypeForm(data=request.POST)
+        if form.is_valid():
+            new_type = form.save(commit=False)
+            item = str(findstring(new_type.type, list_of_types))
+            if re.fullmatch(new_type.type, item, flags=re.IGNORECASE):
+                form.add_error('type', "Ushbu zarar nomi mavjud!")
+                messages.error(request, "Mavjud zarar nomi kiritildi!")
+            else:
+                new_type.save()
+                return redirect('losses')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+
+    context = {
+        'form': form,
+        'types': types,
+        'types_num': types_num,
+    }
+    return render(request, 'service/ltypes.html', context)
+
+
+def edit_ltype(request, ltype_id):
+    """A view providing the content for the page for editing the chosen loss type."""
+
+    check_super_user(request)
+
+    ltype = get_object_or_404(LType, pk=ltype_id)
+    name_of_type = ltype.type
+    types = LType.objects.all()
+    list_of_types = []
+    for a_type in types:
+        list_of_types.append(a_type.type)
+
+    if request.method != 'POST':
+        form = LTypeForm(instance=ltype)
+    else:
+        form = LTypeForm(data=request.POST, instance=ltype)
+        if form.is_valid():
+            edited_type = form.save(commit=False)
+            item = str(findstring(edited_type.type, list_of_types))
+            if not form.has_changed():
+                return redirect('ltypes')
+            elif re.fullmatch(edited_type.type, name_of_type, flags=re.IGNORECASE):
+                edited_type.save()
+                return redirect('ltypes')
+            elif re.fullmatch(edited_type.type, item, flags=re.IGNORECASE):
+                form.add_error('type', "Ushbu zarar nomi mavjud!")
+                messages.error(request, "Mavjud zarar nomi kiritildi!")
+            else:
+                edited_type.save()
+                return redirect('ltypes')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+
+    context = {
+        'form': form,
+        'ltype': ltype,
+    }
+    return render(request, 'service/edit_ltype.html', context)
+
+
+def delete_ltype(request, ltype_id):
+    """A view for deleting the chosen loss type object and rendering the page telling
+    the delete process has gone successfully."""
+
+    check_super_user(request)
+
+    ltype = get_object_or_404(LType, pk=ltype_id)
+    try:
+        ltype.delete()
+    except ProtectedError:
+        return render(request, 'service/not_delete_ltype.html')
+    else:
+        return render(request, 'service/ltype_deleted.html')
+
+
+def losses(request):
+    """A view providing the content for the page for checking and adding losses happened in the business."""
+
+    check_super_user(request)
+
+    the_losses = Loss.objects.all()
+    losses_num = len(the_losses)
+    types = LType.objects.all()
+    dicts = provide_dicts(types)
+
+    if request.method != 'POST':
+        form = LossForm()
+    else:
+        form = LossForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('losses')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+
+    context = {
+        'dicts': dicts,
+        'form': form,
+        'losses': the_losses,
+        'losses_num': losses_num,
+    }
+    return render(request, 'service/losses.html', context)
+
+
+def edit_loss(request, loss_id):
+    """A view providing the content for the page for editing the chosen loss."""
+
+    check_super_user(request)
+
+    loss = get_object_or_404(Loss, pk=loss_id)
+    the_ltypes = LType.objects.all()
+    dicts = provide_dicts(the_ltypes)
+
+    if request.method != 'POST':
+        form = LossForm(instance=loss)
+    else:
+        form = LossForm(data=request.POST, instance=loss)
+        if form.is_valid():
+            form.save()
+            return redirect('losses')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+
+    context = {
+        'dicts': dicts,
+        'form': form,
+        'loss': loss,
+    }
+    return render(request, 'service/edit_loss.html', context)
+
+
+def delete_loss(request, loss_id):
+    """A view for deleting the chosen loss object and rendering the page telling
+    the delete process has gone successfully."""
+
+    check_super_user(request)
+
+    loss = get_object_or_404(Loss, pk=loss_id)
+    loss.delete()
+    return render(request, 'service/loss_deleted.html')
+
+
 # ========================================================================================================
 
 
 def search(request):
     """A view providing the content for the search page to illustrate the results."""
     from django.db.models import Q
-    import re
 
     if request.method == 'GET':
         searched = request.GET.get('searched')
@@ -1696,7 +1881,8 @@ def order_site(request):
             new_order.customer = request.user
             new_order.save()
             return redirect('success_order')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1719,7 +1905,8 @@ def order_users(request):
             new_order.customer = request.user
             new_order.save()
             return redirect('success_order')
-        messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1765,14 +1952,16 @@ def findstring(string, array):
 
 
 def provide_dicts(objs):
-    """An assisting function returning the JavaScript object for the usage in resources section of the admin panel."""
+    """An assisting function returning the JavaScript object for the usage in resources
+    and losses section of the admin panel."""
 
     dicts = []
-    for rtype in objs:
-        types_dict = {}
-        types_dict['type'] = rtype.type
-        types_dict['size'] = rtype.size
-        types_dict['color'] = rtype.color
+    for a_type in objs:
+        types_dict = {
+            'type': a_type.type,
+            'size': a_type.size,
+            'color': a_type.color,
+        }
         dicts.append(types_dict)
     json_dicts = json.dumps(dicts)
     return json_dicts

@@ -60,7 +60,7 @@ urlpatterns = [
     # A path for deleting the chosen order
     path('admin/orders/check/delete-order/<int:order_number>/', views.delete_order, name='delete_order'),
     # A page for checking (and adding available) the base of options
-    path('admin/order-options/', views.order_options, name='order_options'),
+    path('admin/order-options/add-check/', views.order_options, name='order_options'),
     # A page for checking available books in the library
     path('admin/check-books/', views.check_books, name="check_books"),
     # A page for adding books
@@ -175,6 +175,18 @@ urlpatterns = [
     path('admin/news/edit/<int:news_id>/', views.edit_news, name='edit_news'),
     # A page for deleting news
     path('admin/news/delete/<int:news_id>/', views.delete_news, name='delete_news'),
+    # A page for defining loss types
+    path('admin/losses/types/add-check', views.ltypes, name='ltypes'),
+    # A page for editing the chosen loss type
+    path('admin/losses/types/edit/<int:ltype_id>/', views.edit_ltype, name='edit_ltype'),
+    # A page for deleting the chosen loss type
+    path('admin/losses/types/delete/<int:ltype_id>/', views.delete_ltype, name='delete_ltype'),
+    # A page for checking/adding the losses happened in the business
+    path('admin/losses/add-check/', views.losses, name='losses'),
+    # A page for editing the chosen loss
+    path('admin/losses/edit/<int:loss_id>/', views.edit_loss, name='edit_loss'),
+    # A page for deleting the chosen loss
+    path('admin/losses/delete/<int:loss_id>/', views.delete_loss, name='delete_loss'),
 
     # ================================================================================================================
 
