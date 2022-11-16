@@ -7,14 +7,14 @@
     <div class="container col-xl-8 text-center pt-4 pb-4">
         <h1 class="fw-light">Kategoriya kiritish</h1>
     </div>
-    <div class="container form-dec col-xl-8 pt-4 pb-4">
+    <div class="container col-xl-8 form-dec pt-4 pb-4">
         <form class="form-control bg-dark text-light fw-light" action="{% url 'expense_categories' %}"
               novalidate method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
             {% buttons %}
                 <button class="btn btn-warning fw-light" type="submit">Kiritish &check;</button>
-                <a class="btn btn-warning fw-light" href="{% url 'make_expense' %}">Orqaga qaytish</a>
+                <a class="btn btn-warning fw-light top-m" href="{% url 'make_expense' %}">Orqaga qaytish</a>
             {% endbuttons %}
         </form>
     </div>

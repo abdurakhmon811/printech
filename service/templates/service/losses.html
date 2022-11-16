@@ -69,7 +69,7 @@
                 </table>
             </div>
         {% else %}
-            <h2 class="fw-light text-center pt-4 pb-4">Zararlar mavjud emas...</h2>
+            <h2 class="fw-light text-center pt-4 pb-4 mb-3">Zararlar mavjud emas...</h2>
         {% endif %}
     </div>
     <div class="container col-xl-8 pt-4 pb-4 mb-5" style="border-bottom: 1px solid #d0d0d0;">
@@ -80,7 +80,7 @@
             {% bootstrap_form form %}
             {% buttons %}
                 <button type="submit" class="btn btn-warning fw-light">Kiritish &check;</button>
-                <a class="btn btn-warning fw-light" href="{% url 'ltypes' %}">Zarar nomini kiritish</a>
+                <a class="btn btn-warning fw-light top-m" href="{% url 'ltypes' %}">Zarar nomini kiritish</a>
             {% endbuttons %}
         </form>
     </div>

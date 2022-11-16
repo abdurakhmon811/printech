@@ -8,7 +8,7 @@
     <div class="container col-xl-12 pt-4 ps-4 pe-4 pb-4" style="max-width: 100%;">
         <h1 class="fw-light">Resurslar haqidagi ma'lumotlar</h1>
     </div>
-    <div class="container col-xl-12 table-cont-dec pt-4 pb-4" style="max-width: 100%;">
+    <div class="container col-xl-12 table-cont-dec pt-4 pb-2" style="max-width: 100%;">
         {% if res_s %}
             <div class="table-responsive-xl">
                 <table class="table table-hover table-striped table-dark align-middle fw-light text-light text-center">
@@ -67,7 +67,7 @@
                 </table>
             </div>
         {% else %}
-            <h2 class="fw-light text-center pt-4 pb-4">Resurslar mavjud emas...</h2>
+            <h2 class="fw-light text-center pt-4 pb-4 mb-3">Resurslar mavjud emas...</h2>
         {% endif %}
     </div>
     <div class="container col-xl-8 pt-4 pb-4 mb-5" style="border-bottom: 1px solid #d0d0d0;">
@@ -78,7 +78,7 @@
             {% bootstrap_form form %}
             {% buttons %}
                 <button type="submit" class="btn btn-warning fw-light">Kiritish &check;</button>
-                <a class="btn btn-warning fw-light" href="{% url 'rtypes' %}">Resurs nomini kiritish</a>
+                <a class="btn btn-warning fw-light top-m" href="{% url 'rtypes' %}">Resurs nomini kiritish</a>
             {% endbuttons %}
         </form>
     </div>

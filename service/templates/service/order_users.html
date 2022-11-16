@@ -34,154 +34,191 @@
             </div>
         </div>
     </div>
+    <div class="container fixed-bottom pt-3 pb-2" style="max-width: 100%; background: #FF9700;">
+        <h3 class="fw-light">75 x 450 = 33000</h3>
+    </div>
 </div>
-{% if not res.ringed_colorless %}
-    <script>
-        $(window).on('load', function (e) {
-            var type = 'Plastik prujinalangan (rangsiz)';
-            $('#id_book_type').val('').change();
-            $(`#id_book_type option[value='${type}']`).prop('disabled', true);
-        });
-    </script>
+{% if res %}
+    {% if not res.ringed_colorless %}
+        <script>
+            $(window).on('load', function (e) {
+                var type = 'Plastik prujinalangan (rangsiz)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.ringed_color %}
+        <script>
+            $(window).on('load', function (e) {
+                var type1 = 'Plastik prujinalangan (rangli)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type1}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.metal_ringed_colorless %}
+        <script>
+            $(window).on('load', function (e) {
+                var type2 = 'Metal prujinalangan (rangsiz)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type2}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.metal_ringed_color %}
+        <script>
+            $(window).on('load', function (e) {
+                var type3 = 'Metal prujinalangan (rangli)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type3}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.g_soft_colorless %}
+        <script>
+            $(window).on('load', function (e) {
+                var type4 = 'Yelimlangan yumshoq muqovali (rangsiz)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type4}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.g_soft_color %}
+        <script>
+            $(window).on('load', function (e) {
+                var type5 = 'Yelimlangan yumshoq muqovali (rangli)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type5}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.g_hard_colorless %}
+        <script>
+            $(window).on('load', function (e) {
+                var type6 = 'Yelimlangan qattiq muqovali (rangsiz)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type6}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.g_hard_color %}
+        <script>
+            $(window).on('load', function (e) {
+                var type7 = 'Yelimlangan qattiq muqovali (rangli)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type7}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.stapled_colorless %}
+        <script>
+            $(window).on('load', function (e) {
+                var type8 = 'Steplerlangan (rangsiz)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type8}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.stapled_color %}
+        <script>
+            $(window).on('load', function (e) {
+                var type9 = 'Steplerlangan (rangli)';
+                $('#id_book_type').val('').change();
+                $(`#id_book_type option[value='${type9}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.blue %}
+        <script>
+            $(window).on('load', function (e) {
+                var color = 'Ko`k';
+                $('#id_ring_color').val('').change();
+                $(`#id_ring_color option[value='${color}']`).prop('disabled', true);
+                $('#id_front_cover_color').val('').change();
+                $(`#id_front_cover_color option[value='${color}']`).prop('disabled', true);
+                $('#id_back_cover_color').val('').change();
+                $(`#id_back_cover_color option[value='${color}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.red %}
+        <script>
+            $(window).on('load', function (e) {
+                var color1 = 'Qizil';
+                $('#id_ring_color').val('').change();
+                $(`#id_ring_color option[value='${color1}']`).prop('disabled', true);
+                $('#id_front_cover_color').val('').change();
+                $(`#id_front_cover_color option[value='${color1}']`).prop('disabled', true);
+                $('#id_back_cover_color').val('').change();
+                $(`#id_back_cover_color option[value='${color1}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.black %}
+        <script>
+            $(window).on('load', function (e) {
+                var color2 = 'Qora';
+                $('#id_ring_color').val('').change();
+                $(`#id_ring_color option[value='${color2}']`).prop('disabled', true);
+                $('#id_front_cover_color').val('').change();
+                $(`#id_front_cover_color option[value='${color2}']`).prop('disabled', true);
+                $('#id_back_cover_color').val('').change();
+                $(`#id_back_cover_color option[value='${color2}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.transparent %}
+        <script>
+            $(window).on('load', function (e) {
+                var color3 = 'Rangsiz';
+                $('#id_ring_color').val('').change();
+                $(`#id_ring_color option[value='${color3}']`).prop('disabled', true);
+                $('#id_front_cover_color').val('').change();
+                $(`#id_front_cover_color option[value='${color3}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.yellow %}
+        <script>
+            $(window).on('load', function (e) {
+                var color4 = 'Sariq';
+                $('#id_ring_color').val('').change();
+                $(`#id_ring_color option[value='${color4}']`).prop('disabled', true);
+                $('#id_front_cover_color').val('').change();
+                $(`#id_front_cover_color option[value='${color4}']`).prop('disabled', true);
+                $('#id_back_cover_color').val('').change();
+                $(`#id_back_cover_color option[value='${color4}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+    {% if not res.green %}
+        <script>
+            $(window).on('load', function (e) {
+                var color5 = 'Yashil';
+                $('#id_ring_color').val('').change();
+                $(`#id_ring_color option[value='${color5}']`).prop('disabled', true);
+                $('#id_front_cover_color').val('').change();
+                $(`#id_front_cover_color option[value='${color5}']`).prop('disabled', true);
+                $('#id_back_cover_color').val('').change();
+                $(`#id_back_cover_color option[value='${color5}']`).prop('disabled', true);
+            });
+        </script>
+    {% endif %}
 {% endif %}
-{% if not res.ringed_color %}
-    <script>
-        $(window).on('load', function (e) {
-            var type1 = 'Plastik prujinalangan (rangli)';
-            $('#id_book_type').val('').change();
-            $(`#id_book_type option[value='${type1}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.metal_ringed_colorless %}
-    <script>
-        $(window).on('load', function (e) {
-            var type2 = 'Metal prujinalangan (rangsiz)';
-            $('#id_book_type').val('').change();
-            $(`#id_book_type option[value='${type2}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.metal_ringed_color %}
-    <script>
-        $(window).on('load', function (e) {
-            var type3 = 'Metal prujinalangan (rangli)';
-            $('#id_book_type').val('').change();
-            $(`#id_book_type option[value='${type3}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.g_soft_colorless %}
-    <script>
-        $(window).on('load', function (e) {
-            var type4 = 'Yelimlangan yumshoq muqovali (rangsiz)';
-            $('#id_book_type').val('').change();
-            $(`#id_book_type option[value='${type4}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.g_soft_color %}
-    <script>
-        $(window).on('load', function (e) {
-            var type5 = 'Yelimlangan yumshoq muqovali (rangli)';
-            $('#id_book_type').val('').change();
-            $(`#id_book_type option[value='${type5}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.g_hard_colorless %}
-    <script>
-        $(window).on('load', function (e) {
-            var type6 = 'Yelimlangan qattiq muqovali (rangsiz)';
-            $('#id_book_type').val('').change();
-            $(`#id_book_type option[value='${type6}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.g_hard_color %}
-    <script>
-        $(window).on('load', function (e) {
-            var type7 = 'Yelimlangan qattiq muqovali (rangli)';
-            $('#id_book_type').val('').change();
-            $(`#id_book_type option[value='${type7}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.blue %}
-    <script>
-        $(window).on('load', function (e) {
-            var color = 'Ko`k';
-            $('#id_ring_color').val('').change();
-            $(`#id_ring_color option[value='${color}']`).prop('disabled', true);
-            $('#id_front_cover_color').val('').change();
-            $(`#id_front_cover_color option[value='${color}']`).prop('disabled', true);
-            $('#id_back_cover_color').val('').change();
-            $(`#id_back_cover_color option[value='${color}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.red %}
-    <script>
-        $(window).on('load', function (e) {
-            var color1 = 'Qizil';
-            $('#id_ring_color').val('').change();
-            $(`#id_ring_color option[value='${color1}']`).prop('disabled', true);
-            $('#id_front_cover_color').val('').change();
-            $(`#id_front_cover_color option[value='${color1}']`).prop('disabled', true);
-            $('#id_back_cover_color').val('').change();
-            $(`#id_back_cover_color option[value='${color1}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.black %}
-    <script>
-        $(window).on('load', function (e) {
-            var color2 = 'Qora';
-            $('#id_ring_color').val('').change();
-            $(`#id_ring_color option[value='${color2}']`).prop('disabled', true);
-            $('#id_front_cover_color').val('').change();
-            $(`#id_front_cover_color option[value='${color2}']`).prop('disabled', true);
-            $('#id_back_cover_color').val('').change();
-            $(`#id_back_cover_color option[value='${color2}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.transparent %}
-    <script>
-        $(window).on('load', function (e) {
-            var color3 = 'Rangsiz';
-            $('#id_ring_color').val('').change();
-            $(`#id_ring_color option[value='${color3}']`).prop('disabled', true);
-            $('#id_front_cover_color').val('').change();
-            $(`#id_front_cover_color option[value='${color3}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.yellow %}
-    <script>
-        $(window).on('load', function (e) {
-            var color4 = 'Sariq';
-            $('#id_ring_color').val('').change();
-            $(`#id_ring_color option[value='${color4}']`).prop('disabled', true);
-            $('#id_front_cover_color').val('').change();
-            $(`#id_front_cover_color option[value='${color4}']`).prop('disabled', true);
-            $('#id_back_cover_color').val('').change();
-            $(`#id_back_cover_color option[value='${color4}']`).prop('disabled', true);
-        });
-    </script>
-{% endif %}
-{% if not res.green %}
-    <script>
-        $(window).on('load', function (e) {
-            var color5 = 'Yashil';
-            $('#id_ring_color').val('').change();
-            $(`#id_ring_color option[value='${color5}']`).prop('disabled', true);
-            $('#id_front_cover_color').val('').change();
-            $(`#id_front_cover_color option[value='${color5}']`).prop('disabled', true);
-            $('#id_back_cover_color').val('').change();
-            $(`#id_back_cover_color option[value='${color5}']`).prop('disabled', true);
-        });
-    </script>
+{% if places %}
+    {% for place in places %}
+        {% if not place.available %}
+            <script>
+                $(window).on('load', function (e) {
+                    var place_id = '{{ place.id }}';
+
+                    $('#id_place_to_get').val('').change();
+                    $(`#id_place_to_get option[value='${place_id}']`).prop('disabled', true);
+                });
+            </script>
+        {% endif %}
+    {% endfor %}
 {% endif %}
 <script>
     $(window).on('load', function (e) {

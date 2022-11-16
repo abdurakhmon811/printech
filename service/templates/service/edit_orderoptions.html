@@ -1,0 +1,39 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/includes/admin_tab.html' %}
+    <div class="container col-xl-8 text-center pt-4 pb-4">
+        <h1 class="fw-light">Kitob turlari va ranglarga o'zgartirish kiritish</h1>
+    </div>
+    <div class="container col-xl-8 form-dec pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark text-light fw-light" action="{% url 'edit_orderoptions' options.id %}"
+            novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-warning fw-light">Kiritish &check;</button>
+                <a class="btn btn-danger fw-light top-m" data-bs-toggle="modal" data-bs-target="#delmodal">O'chirish</a>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="delmodal" aria-labelledby="delmodalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="border-color: #d0d0d0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="border-color: #d0d0d0">
+                <h4 class="fw-light text-light">Ma'lumotlarni o'chirishga ishonchingiz komilmi?</h4>
+            </div>
+            <div class="modal-footer" style="border-color: #d0d0d0">
+                <a class="btn btn-danger fw-light" data-bs-dismiss="modal">Yo'q</a>
+                <a class="btn btn-warning fw-light" href="{% url 'delete_orderoptions' options.id %}">Ha</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

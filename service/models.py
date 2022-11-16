@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 # Third party application fields
 from djmoney.models.fields import MoneyField
@@ -38,18 +38,18 @@ class BlogPost(models.Model):
 class Book(models.Model):
     """A model handling books."""
     categories = [
-        ('Aniq fanlar', 'Aniq fanlar'),
-        ('Axborot Texnologiyalariga oid', 'Axborot Texnologiyalariga oid'),
-        ('Detektiv', 'Detektiv'),
-        ('Fantastika', 'Fantastika'),
-        ('Ilmiy Fantastika', 'Ilmiy Fantastika'),
-        ('Qisqa hikoyalar', 'Qisqa hikoyalar'),
-        ('Romanlar', 'Romanlar'),
-        ('Romantika', 'Romantika'),
-        ('Sarguzashtlar', 'Sarguzashtlar'),
-        ('Tarixiy Fantastika', 'Tarixiy Fantastika'),
-        ('Tilga oid', 'Tilga oid'),
-        ('Zamonaviy Fantastika', 'Zamonaviy Fantastika'),
+        ("Aniq fanlar", "Aniq fanlar"),
+        ("Axborot Texnologiyalariga oid", "Axborot Texnologiyalariga oid"),
+        ("Detektiv", "Detektiv"),
+        ("Fantastika", "Fantastika"),
+        ("Ilmiy Fantastika", "Ilmiy Fantastika"),
+        ("Qisqa hikoyalar", "Qisqa hikoyalar"),
+        ("Romanlar", "Romanlar"),
+        ("Romantika", "Romantika"),
+        ("Sarguzashtlar", "Sarguzashtlar"),
+        ("Tarixiy Fantastika", "Tarixiy Fantastika"),
+        ("Tilga oid", "Tilga oid"),
+        ("Zamonaviy Fantastika", "Zamonaviy Fantastika"),
     ]
 
     category = models.CharField(max_length=100, choices=categories, default=None, null=True)
@@ -112,8 +112,8 @@ class CreateSite(models.Model):
     """A model handling inquires for Web Development service provided by the main admin."""
 
     person_choices = [
-        ('Jismoniy shaxs', 'Jismoniy shaxs'),
-        ('Yuridik shaxs', 'Yuridik shaxs'),
+        ("Jismoniy shaxs", "Jismoniy shaxs"),
+        ("Yuridik shaxs", "Yuridik shaxs"),
     ]
 
     f_name = models.CharField(max_length=200, null=True)
@@ -367,34 +367,52 @@ class News(models.Model):
         return self.title
 
 
+# ================================ A model defining the PLACES_TO_GET for Order model ================================
+
+class PlaceToGet(models.Model):
+    """A model handling the places from where customers can get their orders."""
+
+    class Meta:
+
+        verbose_name = 'PlaceToGet'
+        verbose_name_plural = 'PlacesToGet'
+
+    place = models.CharField(max_length=200, null=True)
+    available = models.BooleanField(default=True)
+
+    objects = models.Manager()
+
+    def __str__(self):
+
+        return self.place
+
+# ====================================================================================================================
+
+
 class Order(models.Model):
     """A model handling orders for books from users."""
-    # TODO: places_to_get, book types and colors should be dynamic rather than static
-    places_to_get = [
-        ('Qarshi Muhandislik-Iqtisodiyot Instituti', 'Qarshi Muhandislik-Iqtisodiyot Instituti'),
-        ('Kamandi MFY', 'Kamandi MFY'),
-    ]
     payment_methods = [
-        ('Click', 'Click'),
-        ('Naqd', 'Naqd'),
-        ('VISA', 'VISA'),
+        ("Click", "Click"),
+        ("Naqd", "Naqd"),
     ]
     statuses = [
         ("To'lovni kutmoqda", "To'lovni kutmoqda"),
-        ('Bekor qilindi', 'Bekor qilindi'),
-        ('Qabul qilindi', 'Qabul qilindi'),
-        ('Chop etilmoqda', 'Chop etilmoqda'),
-        ('Tayyor', 'Tayyor'),
+        ("Bekor qilindi", "Bekor qilindi"),
+        ("Qabul qilindi", "Qabul qilindi"),
+        ("Chop etilmoqda", "Chop etilmoqda"),
+        ("Tayyor", "Tayyor"),
     ]
     book_types = [
-        ('Plastik prujinalangan (rangsiz)', 'Plastik prujinalangan (rangsiz)'),
-        ('Plastik prujinalangan (rangli)', 'Plastik prujinalangan (rangli)'),
-        ('Metal prujinalangan (rangsiz)', 'Metal prujinalangan (rangsiz)'),
-        ('Metal prujinalangan (rangli)', 'Metal prujinalangan (rangli)'),
-        ('Yelimlangan yumshoq muqovali (rangsiz)', 'Yelimlangan yumshoq muqovali (rangsiz)'),
-        ('Yelimlangan yumshoq muqovali (rangli)', 'Yelimlangan yumshoq muqovali (rangli)'),
-        ('Yelimlangan qattiq muqovali (rangsiz)', 'Yelimlangan qattiq muqovali (rangsiz)'),
-        ('Yelimlangan qattiq muqovali (rangli)', 'Yelimlangan qattiq muqovali (rangli)'),
+        ("Plastik prujinalangan (rangsiz)", "Plastik prujinalangan (rangsiz)"),
+        ("Plastik prujinalangan (rangli)", "Plastik prujinalangan (rangli)"),
+        ("Metal prujinalangan (rangsiz)", "Metal prujinalangan (rangsiz)"),
+        ("Metal prujinalangan (rangli)", "Metal prujinalangan (rangli)"),
+        ("Yelimlangan yumshoq muqovali (rangsiz)", "Yelimlangan yumshoq muqovali (rangsiz)"),
+        ("Yelimlangan yumshoq muqovali (rangli)", "Yelimlangan yumshoq muqovali (rangli)"),
+        ("Yelimlangan qattiq muqovali (rangsiz)", "Yelimlangan qattiq muqovali (rangsiz)"),
+        ("Yelimlangan qattiq muqovali (rangli)", "Yelimlangan qattiq muqovali (rangli)"),
+        ("Steplerlangan (rangsiz)", "Steplerlangan (rangsiz)"),
+        ("Steplerlangan (rangli)", "Steplerlangan (rangli)"),
     ]
     colors = [
         ("Ko`k", "Ko`k"),
@@ -412,7 +430,7 @@ class Order(models.Model):
         ("Yashil", "Yashil"),
     ]
     sources = [
-        ('Saytdan', 'Saytdan'),
+        ("Saytdan", "Saytdan"),
         ("O'zimdan", "O'zimdan"),
     ]
     sizes = [
@@ -428,9 +446,10 @@ class Order(models.Model):
     back_cover_color = models.CharField(choices=colors, max_length=100, null=True, blank=True)
     front_cover_color = models.CharField(choices=colors_2, max_length=100, null=True, blank=True)
     size = models.CharField(choices=sizes, max_length=5, null=True)
-    user_needs = models.DateTimeField(auto_now_add=False, default=None, null=True)
+    custom_page_number = models.PositiveIntegerField(default=0, null=True)
     number = models.PositiveIntegerField(default=1, null=True)
-    place_to_get = models.CharField(choices=places_to_get, max_length=50, null=True)
+    user_needs = models.DateTimeField(auto_now_add=False, default=None, null=True)
+    place_to_get = models.ForeignKey(PlaceToGet, on_delete=models.PROTECT, null=True)
     customer = models.ForeignKey(User, on_delete=models.PROTECT)
     customer_number = PhoneNumberField(region='UZ', default=None)
     customer_email = models.EmailField(default=None, max_length=255, null=True, blank=True)
@@ -465,6 +484,8 @@ class OrderOptions(models.Model):
     g_soft_color = models.BooleanField(default=False)
     g_hard_colorless = models.BooleanField(default=False)
     g_hard_color = models.BooleanField(default=False)
+    stapled_colorless = models.BooleanField(default=True)
+    stapled_color = models.BooleanField(default=False)
 
     # Colors
     black = models.BooleanField(default=False)
@@ -479,6 +500,249 @@ class OrderOptions(models.Model):
     def __str__(self):
 
         return str(self.date)
+
+
+# ======================================== Models for using in Prices section ========================================
+
+
+class BindingPrice(models.Model):
+    """A model handling binding prices based on type and size."""
+
+    types = [
+        ("Plastik prujinalash", "Plastik prujinalash"),
+        ("Metal prujinalash", "Metal prujinalash"),
+        ("Yumshoq muqovali yelimlash", "Yumshoq muqovali yelimlash"),
+        ("Qattiq muqovali yelimlash", "Qattiq muqovali yelimlash"),
+        ("Steplerlash", "Steplerlash"),
+    ]
+
+    sizes = [
+        ('A4', 'A4'),
+        ('A5', 'A5'),
+    ]
+
+    date = models.DateField(auto_now_add=False, null=True)
+    type = models.CharField(max_length=150, choices=types, null=True)
+    size = models.CharField(max_length=150, choices=sizes, null=True)
+    price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+
+    objects = models.Manager()
+
+    def __repr__(self):
+
+        return self.type
+
+
+class ColorPrice(models.Model):
+    """A model handling color prices based on color."""
+
+    colors = [
+        ("Qora", "Qora"),
+        ("Rangli", "Rangli"),
+    ]
+    sizes = [
+        ('A4', 'A4'),
+        ('A5', 'A5'),
+    ]
+
+    date = models.DateField(auto_now_add=False, null=True)
+    color = models.CharField(max_length=100, choices=colors, null=True)
+    size = models.CharField(max_length=100, choices=sizes, null=True)
+    price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+
+    objects = models.Manager()
+
+    def __repr__(self):
+
+        return self.color
+
+
+class CoverPrice(models.Model):
+    """A model handling cover prices based on size and type."""
+
+    types = [
+        ("Plastik prujinali ulash uchun", "Plastik prujinali ulash uchun"),
+        ("Metal prujinali ulash uchun", "Metal prujinali ulash uchun"),
+        ("Yelimli ulash uchun (Yumshoq)", "Yelimli ulash uchun (Yumshoq)"),
+        ("Yelimli ulash uchun (Qattiq)", "Yelimli ulash uchun (Qattiq)"),
+    ]
+    sizes = [
+        ('A4', 'A4'),
+        ('A5', 'A5'),
+    ]
+
+    date = models.DateField(auto_now_add=False, null=True)
+    type = models.CharField(max_length=100, choices=types,  null=True)
+    size = models.CharField(max_length=100, choices=sizes, null=True)
+    price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+
+    objects = models.Manager()
+
+    def __repr__(self):
+
+        return self.type
+
+
+class GluePrice(models.Model):
+    """A model handling glue prices based on type and size."""
+
+    sizes = [
+        ('A4', 'A4'),
+        ('A5', 'A5'),
+    ]
+
+    date = models.DateField(auto_now_add=False, null=True)
+    type = models.CharField(max_length=100, null=True)
+    size = models.CharField(max_length=100, choices=sizes, null=True)
+    price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+
+    objects = models.Manager()
+
+    def __repr__(self):
+        return self.type
+
+
+class OuterPrice(models.Model):
+    """A model handling the prices for orders and resources."""
+
+    # As of
+    date = models.DateField(auto_now_add=False, null=True)
+    staple_price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+    packaging_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+    delivery_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+    workforce_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+    electricity_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+    printer_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+    profit = models.IntegerField()
+
+    objects = models.Manager()
+
+    def __repr__(self):
+
+        return str(self.date)
+
+
+class PagePrice(models.Model):
+    """A model handling page prices based on sizes."""
+
+    types = [
+        ('Classic', 'Classic'),
+        ('ECO', 'ECO'),
+        ('Premium', 'Premium'),
+    ]
+    sizes = [
+        ('A4', 'A4'),
+        ('A5', 'A5'),
+    ]
+
+    date = models.DateField(auto_now_add=False, null=True)
+    type = models.CharField(max_length=100, choices=types, null=True)
+    size = models.CharField(max_length=100, choices=sizes, null=True)
+    price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+
+    objects = models.Manager()
+
+    def __repr__(self):
+
+        return self.size
+
+
+class PaperPrice(models.Model):
+    """A model handling paper prices based on sizes."""
+
+    types = [
+        ('Classic', 'Classic'),
+        ('ECO', 'ECO'),
+        ('Premium', 'Premium'),
+    ]
+    sizes = [
+        ('A3', 'A3'),
+        ('A4', 'A4'),
+    ]
+
+    date = models.DateField(auto_now_add=False, null=True)
+    type = models.CharField(max_length=100, choices=types, null=True)
+    size = models.CharField(max_length=100, choices=sizes, null=True)
+    price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+
+    objects = models.Manager()
+
+    def __repr__(self):
+
+        return self.size
+
+
+class RingPrice(models.Model):
+    """A model handling ring pricing based size and type."""
+
+    types = [
+        ('Plastik', 'Plastik'),
+        ('Metal', 'Metal'),
+    ]
+    sizes = [
+        ('4.5mm (<15)', '4.5mm (<15)'),
+        ('6mm (15-30)', '6mm (15-30)'),
+        ('8mm (30-50)', '8mm (30-50)'),
+        ('10mm (50-70)', '10mm (50-70)'),
+        ('12mm (70-90)', '12mm (70-90)'),
+        ('14mm (90-110)', '14mm (90-110)'),
+        ('16mm (110-130)', '16mm (110-130)'),
+        ('18mm (130-150)', '18mm (130-150)'),
+        ('20mm (150-170)', '20mm (150-170)'),
+        ('22mm (170-190)', '22mm (170-190)'),
+        ('25mm (190-220)', '25mm (190-220)'),
+        ('28mm (220-250)', '28mm (220-250)'),
+        ('32mm (250-280)', '32mm (250-280)'),
+        ('38mm (280-340)', '38mm (280-340)'),
+        ('45mm (340-410)', '45mm (340-410)'),
+        ('51mm (410-480)', '51mm (410-480)'),
+        ('5.5mm (<20)', '5.5mm (<20)'),
+        ('6.9mm (20-30)', '6.9mm (20-30)'),
+        ('8.1mm (30-50)', '8.1mm (30-50)'),
+        ('9.5mm (50-60)', '9.5mm (50-60)'),
+        ('11mm (60-80)', '11mm (60-80)'),
+        ('12.7mm (80-100)', '12.7mm (80-100)'),
+        ('14.3mm (100-120)', '14.3mm (100-120)'),
+    ]
+
+    date = models.DateField(auto_now_add=False, null=True)
+    type = models.CharField(max_length=100, choices=types, null=True)
+    size = models.CharField(max_length=50, choices=sizes, null=True)
+    price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+
+    objects = models.Manager()
+
+    def __repr__(self):
+
+        return self.type
+
+
+class YarnPrice(models.Model):
+    """A model handling yarn prices based on type and size."""
+
+    types = [
+        ("Yupqa", "Yupqa"),
+        ("O'rtacha", "O'rtacha"),
+        ("Qalin", "Qalin"),
+    ]
+    sizes = [
+        ('A4', 'A4'),
+        ('A5', 'A5'),
+    ]
+
+    date = models.DateField(auto_now_add=False, null=True)
+    type = models.CharField(max_length=100, choices=types, null=True)
+    size = models.CharField(max_length=100, choices=sizes, null=True)
+    price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
+
+    objects = models.Manager()
+
+    def __repr__(self):
+
+        return self.type
+
+
+# ====================================================================================================================
 
 
 # ==================================== Models for using within the Resource model ====================================

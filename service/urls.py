@@ -52,7 +52,7 @@ urlpatterns = [
     # ==================================== A management system for administrators ====================================
 
     # Welcoming page for admins
-    path('admin/welcome/', views.welcome_admin, name='welcome_admin'),
+    path('admin/main-page/', views.main_page, name='main_page'),
     # A page for checking orders
     path('admin/orders/check/', views.check_orders, name='check_orders'),
     # A page for modifying orders
@@ -61,6 +61,15 @@ urlpatterns = [
     path('admin/orders/check/delete-order/<int:order_number>/', views.delete_order, name='delete_order'),
     # A page for checking (and adding available) the base of options
     path('admin/order-options/add-check/', views.order_options, name='order_options'),
+    # A page for editing the chosen order options
+    path('admin/order-options/edit/<int:orderoptions_id>/', views.edit_orderoptions, name='edit_orderoptions'),
+    # A page for deleting the chosen order options
+    path('admin/order-options/delete/<int:orderoptions_id>/', views.delete_orderoptions, name='delete_orderoptions'),
+    # A page for editing the chosen place from where customers can get their orders
+    path('admin/order-options/edit/placetoget/<int:placetoget_id>/', views.edit_placetoget, name='edit_placetoget'),
+    # A page for deleting the chosen place
+    path('admin/order-options/delete/placetoget/<int:placetoget_id>/',
+         views.delete_placetoget, name='delete_placetoget'),
     # A page for checking available books in the library
     path('admin/check-books/', views.check_books, name="check_books"),
     # A page for adding books
@@ -143,6 +152,65 @@ urlpatterns = [
     path('admin/contacts/ask-to-delete/<int:contact_id>/', views.ask_del_contact, name='ask_del_contact'),
     # A page for deleting the chosen contact
     path('admin/contacts/delete/<int:contact_id>/', views.delete_contact, name='delete_contact'),
+    # A page for adding/checking pricing objects
+    path('admin/pricing/add-check/', views.pricing, name='pricing'),
+    # A page for adding page prices
+    path('admin/pricing/page-price/add/', views.page_price, name='page_price'),
+    # A page for editing the chosen page price
+    path('admin/pricing/page-price/edit/<int:pageprice_id>/', views.edit_page_price, name='edit_page_price'),
+    # A page for deleting the chosen page price
+    path('admin/pricing/page-price/delete/<int:pageprice_id>/', views.delete_page_price, name='delete_page_price'),
+    # A page for adding binding prices
+    path('admin/pricing/binding-price/add/', views.binding, name='binding'),
+    # A page for editing the chosen binding price
+    path('admin/pricing/binding-price/edit/<int:bindingprice_id>/',
+         views.edit_binding_price, name='edit_binding_price'),
+    # A page for deleting the chosen binding price
+    path('admin/pricing/binding-price/delete/<int:bindingprice_id>/',
+         views.delete_binding_price, name='delete_binding_price'),
+    # A page for adding ring prices
+    path('admin/pricing/ring-price/add/', views.ring_price, name='ring_price'),
+    # A page for editing the chosen ring price
+    path('admin/pricing/ring-price/edit/<int:ringprice_id>/', views.edit_ring_price, name='edit_ring_price'),
+    # A page for deleting the chosen ring price
+    path('admin/pricing/ring-price/delete/<int:ringprice_id>/', views.delete_ring_price, name='delete_ring_price'),
+    # A page for adding color prices
+    path('admin/pricing/color-price/add/', views.color_price, name='color_price'),
+    # A page for editing the chosen color price
+    path('admin/pricing/color-price/edit/<int:colorprice_id>/', views.edit_color_price, name='edit_color_price'),
+    # A page for deleting the chosen color price
+    path('admin/pricing/color-price/delete/<int:colorprice_id>/', views.delete_color_price, name='delete_color_price'),
+    # A page for adding cover prices
+    path('admin/pricing/cover-price/add/', views.cover_price, name='cover_price'),
+    # A page for editing the chosen cover price
+    path('admin/pricing/cover-price/edit/<int:coverprice_id>/', views.edit_cover_price, name='edit_cover_price'),
+    # A page for deleting the chosen cover price
+    path('admin/pricing/cover-price/delete/<int:coverprice_id>/', views.delete_cover_price, name='delete_cover_price'),
+    # A page for adding glue prices
+    path('admin/pricing/glue-price/add/', views.glue_price, name='glue_price'),
+    # A page for editing the chosen glue price
+    path('admin/pricing/glue-price/edit/<int:glueprice_id>/', views.edit_glue_price, name='edit_glue_price'),
+    # A page for deleting the chosen glue price
+    path('admin/pricing/glue-price/delete/<int:glueprice_id>/', views.delete_glue_price, name='delete_glue_price'),
+    # A page for adding paper prices
+    path('admin/pricing/paper-price/add/', views.paper_price, name='paper_price'),
+    # A page for editing the chosen paper price
+    path('admin/pricing/paper-price/edit/<int:paperprice_id>/', views.edit_paper_price, name='edit_paper_price'),
+    # A page for deleting the chosen paper price
+    path('admin/pricing/paper-price/delete/<int:paperprice_id>/', views.delete_paper_price, name='delete_paper_price'),
+    # A page for adding yarn prices
+    path('admin/pricing/yarn-price/add/', views.yarn_price, name='yarn_price'),
+    # A page for editing the chosen yarn price
+    path('admin/pricing/yarn-price/edit/<int:yarnprice_id>/', views.edit_yarn_price, name='edit_yarn_price'),
+    # A page for deleting the chosen yarn price
+    path('admin/pricing/yarn-price/delete/<int:yarnprice_id>/', views.delete_yarn_price, name='delete_yarn_price'),
+    # A page for adding outer expense amounts and profit
+    path('admin/pricing/outer-prices/add/', views.outer_prices, name='outer_prices'),
+    # A page for editing the chosen outer prices
+    path('admin/pricing/outer-prices/edit/<int:outerprice_id>/', views.edit_outer_prices, name='edit_outer_prices'),
+    # A page for deleting the chosen outer prices
+    path('admin/pricing/outer-prices/delete/<int:outerprice_id>/',
+         views.delete_outer_prices, name='delete_outer_prices'),
     # A page for adding/checking a resource type
     path('admin/resources/types/add-check', views.rtypes, name='rtypes'),
     # A page for editing a resource type

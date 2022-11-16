@@ -1,0 +1,245 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/includes/admin_tab.html' %}
+    <div class="container col-xl-8 text-center pt-4 pb-4">
+        <h1 class="fw-light">Prujina narxiga o'zgartirish kiritish</h1>
+    </div>
+    <div class="container col-xl-8 form-dec pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark text-light fw-light" action="{% url 'edit_ring_price' r_price.id %}"
+            novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-warning fw-light">Kiritish &check;</button>
+                <a class="btn btn-danger fw-light top-m" data-bs-toggle="modal" data-bs-target="#delmodal">O'chirish</a>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="delmodal" aria-labelledby="delmodalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="border-color: #d0d0d0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="border-color: #d0d0d0">
+                <h4 class="fw-light text-light">Ma'lumotlarni o'chirishga ishonchingiz komilmi?</h4>
+            </div>
+            <div class="modal-footer" style="border-color: #d0d0d0">
+                <a class="btn btn-danger fw-light" data-bs-dismiss="modal">Yo'q</a>
+                <a class="btn btn-warning fw-light" href="{% url 'delete_ring_price' r_price.id %}">Ha</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(window).on('load', function (e) {
+        var psize1 = '4.5mm (<15)'
+        var psize2 = '6mm (15-30)'
+        var psize3 = '8mm (30-50)'
+        var psize4 = '10mm (50-70)'
+        var psize5 = '12mm (70-90)'
+        var psize6 = '14mm (90-110)'
+        var psize7 = '16mm (110-130)'
+        var psize8 = '18mm (130-150)'
+        var psize9 = '20mm (150-170)'
+        var psize10 = '22mm (170-190)'
+        var psize11 = '25mm (190-220)'
+        var psize12 = '28mm (220-250)'
+        var psize13 = '32mm (250-280)'
+        var psize14 = '38mm (280-340)'
+        var psize15 = '45mm (340-410)'
+        var psize16 = '51mm (410-480)'
+        var msize1 = '5.5mm (<20)'
+        var msize2 = '6.9mm (20-30)'
+        var msize3 = '8.1mm (30-50)'
+        var msize4 = '9.5mm (50-60)'
+        var msize5 = '11mm (60-80)'
+        var msize6 = '12.7mm (80-100)'
+        var msize7 = '14.3mm (100-120)'
+        var sel = document.getElementById("id_type")
+        var val = sel.value
+
+        if (val === "Plastik") {
+            $(`#id_size option[value='${psize1}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize2}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize3}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize4}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize5}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize6}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize7}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize8}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize9}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize10}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize11}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize12}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize13}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize14}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize15}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize16}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize1}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize2}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize3}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize4}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize5}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize6}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize7}']`).prop('disabled', true);
+        } else if (val === "Metal") {
+            $(`#id_size option[value='${psize1}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize2}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize3}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize4}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize5}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize6}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize7}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize8}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize9}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize10}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize11}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize12}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize13}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize14}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize15}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize16}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize1}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize2}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize3}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize4}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize5}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize6}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize7}']`).prop('disabled', false);
+        } else {
+            $(`#id_size option[value='${psize1}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize2}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize3}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize4}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize5}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize6}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize7}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize8}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize9}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize10}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize11}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize12}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize13}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize14}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize15}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize16}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize1}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize2}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize3}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize4}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize5}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize6}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize7}']`).prop('disabled', true);
+            $(`#id_size option[value='']`).prop('selected', true);
+        };
+    });
+    $('select').on('change', function (e) {
+        var psize1 = '4.5mm (<15)'
+        var psize2 = '6mm (15-30)'
+        var psize3 = '8mm (30-50)'
+        var psize4 = '10mm (50-70)'
+        var psize5 = '12mm (70-90)'
+        var psize6 = '14mm (90-110)'
+        var psize7 = '16mm (110-130)'
+        var psize8 = '18mm (130-150)'
+        var psize9 = '20mm (150-170)'
+        var psize10 = '22mm (170-190)'
+        var psize11 = '25mm (190-220)'
+        var psize12 = '28mm (220-250)'
+        var psize13 = '32mm (250-280)'
+        var psize14 = '38mm (280-340)'
+        var psize15 = '45mm (340-410)'
+        var psize16 = '51mm (410-480)'
+        var msize1 = '5.5mm (<20)'
+        var msize2 = '6.9mm (20-30)'
+        var msize3 = '8.1mm (30-50)'
+        var msize4 = '9.5mm (50-60)'
+        var msize5 = '11mm (60-80)'
+        var msize6 = '12.7mm (80-100)'
+        var msize7 = '14.3mm (100-120)'
+        var sel = document.getElementById("id_type")
+        var val = sel.options[sel.selectedIndex].value
+
+        if (val === "Plastik") {
+            $(`#id_size option[value='${psize1}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize2}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize3}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize4}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize5}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize6}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize7}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize8}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize9}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize10}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize11}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize12}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize13}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize14}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize15}']`).prop('disabled', false);
+            $(`#id_size option[value='${psize16}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize1}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize2}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize3}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize4}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize5}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize6}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize7}']`).prop('disabled', true);
+        } else if (val === "Metal") {
+            $(`#id_size option[value='${psize1}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize2}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize3}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize4}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize5}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize6}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize7}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize8}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize9}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize10}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize11}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize12}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize13}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize14}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize15}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize16}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize1}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize2}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize3}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize4}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize5}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize6}']`).prop('disabled', false);
+            $(`#id_size option[value='${msize7}']`).prop('disabled', false);
+        } else {
+            $(`#id_size option[value='${psize1}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize2}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize3}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize4}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize5}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize6}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize7}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize8}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize9}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize10}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize11}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize12}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize13}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize14}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize15}']`).prop('disabled', true);
+            $(`#id_size option[value='${psize16}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize1}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize2}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize3}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize4}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize5}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize6}']`).prop('disabled', true);
+            $(`#id_size option[value='${msize7}']`).prop('disabled', true);
+            $(`#id_size option[value='']`).prop('selected', true);
+        };
+    });
+</script>
+{% endblock content %}

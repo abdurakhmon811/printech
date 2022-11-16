@@ -1,6 +1,18 @@
 from django import forms
-from .models import Account, BlogPost, Book, CategoryEx, CategoryIn, Complaint, Contact, CreateSite, Expense, Income, \
-    LType, Loss, News, Order, OrderOptions, RType, Resource, SubCategoryEx, SubCategoryIn, Transaction
+from .models import Account, \
+    BindingPrice, BlogPost, Book, \
+    CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, CreateSite, CoverPrice, \
+    Expense, \
+    GluePrice, \
+    Income, \
+    LType, Loss, \
+    News, \
+    Order, OrderOptions, OuterPrice, \
+    PagePrice, PaperPrice, PlaceToGet, \
+    Resource, RingPrice, RType, \
+    SubCategoryEx, SubCategoryIn, \
+    Transaction, \
+    YarnPrice
 import time
 
 # Third party application widgets
@@ -9,7 +21,7 @@ from phonenumber_field.formfields import RegionalPhoneNumberWidget
 
 
 class AccountForm(forms.ModelForm):
-    """A form for adding money accounts (available for admins only)."""
+    """A form for adding money accounts (available to admins only)."""
 
     class Meta:
 
@@ -41,16 +53,56 @@ class AccountForm(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
             }),
-            'means': MoneyWidget(choices=currencies, attrs={
+            'means': MoneyWidget(attrs={
                 'class': 'form-control',
                 'placeholder': 'Mavjud miqdor',
                 'required': True,
+            }, choices=currencies),
+        }
+
+
+class BindingPriceForm(forms.ModelForm):
+    """A form for adding binding types and prices (available to admins only)."""
+
+    class Meta:
+
+        model = BindingPrice
+        fields = [
+            'date', 'type', 'size',
+        ]
+        labels = {
+            'date': "Sana",
+            'type': "Ulash turi",
+            'size': "O'lchami",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'type': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'size': {
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
+            }),
+            'type': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'size': forms.Select(attrs={
+                'class': 'form-control',
             }),
         }
 
 
 class BlogPostForm(forms.ModelForm):
-    """A form for adding blog posts (available for admins only)."""
+    """A form for adding blog posts (available to admins only)."""
 
     class Meta:
 
@@ -176,7 +228,7 @@ class BlogPostForm(forms.ModelForm):
 
 
 class BookForm(forms.ModelForm):
-    """A form for adding books (available for admins only)."""
+    """A form for adding books (available to admins only)."""
 
     class Meta:
 
@@ -240,7 +292,7 @@ class BookForm(forms.ModelForm):
 
 
 class CategoryExForm(forms.ModelForm):
-    """A form handling expense categories."""
+    """A form handling expense categories (available to admins only)."""
 
     class Meta:
 
@@ -264,7 +316,7 @@ class CategoryExForm(forms.ModelForm):
 
 
 class CategoryInForm(forms.ModelForm):
-    """A form handling expense categories."""
+    """A form handling expense categories (available to admins only)."""
 
     class Meta:
         model = CategoryIn
@@ -284,6 +336,61 @@ class CategoryInForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Biznes',
             }),
+        }
+
+
+class ColorPriceForm(forms.ModelForm):
+    """A form for adding prices to colors based on color (available to admins only)."""
+
+    class Meta:
+
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = ColorPrice
+        fields = [
+            'date', 'color', 'size', 'price',
+        ]
+        labels = {
+            'date': "Sana",
+            'color': "Rang",
+            'size': "Kitob o'lchami",
+            'price': "Narx",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'color': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'size': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'price': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
+            }),
+            'color': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'size': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'price': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
         }
 
 
@@ -506,6 +613,60 @@ class ContactForm(forms.ModelForm):
         }
 
 
+class CoverPriceForm(forms.ModelForm):
+    """A form for adding prices to covers based on type and size (available to admins only)."""
+
+    class Meta:
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = CoverPrice
+        fields = [
+            'date', 'type', 'size', 'price',
+        ]
+        labels = {
+            'date': "Sana",
+            'type': "Turi",
+            'size': "O'lchami",
+            'price': "Narx",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'type': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'size': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'price': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
+            }),
+            'type': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'size': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'price': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+        }
+
+
 class CreateSiteForm(forms.ModelForm):
     """A form for receiving inquires for Web Development services provided by the main admin."""
 
@@ -601,7 +762,7 @@ class CreateSiteForm(forms.ModelForm):
 
 
 class ExpenseForm(forms.ModelForm):
-    """A form for making expenses related to business."""
+    """A form for making expenses related to business (available to admins only)."""
 
     class Meta:
 
@@ -628,26 +789,27 @@ class ExpenseForm(forms.ModelForm):
         }
         error_messages = {
             'category': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'subcategory': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'user': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'account': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'date_made': {
                 'invalid': "Vaqt noto'g'ri formatda kiritildi!",
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'comment': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'amount': {
-                'required': "Forma to'ldirilmadi!"
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
             },
         }
         widgets = {
@@ -670,14 +832,69 @@ class ExpenseForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
             }),
-            'amount': MoneyWidget(choices=currencies, attrs={
+            'amount': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+        }
+
+
+class GluePriceForm(forms.ModelForm):
+    """A form for adding prices to glue based on type (available to admins only)."""
+
+    class Meta:
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = GluePrice
+        fields = [
+            'date', 'type', 'size', 'price',
+        ]
+        labels = {
+            'date': "Sana",
+            'type': "Turi",
+            'size': "Kitob o'lchami",
+            'price': "Narx",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'type': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'size': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'price': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
+            }),
+            'type': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'PVA Standard/PVA Jade 403/...',
+            }),
+            'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
+            'price': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
         }
 
 
 class IncomeForm(forms.ModelForm):
-    """A form for making expenses related to business."""
+    """A form for making expenses related to business (available to admins only)."""
 
     class Meta:
 
@@ -704,26 +921,27 @@ class IncomeForm(forms.ModelForm):
         }
         error_messages = {
             'category': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'subcategory': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'user': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'account': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'date_made': {
                 'invalid': "Vaqt noto'g'ri formatda kiritildi!",
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'comment': {
-                'required': "Forma to'ldirilmadi!"
+                'required': "Forma to'ldirilmadi!",
             },
             'amount': {
-                'required': "Forma to'ldirilmadi!"
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
             },
         }
         widgets = {
@@ -746,14 +964,14 @@ class IncomeForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
             }),
-            'amount': MoneyWidget(choices=currencies, attrs={
+            'amount': MoneyWidget(attrs={
                 'class': 'form-control',
-            }),
+            }, choices=currencies),
         }
 
 
 class LossForm(forms.ModelForm):
-    """A form for adding losses happened in business."""
+    """A form for adding losses happened in business (available to admins only)."""
 
     class Meta:
 
@@ -800,6 +1018,7 @@ class LossForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'worth': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
                 'required': "Forma to'ldirilmadi!",
             }
         }
@@ -846,7 +1065,7 @@ class LossForm(forms.ModelForm):
 
 
 class LTypeForm(forms.ModelForm):
-    """A form for adding loss types to the model Loss."""
+    """A form for adding loss types to the model Loss (available to admins only)."""
 
     class Meta:
 
@@ -879,7 +1098,7 @@ class LTypeForm(forms.ModelForm):
 
 
 class NewsForm(forms.ModelForm):
-    """A form for publishing news about the service (or something else / available for admins only)."""
+    """A form for publishing news about the service (or something else / available to admins only)."""
 
     class Meta:
 
@@ -999,15 +1218,17 @@ class NewsForm(forms.ModelForm):
 
 
 class OrderOptionsForm(forms.ModelForm):
-    """A form for defining the available resources for making orders (available for admins only)."""
+    """A form for defining the available resources for making orders (available to admins only)."""
 
     class Meta:
 
         model = OrderOptions
         fields = [
-            'date', 'ringed_colorless', 'ringed_color', 'metal_ringed_colorless', 'metal_ringed_color',
-            'g_soft_colorless', 'g_soft_color', 'g_hard_colorless', 'g_hard_color', 'blue',
-            'red', 'black', 'transparent', 'yellow', 'green',
+            'date', 'ringed_colorless', 'ringed_color', 'metal_ringed_colorless',
+            'metal_ringed_color', 'g_soft_colorless', 'g_soft_color', 'g_hard_colorless',
+            'g_hard_color',  'stapled_colorless', 'stapled_color', 'blue',
+            'red', 'black', 'transparent', 'yellow',
+            'green',
         ]
         labels = {
             'date': 'Sana',
@@ -1019,6 +1240,8 @@ class OrderOptionsForm(forms.ModelForm):
             'g_soft_color': "Yelimlangan yumshoq muqovali (rangli)",
             'g_hard_colorless': "Yelimlangan qattiq muqovali (rangsiz)",
             'g_hard_color': "Yelimlangan qattiq muqovali (rangli)",
+            'stapled_colorless': "Steplerlangan (rangsiz)",
+            'stapled_color': "Steplerlangan (rangli)",
             'black': "Qora",
             'blue': "Ko`k",
             'green': "Yashil",
@@ -1047,9 +1270,10 @@ class OrderSelfForm(forms.ModelForm):
 
         model = Order
         fields = [
-            'custom_book', 'book_type', 'ring_color', 'front_cover_color', 'back_cover_color',
-            'size', 'user_needs', 'number', 'place_to_get', 'customer_number',
-            'customer_email', 'payment',
+            'custom_book', 'book_type', 'ring_color', 'front_cover_color',
+            'back_cover_color', 'size', 'custom_page_number', 'number',
+            'user_needs', 'place_to_get', 'customer_number', 'customer_email',
+            'payment',
         ]
         labels = {
             'custom_book': 'Kitob',
@@ -1058,8 +1282,9 @@ class OrderSelfForm(forms.ModelForm):
             'front_cover_color': 'Old muqova ranggi',
             'back_cover_color': 'Orqa muqova ranggi',
             'size': "O'lchami",
-            'user_needs': "Kitob kerak bo'ladigan vaqt",
+            'custom_page_number': "Betlari soni",
             'number': "Soni",
+            'user_needs': "Kitob kerak bo'ladigan vaqt",
             'place_to_get': "Buyurtmani olish mumkin bo'lgan joylar",
             'customer_number': "Telefon raqamingiz",
             'customer_email': "Email manzilingiz (agar mavjud bo'lsa)",
@@ -1084,11 +1309,14 @@ class OrderSelfForm(forms.ModelForm):
             'size': {
                 'required': "Forma to'ldirilmadi!",
             },
-            'user_needs': {
-                'invalid': "Vaqt noto'g'ri formatda kiritildi!",
+            'custom_page_number': {
                 'required': "Forma to'ldirilmadi!",
             },
             'number': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'user_needs': {
+                'invalid': "Vaqt noto'g'ri formatda kiritildi!",
                 'required': "Forma to'ldirilmadi!",
             },
             'place_to_get': {
@@ -1125,13 +1353,15 @@ class OrderSelfForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'user_needs': forms.DateTimeInput(attrs={
+            'custom_page_number': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
             'number': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': '0',
+            }),
+            'user_needs': forms.DateTimeInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
             'place_to_get': forms.Select(attrs={
                 'class': 'form-control',
@@ -1158,9 +1388,9 @@ class OrderSiteForm(forms.ModelForm):
 
         model = Order
         fields = [
-            'book', 'book_type', 'ring_color', 'front_cover_color', 'back_cover_color',
-            'size', 'user_needs', 'number', 'place_to_get', 'customer_number',
-            'customer_email', 'payment',
+            'book', 'book_type', 'ring_color', 'front_cover_color',
+            'back_cover_color', 'size', 'number', 'user_needs',
+            'place_to_get', 'customer_number', 'customer_email', 'payment',
         ]
         labels = {
             'book': "Kitob",
@@ -1169,8 +1399,8 @@ class OrderSiteForm(forms.ModelForm):
             'front_cover_color': 'Old muqova ranggi',
             'back_cover_color': 'Orqa muqova ranggi',
             'size': "O'lchami",
-            'user_needs': "Kitob kerak bo'ladigan vaqt",
             'number': "Soni",
+            'user_needs': "Kitob kerak bo'ladigan vaqt",
             'place_to_get': "Buyurtmani olish mumkin bo'lgan joylar",
             'customer_number': "Telefon raqamingiz",
             'customer_email': "Email manzilingiz (agar mavjud bo'lsa)",
@@ -1195,11 +1425,11 @@ class OrderSiteForm(forms.ModelForm):
             'size': {
                 'required': "Forma to'ldirilmadi!",
             },
-            'user_needs': {
-                'invalid': "Vaqt noto'g'ri formatda kiritildi!",
+            'number': {
                 'required': "Forma to'ldirilmadi!",
             },
-            'number': {
+            'user_needs': {
+                'invalid': "Vaqt noto'g'ri formatda kiritildi!",
                 'required': "Forma to'ldirilmadi!",
             },
             'place_to_get': {
@@ -1235,13 +1465,12 @@ class OrderSiteForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
+            'number': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
             'user_needs': forms.DateTimeInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
-            }),
-            'number': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': '0',
             }),
             'place_to_get': forms.Select(attrs={
                 'class': 'form-control',
@@ -1261,8 +1490,226 @@ class OrderSiteForm(forms.ModelForm):
         }
 
 
+class OuterPriceForm(forms.ModelForm):
+    """A form for adding prices to external expenses spent on making books (available to admins only)."""
+
+    class Meta:
+
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = OuterPrice
+        fields = [
+            'date', 'staple_price', 'packaging_expenses', 'delivery_expenses',
+            'workforce_expenses', 'electricity_expenses', 'printer_expenses', 'profit',
+        ]
+        labels = {
+            'date': "Sana",
+            'staple_price': "Stepler o'qi narxi (1 donasi uchun)",
+            'packaging_expenses': "Qadoqlash xarajati (1 kitob uchun (A5))",
+            'delivery_expenses': "Yetkazib berish xarajatlari (1 kitob uchun)",
+            'workforce_expenses': "Ishchi kuchi xarajatlari (1 kitob uchun)",
+            'electricity_expenses': "Elektr toki xarajatlari (1 kitob uchun)",
+            'printer_expenses': "Printer xarajatlari (1 varoq uchun)",
+            'profit': "Sof foyda (%)",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Sana noto'g'ri kiritildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'staple_price': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'packaging_expenses': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'delivery_expenses': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'workforce_expenses': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'electricity_expenses': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'printer_expenses': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'profit': {
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
+            }),
+            'staple_price': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+            'packaging_expenses': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+            'delivery_expenses': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+            'workforce_expenses': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+            'electricity_expenses': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+            'printer_expenses': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+            'profit': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
+        }
+
+
+class PagePriceForm(forms.ModelForm):
+    """A form for adding prices to single page based on size (available to admins only)."""
+
+    class Meta:
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = PagePrice
+        fields = [
+            'date', 'type', 'size',
+        ]
+        labels = {
+            'date': "Sana",
+            'type': "Qog'oz turi",
+            'size': "O'lchami",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'type': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'size': {
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
+            }),
+            'type': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'size': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+        }
+
+
+class PaperPriceForm(forms.ModelForm):
+    """A form for adding prices to paper based on size (available to admins only)."""
+
+    class Meta:
+
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = PaperPrice
+        fields = [
+            'date', 'type', 'size', 'price',
+        ]
+        labels = {
+            'date': "Sana",
+            'type': "Turi",
+            'size': "O'lchami",
+            'price': "Narxi",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'type': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'size': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'price': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'dirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
+            }),
+            'type': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'size': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'price': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+        }
+
+
+class PlaceToGetForm(forms.ModelForm):
+    """A form for adding places for users to obtain their orders (available to admins only)."""
+
+    class Meta:
+
+        model = PlaceToGet
+        fields = [
+            'place', 'available',
+        ]
+        labels = {
+            'place': "Manzil",
+            'available': "Mavjud",
+        }
+        error_messages = {
+            'place': {
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'place': forms.TextInput(attrs={
+                'class': 'form-control',
+            }),
+            'available': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            }),
+        }
+
+
 class ResourceForm(forms.ModelForm):
-    """A form for adding resources available in the business."""
+    """A form for adding resources available in the business (available to admins only)."""
 
     class Meta:
 
@@ -1304,6 +1751,7 @@ class ResourceForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'worth': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
                 'required': "Forma to'ldirilmadi!",
             },
             'last_used_date': {
@@ -1340,9 +1788,9 @@ class ResourceForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
-            'worth': MoneyWidget(choices=currencies, attrs={
+            'worth': MoneyWidget(attrs={
                 'class': 'form-control',
-            }),
+            }, choices=currencies),
             'last_used_date': forms.DateInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
@@ -1360,8 +1808,62 @@ class ResourceForm(forms.ModelForm):
         }
 
 
+class RingPriceForm(forms.ModelForm):
+    """A form for adding ring type, size and price (available to admins only)."""
+
+    class Meta:
+
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = RingPrice
+        fields = [
+            'date', 'type', 'size', 'price',
+        ]
+        labels = {
+            'date': "Sana",
+            'type': "Turi",
+            'size': "O'lchami",
+            'price': "Narxi",
+        }
+        error_messages = {
+            'date': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'type': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'size': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'price': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
+            }),
+            'type': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'size': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'price': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+        }
+
+
 class RTypeForm(forms.ModelForm):
-    """A form for adding resource types to the model Resource."""
+    """A form for adding resource types to the model Resource (available to admins only)."""
 
     class Meta:
         model = RType
@@ -1393,16 +1895,16 @@ class RTypeForm(forms.ModelForm):
 
 
 class SelfOrderForm(forms.ModelForm):
-    """A form for making changes to order made by users for books provided by them (available for admins only)."""
+    """A form for making changes to order made by users for books provided by them (available to admins only)."""
 
     class Meta:
 
         model = Order
         fields = [
             'custom_book', 'book_type', 'ring_color', 'front_cover_color',
-            'back_cover_color', 'size', 'user_needs', 'number',
-            'place_to_get', 'customer', 'customer_number', 'customer_email',
-            'payment', 'status', 'delivered',
+            'back_cover_color', 'size', 'custom_page_number', 'number',
+            'user_needs', 'place_to_get', 'customer', 'customer_number',
+            'customer_email', 'payment', 'status', 'delivered',
         ]
         labels = {
             'custom_book': 'Kitob',
@@ -1411,10 +1913,11 @@ class SelfOrderForm(forms.ModelForm):
             'front_cover_color': 'Old muqova ranggi',
             'back_cover_color': 'Orqa muqova ranggi',
             'size': "O'lchami",
-            'user_needs': "Kitob kerak bo'ladigan vaqt",
+            'custom_page_number': "Betlari soni",
             'number': "Soni",
+            'user_needs': "Kitob kerak bo'ladigan vaqt",
             'place_to_get': "Buyurtmani olish mumkin bo'lgan joylar",
-            'customer': 'Mijoz',
+            'customer': 'Xaridor',
             'customer_number': "Telefon raqamingiz",
             'customer_email': "Email manzilingiz (agar mavjud bo'lsa)",
             'payment': "To'lov usuli",
@@ -1440,11 +1943,14 @@ class SelfOrderForm(forms.ModelForm):
             'size': {
                 'required': "Forma to'ldirilmadi!",
             },
-            'user_needs': {
-                'invalid': "Vaqt noto'g'ri formatda kiritildi!",
+            'custom_page_number': {
                 'required': "Forma to'ldirilmadi!",
             },
             'number': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'user_needs': {
+                'invalid': "Vaqt noto'g'ri formatda kiritildi!",
                 'required': "Forma to'ldirilmadi!",
             },
             'place_to_get': {
@@ -1490,13 +1996,15 @@ class SelfOrderForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'user_needs': forms.DateTimeInput(attrs={
+            'custom_page_number': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
             'number': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': '0',
+            }),
+            'user_needs': forms.DateTimeInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
             'place_to_get': forms.Select(attrs={
                 'class': 'form-control',
@@ -1526,14 +2034,14 @@ class SelfOrderForm(forms.ModelForm):
 
 
 class SiteOrderForm(forms.ModelForm):
-    """A form for making changes to order made by users for books available in the base (available for admins only)."""
+    """A form for making changes to order made by users for books available in the base (available to admins only)."""
 
     class Meta:
 
         model = Order
         fields = [
             'book', 'book_type', 'ring_color', 'front_cover_color',
-            'back_cover_color', 'size', 'user_needs', 'number',
+            'back_cover_color', 'size', 'number', 'user_needs',
             'place_to_get', 'customer', 'customer_number', 'customer_email',
             'payment', 'status', 'delivered',
         ]
@@ -1544,10 +2052,10 @@ class SiteOrderForm(forms.ModelForm):
             'front_cover_color': 'Old muqova ranggi',
             'back_cover_color': 'Orqa muqova ranggi',
             'size': "O'lchami",
-            'user_needs': "Kitob kerak bo'ladigan vaqt",
             'number': "Soni",
+            'user_needs': "Kitob kerak bo'ladigan vaqt",
             'place_to_get': "Buyurtmani olish mumkin bo'lgan joylar",
-            'customer': 'Mijoz',
+            'customer': 'Xaridor',
             'customer_number': "Telefon raqamingiz",
             'customer_email': "Email manzilingiz (agar mavjud bo'lsa)",
             'payment': "To'lov usuli",
@@ -1573,11 +2081,11 @@ class SiteOrderForm(forms.ModelForm):
             'size': {
                 'required': "Forma to'ldirilmadi!",
             },
-            'user_needs': {
-                'invalid': "Vaqt noto'g'ri formatda kiritildi!",
+            'number': {
                 'required': "Forma to'ldirilmadi!",
             },
-            'number': {
+            'user_needs': {
+                'invalid': "Vaqt noto'g'ri formatda kiritildi!",
                 'required': "Forma to'ldirilmadi!",
             },
             'place_to_get': {
@@ -1622,13 +2130,12 @@ class SiteOrderForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
+            'number': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
             'user_needs': forms.DateTimeInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
-            }),
-            'number': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': '0',
             }),
             'place_to_get': forms.Select(attrs={
                 'class': 'form-control',
@@ -1658,7 +2165,7 @@ class SiteOrderForm(forms.ModelForm):
 
 
 class SubCategoryExForm(forms.ModelForm):
-    """A form handling expense categories."""
+    """A form handling expense categories (available to admins only)."""
 
     class Meta:
         model = SubCategoryEx
@@ -1681,7 +2188,7 @@ class SubCategoryExForm(forms.ModelForm):
 
 
 class SubCategoryInForm(forms.ModelForm):
-    """A form handling expense categories."""
+    """A form handling expense categories (available to admins only)."""
 
     class Meta:
         model = SubCategoryIn
@@ -1705,7 +2212,7 @@ class SubCategoryInForm(forms.ModelForm):
 
 
 class TransactionForm(forms.ModelForm):
-    """A form for making transactions between accounts."""
+    """A form for making transactions between accounts (available to admins only)."""
 
     class Meta:
 
@@ -1733,6 +2240,7 @@ class TransactionForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'amount': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
                 'required': "Forma to'ldirilmadi!",
             }
         }
@@ -1744,6 +2252,60 @@ class TransactionForm(forms.ModelForm):
                 'class': 'form-control',
             }),
             'amount': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+        }
+
+
+class YarnPriceForm(forms.ModelForm):
+    """A form for adding prices to yarn based on type (available to admins only)."""
+
+    class Meta:
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = YarnPrice
+        fields = [
+            'date', 'type', 'size', 'price',
+        ]
+        labels = {
+            'date': "Sana",
+            'type': "Turi",
+            'size': "Kitob o'lchami",
+            'price': "Narx",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'type': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'size': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'price': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
+            }),
+            'type': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'size': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'price': MoneyWidget(attrs={
                 'class': 'form-control',
             }, choices=currencies),
         }
