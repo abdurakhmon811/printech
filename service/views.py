@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.db.models import ProtectedError
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, PermissionDenied, RequestAborted
+from django.db.models import ProtectedError, Q
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, RequestAborted
 from django.http import Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import AccountForm, \
@@ -32,6 +32,7 @@ from .models import Account, \
     SubCategoryEx, SubCategoryIn, \
     Transaction, \
     YarnPrice
+import decimal
 import math
 import re
 import json
@@ -1559,6 +1560,12 @@ def page_price(request):
                 form.add_error('size', "")
                 messages.error(request, "Kiritilgan sana, tur va o'lcham bo'yicha narx mavjud!")
             else:
+                try:
+                    def_or_redef_page_price(new_price)
+                except Http404:
+                    return render(request, 'service/external_prices_insufficient.html')
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_3.html')
                 new_price.save()
                 return redirect('pricing')
         else:
@@ -1594,6 +1601,12 @@ def edit_page_price(request, pageprice_id):
                 form.add_error('size', "")
                 messages.error(request, "Kiritilgan sana, tur va o'lcham bo'yicha narx mavjud!")
             else:
+                try:
+                    def_or_redef_page_price(edited_price)
+                except Http404:
+                    return render(request, 'service/external_prices_insufficient.html')
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_3.html')
                 edited_price.save()
                 return redirect('pricing')
         else:
@@ -1835,6 +1848,7 @@ def edit_color_price(request, colorprice_id):
     list_of_dicts = get_color_price_dicts(color_prices)
 
     c_price = get_object_or_404(ColorPrice, pk=colorprice_id)
+    initial_price_val = c_price.price
 
     if request.method != 'POST':
         form = ColorPriceForm(instance=c_price)
@@ -1842,6 +1856,7 @@ def edit_color_price(request, colorprice_id):
         form = ColorPriceForm(data=request.POST, instance=c_price)
         if form.is_valid():
             edited_price = form.save(commit=False)
+            edited_price_val = edited_price.price
             date_changed = 'date' in form.changed_data
             color_changed = 'color' in form.changed_data
             size_changed = 'size' in form.changed_data
@@ -1850,16 +1865,34 @@ def edit_color_price(request, colorprice_id):
             if not form.has_changed():
                 return redirect('pricing')
             elif form.has_changed() and all(array) is False and price_changed:
-                edited_price.save()
-                return redirect('pricing')
+                try:
+                    # Find the correlating page price and change its value according to the changes made in color price
+                    # Also abort the request in case duplicate objects found
+                    find_and_change_3(edited_price=edited_price,
+                                      edited_price_val=edited_price_val,
+                                      initial_price_val=initial_price_val)
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_4.html')
+                else:
+                    edited_price.save()
+                    return redirect('pricing')
             elif match_color_price_with_existing(list_of_dicts, edited_price):
                 form.add_error('date', "")
                 form.add_error('color', "")
                 form.add_error('size', "")
                 messages.error(request, "Kiritilgan sana, rang va o'lcham bo'yicha narx mavjud!")
             else:
-                edited_price.save()
-                return redirect('pricing')
+                try:
+                    # Find the correlating page price and change its value according to the changes made in color price
+                    # Also abort the request in case duplicate objects found
+                    find_and_change_3(edited_price=edited_price,
+                                      edited_price_val=edited_price_val,
+                                      initial_price_val=initial_price_val)
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_4.html')
+                else:
+                    edited_price.save()
+                    return redirect('pricing')
         else:
             messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
 
@@ -1877,8 +1910,24 @@ def delete_color_price(request, colorprice_id):
     check_super_user(request)
 
     c_price = get_object_or_404(ColorPrice, pk=colorprice_id)
-    c_price.delete()
-    return render(request, 'service/color_price_deleted.html')
+
+    page_prices = PagePrice.objects.filter(date=c_price.date,
+                                           type__icontains=c_price.color,
+                                           size=c_price.size)
+
+    # Get the list of page price dictionaries to check whether there are no duplicates
+    list_of_dicts = get_price_dicts(page_prices)
+
+    if not page_prices:
+        c_price.delete()
+        return render(request, 'service/color_price_deleted.html')
+    elif find_duplicates(list_of_dicts):
+        return render(request, 'service/multiple_objects_4.html')
+    else:
+        context = {
+            'page_prices': page_prices,
+        }
+        return render(request, 'service/not_delete_color_price.html', context)
 
 
 def cover_price(request):
@@ -1941,6 +1990,7 @@ def edit_cover_price(request, coverprice_id):
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in cover price
+                    # Also abort the request in case duplicate objects found
                     find_and_change_1(edited_price=edited_price,
                                       edited_price_val=edited_price_val,
                                       initial_price_val=initial_price_val)
@@ -1958,6 +2008,7 @@ def edit_cover_price(request, coverprice_id):
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in cover price
+                    # Also abort the request in case duplicate objects found
                     find_and_change_1(edited_price=edited_price,
                                       edited_price_val=edited_price_val,
                                       initial_price_val=initial_price_val)
@@ -2095,6 +2146,7 @@ def edit_glue_price(request, glueprice_id):
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in glue price
+                    # Also abort the request in case duplicate objects found
                     find_and_change_2(edited_price=edited_price,
                                       edited_price_val=edited_price_val,
                                       initial_price_val=initial_price_val)
@@ -2112,6 +2164,7 @@ def edit_glue_price(request, glueprice_id):
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in glue price
+                    # Also abort the request in case duplicate objects found
                     find_and_change_2(edited_price=edited_price,
                                       edited_price_val=edited_price_val,
                                       initial_price_val=initial_price_val)
@@ -2226,6 +2279,7 @@ def edit_paper_price(request, paperprice_id):
     list_of_dicts = get_price_dicts(paper_prices)
 
     p_price = get_object_or_404(PaperPrice, pk=paperprice_id)
+    initial_price_val = p_price.price
 
     if request.method != 'POST':
         form = PaperPriceForm(instance=p_price)
@@ -2233,6 +2287,7 @@ def edit_paper_price(request, paperprice_id):
         form = PaperPriceForm(data=request.POST, instance=p_price)
         if form.is_valid():
             edited_price = form.save(commit=False)
+            edited_price_val = edited_price.price
             date_changed = 'date' in form.changed_data
             type_changed = 'type' in form.changed_data
             size_changed = 'size' in form.changed_data
@@ -2241,16 +2296,34 @@ def edit_paper_price(request, paperprice_id):
             if not form.has_changed():
                 return redirect('pricing')
             elif form.has_changed() and all(array) is False and price_changed:
-                edited_price.save()
-                return redirect('pricing')
+                try:
+                    # Find the correlating page price and change its value according to the changes made in paper price
+                    # Also abort the request in case duplicate objects found
+                    find_and_change_3(edited_price=edited_price,
+                                      edited_price_val=edited_price_val,
+                                      initial_price_val=initial_price_val)
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_4.html')
+                else:
+                    edited_price.save()
+                    return redirect('pricing')
             elif match_with_existing(list_of_dicts, edited_price):
                 form.add_error('date', "")
                 form.add_error('type', "")
                 form.add_error('size', "")
                 messages.error(request, "Kiritilgan sana, tur ba o'lcham bo'yicha narx mavjud!")
             else:
-                edited_price.save()
-                return redirect('pricing')
+                try:
+                    # Find the correlating page price and change its value according to the changes made in paper price
+                    # Also Abort the request in case duplicate objects found
+                    find_and_change_3(edited_price=edited_price,
+                                      edited_price_val=edited_price_val,
+                                      initial_price_val=initial_price_val)
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_4.html')
+                else:
+                    edited_price.save()
+                    return redirect('pricing')
         else:
             messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
 
@@ -2268,8 +2341,24 @@ def delete_paper_price(request, paperprice_id):
     check_super_user(request)
 
     p_price = get_object_or_404(PaperPrice, pk=paperprice_id)
-    p_price.delete()
-    return render(request, 'service/paper_price_deleted.html')
+
+    page_prices = PagePrice.objects.filter(date=p_price.date,
+                                           type__icontains=p_price.type,
+                                           size='A4' if str(p_price.size) == 'A3' else 'A5')
+
+    # Get the list of page prices to check whether there are no duplicates
+    list_of_dicts = get_price_dicts(page_prices)
+
+    if not page_prices:
+        p_price.delete()
+        return render(request, 'service/paper_price_deleted.html')
+    elif find_duplicates(list_of_dicts):
+        return render(request, 'service/multiple_objects_4.html')
+    else:
+        context = {
+            'page_prices': page_prices,
+        }
+        return render(request, 'service/not_delete_paper_price.html', context)
 
 
 def yarn_price(request):
@@ -2332,6 +2421,7 @@ def edit_yarn_price(request, yarnprice_id):
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in yarn price
+                    # Also abort the request in case duplicate objects found
                     find_and_change_2(edited_price=edited_price,
                                       edited_price_val=edited_price_val,
                                       initial_price_val=initial_price_val)
@@ -2349,6 +2439,7 @@ def edit_yarn_price(request, yarnprice_id):
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in yarn price
+                    # Also abort the request in case duplicate objects found
                     find_and_change_2(edited_price=edited_price,
                                       edited_price_val=edited_price_val,
                                       initial_price_val=initial_price_val)
@@ -2453,6 +2544,7 @@ def edit_outer_prices(request, outerprice_id):
     out_prices = get_object_or_404(OuterPrice, pk=outerprice_id)
     initial_workforce = out_prices.workforce_expenses.amount
     initial_packaging = out_prices.packaging_expenses.amount
+    initial_printer = out_prices.printer_expenses.amount
 
     if request.method != 'POST':
         form = OuterPriceForm(instance=out_prices)
@@ -2462,17 +2554,37 @@ def edit_outer_prices(request, outerprice_id):
             edited_prices = form.save(commit=False)
             edited_workforce = edited_prices.workforce_expenses.amount
             edited_packaging = edited_prices.packaging_expenses.amount
+            edited_printer = edited_prices.printer_expenses.amount
             date_changed = 'date' in form.changed_data
+            staple_changed = 'staple_price' in form.changed_data
+            packaging_changed = 'packaging_expenses' in form.changed_data
+            workforce_changed = 'workforce_expenses' in form.changed_data
+            printer_changed = 'printer_expenses' in form.changed_data
+            bprice_to_be_changed = [staple_changed, packaging_changed, workforce_changed]
             if not form.has_changed():
                 return redirect('pricing')
             elif form.has_changed() and date_changed is False:
                 try:
-                    outex_edited_edit_bprice(initial_packaging=initial_packaging,
-                                             initial_workforce=initial_workforce,
-                                             edited_packaging=edited_packaging,
-                                             edited_prices=edited_prices,
-                                             edited_workforce=edited_workforce)
-                except PermissionDenied:
+                    if True in bprice_to_be_changed and printer_changed is False:
+                        outex_edited_edit_bprice(initial_packaging=initial_packaging,
+                                                 initial_workforce=initial_workforce,
+                                                 edited_packaging=edited_packaging,
+                                                 edited_prices=edited_prices,
+                                                 edited_workforce=edited_workforce)
+                    elif printer_changed is True and all(bprice_to_be_changed) is False:
+                        outex_edited_edit_pprice(initial_printer_exp=initial_printer,
+                                                 edited_prices=edited_prices,
+                                                 edited_printer_exp=edited_printer)
+                    else:
+                        outex_edited_edit_bprice(initial_packaging=initial_packaging,
+                                                 initial_workforce=initial_workforce,
+                                                 edited_packaging=edited_packaging,
+                                                 edited_prices=edited_prices,
+                                                 edited_workforce=edited_workforce)
+                        outex_edited_edit_pprice(initial_printer_exp=initial_printer,
+                                                 edited_prices=edited_prices,
+                                                 edited_printer_exp=edited_printer)
+                except RequestAborted:
                     return render(request, 'service/multiple_objects_2.html')
                 else:
                     edited_prices.save()
@@ -2482,12 +2594,26 @@ def edit_outer_prices(request, outerprice_id):
                 messages.error(request, "Kiritilgan sana bo'yicha narxlar mavjud!")
             else:
                 try:
-                    outex_edited_edit_bprice(initial_packaging=initial_packaging,
-                                             initial_workforce=initial_workforce,
-                                             edited_packaging=edited_packaging,
-                                             edited_prices=edited_prices,
-                                             edited_workforce=edited_workforce)
-                except PermissionDenied:
+                    if True in bprice_to_be_changed and printer_changed is False:
+                        outex_edited_edit_bprice(initial_packaging=initial_packaging,
+                                                 initial_workforce=initial_workforce,
+                                                 edited_packaging=edited_packaging,
+                                                 edited_prices=edited_prices,
+                                                 edited_workforce=edited_workforce)
+                    elif printer_changed is True and all(bprice_to_be_changed) is False:
+                        outex_edited_edit_pprice(initial_printer_exp=initial_printer,
+                                                 edited_prices=edited_prices,
+                                                 edited_printer_exp=edited_printer)
+                    else:
+                        outex_edited_edit_bprice(initial_packaging=initial_packaging,
+                                                 initial_workforce=initial_workforce,
+                                                 edited_packaging=edited_packaging,
+                                                 edited_prices=edited_prices,
+                                                 edited_workforce=edited_workforce)
+                        outex_edited_edit_pprice(initial_printer_exp=initial_printer,
+                                                 edited_prices=edited_prices,
+                                                 edited_printer_exp=edited_printer)
+                except RequestAborted:
                     return render(request, 'service/multiple_objects_2.html')
                 else:
                     edited_prices.save()
@@ -2510,24 +2636,22 @@ def delete_outer_prices(request, outerprice_id):
 
     out_prices = get_object_or_404(OuterPrice, pk=outerprice_id)
 
-    try:
-        binding_prices = BindingPrice.objects.filter(date=out_prices.date)
+    binding_prices = BindingPrice.objects.filter(date=out_prices.date)
+    page_prices = PagePrice.objects.filter(date=out_prices.date)
 
-        # Get the list of binding price dictionaries to check whether there are duplicates
-        list_of_dicts = get_price_dicts(binding_prices)
+    # Get the list of binding and page price dictionaries to check whether there are no duplicates
+    list_of_binding_price_dicts = get_price_dicts(binding_prices)
+    list_of_page_price_dicts = get_price_dicts(page_prices)
 
-        if not binding_prices:
-            raise Http404
-        elif find_duplicates(list_of_dicts):
-            raise PermissionDenied
-    except Http404:
+    if not binding_prices and not page_prices:
         out_prices.delete()
         return render(request, 'service/outer_prices_deleted.html')
-    except PermissionDenied:
+    elif find_duplicates(list_of_binding_price_dicts) or find_duplicates(list_of_page_price_dicts):
         return render(request, 'service/multiple_objects_2.html')
     else:
         context = {
             'binding_prices': binding_prices,
+            'page_prices': page_prices,
         }
         return render(request, 'service/not_delete_out_exps.html', context)
 
@@ -2996,7 +3120,6 @@ def delete_loss(request, loss_id):
 
 def search(request):
     """A view providing the content for the search page to illustrate the results."""
-    from django.db.models import Q
 
     if request.method == 'GET':
         searched = request.GET.get('searched')
@@ -3146,7 +3269,7 @@ def check_user(request, user):
 
 
 def edit_bprice(**kwargs):
-    """An assisting function editing the binding price based on cover price which is edited."""
+    """An assisting function editing the binding price based on edited correlated price."""
 
     edited_price_val = kwargs['edited_price_val']
     initial_price_val = kwargs['initial_price_val']
@@ -3167,6 +3290,65 @@ def edit_bprice(**kwargs):
             pass
 
 
+def edit_pprice(**kwargs):
+    """An assisting function editing the page price based on edited correlated price."""
+
+    edited_price = kwargs['edited_price']
+    edited_price_val = kwargs['edited_price_val']
+    initial_price_val = kwargs['initial_price_val']
+    price_to_be_changed = kwargs['price_to_be_changed']
+
+    if edited_price and edited_price_val and initial_price_val and price_to_be_changed:
+        if hasattr(edited_price, 'color') and str(edited_price.size) == 'A4':
+            if edited_price_val > initial_price_val:
+                gap = edited_price_val.amount - initial_price_val.amount
+                price_to_be_changed.price = price_to_be_changed.price.amount + (gap / 2)
+                price_to_be_changed.save()
+            elif edited_price_val.amount < initial_price_val.amount:
+                gap = initial_price_val.amount - edited_price_val.amount
+                price_to_be_changed.price = price_to_be_changed.price.amount - (gap / 2)
+                price_to_be_changed.save()
+            elif edited_price_val.amount == initial_price_val.amount:
+                pass
+        elif hasattr(edited_price, 'type') and str(edited_price.size) == 'A3':
+            if edited_price_val > initial_price_val:
+                gap = edited_price_val.amount - initial_price_val.amount
+                price_to_be_changed.price = price_to_be_changed.price.amount + (gap / 2)
+                price_to_be_changed.save()
+            elif edited_price_val.amount < initial_price_val.amount:
+                gap = initial_price_val.amount - edited_price_val.amount
+                price_to_be_changed.price = price_to_be_changed.price.amount - (gap / 2)
+                price_to_be_changed.save()
+            elif edited_price_val.amount == initial_price_val.amount:
+                pass
+        elif hasattr(edited_price, 'color') and str(edited_price.size) == 'A5':
+            if edited_price_val > initial_price_val:
+                gap = edited_price_val.amount - initial_price_val.amount
+                new_value = price_to_be_changed.price.amount + (gap / 4)
+                price_to_be_changed.price = new_value
+                price_to_be_changed.save()
+            elif edited_price_val.amount < initial_price_val.amount:
+                gap = initial_price_val.amount - edited_price_val.amount
+                new_value = price_to_be_changed.price.amount - (gap / 4)
+                price_to_be_changed.price = new_value
+                price_to_be_changed.save()
+            elif edited_price_val.amount == initial_price_val.amount:
+                pass
+        elif hasattr(edited_price, 'type') and str(edited_price.size) == 'A4':
+            if edited_price_val > initial_price_val:
+                gap = edited_price_val.amount - initial_price_val.amount
+                new_value = price_to_be_changed.price.amount + (gap / 4)
+                price_to_be_changed.price = new_value
+                price_to_be_changed.save()
+            elif edited_price_val.amount < initial_price_val.amount:
+                gap = initial_price_val.amount - edited_price_val.amount
+                new_value = price_to_be_changed.price.amount - (gap / 4)
+                price_to_be_changed.price = new_value
+                price_to_be_changed.save()
+            elif edited_price_val.amount == initial_price_val.amount:
+                pass
+
+
 def def_or_redef_binding_price(price):
     """An assisting function defining or redefining the chosen binding price based on the prices of other resources,
     and outer expenses."""
@@ -3185,7 +3367,6 @@ def def_or_redef_binding_price(price):
             price.price = math.fsum([cov_price.price.amount,
                                      outer_expenses.workforce_expenses.amount,
                                      outer_expenses.packaging_expenses.amount])
-            return price
     elif price.type == "Metal prujinalash":
         try:
             cov_price = CoverPrice.objects.get(date=price.date,
@@ -3200,7 +3381,6 @@ def def_or_redef_binding_price(price):
             price.price = math.fsum([cov_price.price.amount,
                                      outer_expenses.workforce_expenses.amount,
                                      outer_expenses.packaging_expenses.amount])
-            return price
     elif price.type == "Yumshoq muqovali yelimlash":
         try:
             cov_price = CoverPrice.objects.get(date=price.date,
@@ -3222,7 +3402,6 @@ def def_or_redef_binding_price(price):
                                      y_price.price.amount,
                                      outer_expenses.workforce_expenses.amount,
                                      outer_expenses.packaging_expenses.amount])
-            return price
     elif price.type == "Qattiq muqovali yelimlash":
         try:
             cov_price = CoverPrice.objects.get(date=price.date,
@@ -3244,7 +3423,6 @@ def def_or_redef_binding_price(price):
                                      y_price.price.amount,
                                      outer_expenses.workforce_expenses.amount,
                                      outer_expenses.packaging_expenses.amount])
-            return price
     elif price.type == "Steplerlash":
         try:
             outer_expenses = OuterPrice.objects.get(date=price.date)
@@ -3257,11 +3435,46 @@ def def_or_redef_binding_price(price):
                                      outer_expenses.packaging_expenses.amount,
                                      outer_expenses.workforce_expenses.amount])
 
-            return price
+    return price
+
+
+def def_or_redef_page_price(price):
+    """An assisting function defining or redefining a price for a single page."""
+
+    # PRICE parameter can take in either new price or edited price
+    try:
+        col_price = ColorPrice.objects.get(date=price.date,
+                                           color__in=list(get_list_of_words(str(price.type))),
+                                           size=price.size)
+        pap_price = PaperPrice.objects.get(date=price.date,
+                                           type__in=list(get_list_of_words(str(price.type))),
+                                           size='A3' if str(price.size) == 'A4' else 'A4')
+        outer_expenses = OuterPrice.objects.get(date=price.date)
+        # Delivery and electricity expenses should be accounted while an order is being made
+        printer_exp = outer_expenses.printer_expenses
+    except ObjectDoesNotExist:
+        raise Http404
+    except MultipleObjectsReturned:
+        raise RequestAborted
+    else:
+        if str(price.size) == 'A4':
+            price.price = math.fsum([
+                col_price.price.amount,
+                pap_price.price.amount,
+                printer_exp.amount,
+            ]) / 2
+        elif str(price.size) == 'A5':
+            price.price = math.fsum([
+                col_price.price.amount,
+                pap_price.price.amount,
+                printer_exp.amount,
+            ]) / 4
+
+        return price
 
 
 def find_and_change_1(**kwargs):
-    """An assisting function retrieving the queried object and changing its value using EDIT_BPRICE."""
+    """An assisting function retrieving the queried object and changing its value using EDIT_PRICE."""
 
     edited_price = kwargs['edited_price']
     edited_price_val = kwargs['edited_price_val']
@@ -3322,7 +3535,7 @@ def find_and_change_1(**kwargs):
 
 
 def find_and_change_2(**kwargs):
-    """An assisting function retrieving the queried object and changing its value using EDIT_BPRICE."""
+    """An assisting function retrieving the queried object and changing its value using EDIT_PRICE."""
 
     edited_price = kwargs['edited_price']
     edited_price_val = kwargs['edited_price_val']
@@ -3383,6 +3596,51 @@ def find_and_change_2(**kwargs):
                         price_to_be_changed=hg_binding_price)
 
 
+def find_and_change_3(**kwargs):
+    """An assisting function retrieving the queried object and changing its value using EDIT_PRICE."""
+
+    edited_price = kwargs['edited_price']
+    edited_price_val = kwargs['edited_price_val']
+    initial_price_val = kwargs['initial_price_val']
+
+    if hasattr(edited_price, 'color'):
+        page_prices = PagePrice.objects.filter(date=edited_price.date,
+                                               type__icontains=edited_price.color,
+                                               size=edited_price.size)
+
+        # Get the list of page prices to check whether there are no duplicates
+        list_of_dicts = get_price_dicts(page_prices)
+
+        if not page_prices:
+            pass
+        elif find_duplicates(list_of_dicts):
+            raise RequestAborted
+        else:
+            for pag_price in page_prices:
+                edit_pprice(edited_price=edited_price,
+                            edited_price_val=edited_price_val,
+                            initial_price_val=initial_price_val,
+                            price_to_be_changed=pag_price)
+    else:
+        page_prices = PagePrice.objects.filter(date=edited_price.date,
+                                               type__icontains=edited_price.type,
+                                               size='A4' if str(edited_price.size) == 'A3' else 'A5')
+
+        # Get the list of page prices to check whether there are no duplicates
+        list_of_dicts = get_price_dicts(page_prices)
+
+        if not page_prices:
+            pass
+        elif find_duplicates(list_of_dicts):
+            raise RequestAborted
+        else:
+            for pag_price in page_prices:
+                edit_pprice(edited_price=edited_price,
+                            edited_price_val=edited_price_val,
+                            initial_price_val=initial_price_val,
+                            price_to_be_changed=pag_price)
+
+
 def find_duplicates(array):
     """An assisting function finding the duplicate dictionaries and returning True or False based on the result."""
 
@@ -3400,6 +3658,36 @@ def find_string_in_list(string, array):
     for item in array:
         if re.fullmatch(string, item, flags=re.IGNORECASE):
             return string
+
+
+def get_color_price_dicts(prices):
+    """An assisting function retrieving the data from the provided queryset and
+    placing it to the list as dictionaries."""
+
+    list_of_price_dicts = []
+    for price in prices:
+        price_dict = {
+            'date': str(price.date),
+            'color': str(price.color),
+            'size': str(price.size),
+        }
+        list_of_price_dicts.append(price_dict)
+
+    return list_of_price_dicts
+
+
+def get_list_of_words(string):
+    """An assisting function taking in a string and returning a list, the items of which are words contained
+    in the provided string."""
+
+    array = []
+    for word in string.split():
+        array.append(str(word.strip('()')))
+
+    array = [pattern.replace('rangli', 'rangli'.capitalize()) for pattern in array]
+    array = [pattern.replace('qora', 'qora'.capitalize()) for pattern in array]
+
+    return array
 
 
 def get_price_dates(prices):
@@ -3422,22 +3710,6 @@ def get_price_dicts(prices):
         price_dict = {
             'date': str(price.date),
             'type': str(price.type),
-            'size': str(price.size),
-        }
-        list_of_price_dicts.append(price_dict)
-
-    return list_of_price_dicts
-
-
-def get_color_price_dicts(prices):
-    """An assisting function retrieving the data from the provided queryset and
-    placing it to the list as dictionaries."""
-
-    list_of_price_dicts = []
-    for price in prices:
-        price_dict = {
-            'date': str(price.date),
-            'color': str(price.color),
             'size': str(price.size),
         }
         list_of_price_dicts.append(price_dict)
@@ -3484,8 +3756,7 @@ def match_with_existing_dates(list_of_dates, price):
 
 
 def outex_edited_edit_bprice(**kwargs):
-    """An assisting function editing all binding prices except stapling ones
-    based on the edited price of outer expenses."""
+    """An assisting function editing all binding prices based on the edited price of outer expenses."""
 
     initial_packaging = kwargs['initial_packaging']
     initial_workforce = kwargs['initial_workforce']
@@ -3502,7 +3773,7 @@ def outex_edited_edit_bprice(**kwargs):
     list_of_dicts = get_price_dicts(binding_prices)
 
     if find_duplicates(list_of_dicts):
-        raise PermissionDenied
+        raise RequestAborted
     else:
         if binding_prices:
             for binding_price in binding_prices:
@@ -3514,6 +3785,43 @@ def outex_edited_edit_bprice(**kwargs):
                     gap = int(sum_initial_exps) - int(sum_edited_exps)
                     binding_price.price = binding_price.price.amount - gap
                     binding_price.save()
+
+
+def outex_edited_edit_pprice(**kwargs):
+    """An assisting function editing all page prices based on the edited price of outer expenses."""
+
+    initial_printer_exp = kwargs['initial_printer_exp']
+    edited_printer_exp = kwargs['edited_printer_exp']
+    edited_prices = kwargs['edited_prices']
+
+    page_prices = PagePrice.objects.filter(date=edited_prices.date)
+
+    # Get the list of page price dictionaries to check whether there are no duplicates
+    list_of_dicts = get_price_dicts(page_prices)
+
+    if find_duplicates(list_of_dicts):
+        raise RequestAborted
+    else:
+        if page_prices:
+            for pag_price in page_prices:
+                if str(pag_price.size) == 'A4':
+                    if edited_printer_exp > initial_printer_exp:
+                        gap = int(edited_printer_exp) - int(initial_printer_exp)
+                        pag_price.price = pag_price.price.amount + decimal.Decimal(gap / 2)
+                        pag_price.save()
+                    elif edited_printer_exp < initial_printer_exp:
+                        gap = int(initial_printer_exp) - int(edited_printer_exp)
+                        pag_price.price = pag_price.price.amount - decimal.Decimal(gap / 2)
+                        pag_price.save()
+                elif str(pag_price.size) == 'A5':
+                    if edited_printer_exp > initial_printer_exp:
+                        gap = int(edited_printer_exp) - int(initial_printer_exp)
+                        pag_price.price = pag_price.price.amount + decimal.Decimal(gap / 4)
+                        pag_price.save()
+                    elif edited_printer_exp < initial_printer_exp:
+                        gap = int(initial_printer_exp) - int(edited_printer_exp)
+                        pag_price.price = pag_price.price.amount - decimal.Decimal(gap / 4)
+                        pag_price.save()
 
 
 def provide_dicts(objs):

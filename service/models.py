@@ -605,7 +605,6 @@ class GluePrice(models.Model):
 class OuterPrice(models.Model):
     """A model handling the prices for orders and resources."""
 
-    # As of
     date = models.DateField(auto_now_add=False, null=True)
     staple_price = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
     packaging_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
@@ -626,9 +625,12 @@ class PagePrice(models.Model):
     """A model handling page prices based on sizes."""
 
     types = [
-        ('Classic', 'Classic'),
-        ('ECO', 'ECO'),
-        ('Premium', 'Premium'),
+        ('Classic (qora)', 'Classic (qora)'),
+        ('Classic (rangli)', 'Classic (rangli)'),
+        ('ECO (qora)', 'ECO (qora)'),
+        ('ECO (rangli)', 'ECO (rangli)'),
+        ('Premium (qora)', 'Premium (qora)'),
+        ('Premium (rangli)', 'Premium (rangli)'),
     ]
     sizes = [
         ('A4', 'A4'),

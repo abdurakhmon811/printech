@@ -8,21 +8,81 @@
         <img src="{% static 'images/attention.jpg' %}" height="150">
         <h4 class="fw-light mt-4">So'rov rad etildi!</h4>
         <h5 class="fw-light mb-3">
-            Ma'lumotlar ulash turi narx(lar)ini aniqlash uchun ishlatilgan va shu
+            Ma'lumotlar bir bet uchun narx(lar)ni yoki/va ulash turi narx(lar)ini aniqlash uchun ishlatilgan va shu
             sababli o'chirish ta'qiqlanadi. Ta'qiqni olish uchun quyidagi havola(lar) orqali bog'liq
-            bo'lgan ulash narx(lar)ini o'chiring
+            bo'lgan bir bet uchun narx(lar)ni yoki/va ulash narx(lar)ini o'chiring
         </h5>
-        {% for binding_price in binding_prices %}
-            <a class="link-hover fw-normal" href="{% url 'edit_binding_price' binding_price.id %}"
-                style="line-height: 2rem;">
-                <cite>
-                    Ulash-narxlari&gt;
-                    {{ binding_price.date|date:'d-m-Y' }}&gt;
-                    {{ binding_price.type }}&gt;
-                    {{ binding_price.size }}&gt;...
-                </cite>
-            </a><br>
-        {% endfor %}
+        {% if binding_prices and page_prices %}
+            {% for binding_price in binding_prices %}
+                <a class="link-hover fw-normal" href="{% url 'edit_binding_price' binding_price.id %}"
+                    style="line-height: 2rem;">
+                    <cite>
+                        Ulash-narxlari&gt;
+                        {{ binding_price.date|date:'d-m-Y' }}&gt;
+                        {{ binding_price.type }}&gt;
+                        {{ binding_price.size }}&gt;...
+                    </cite>
+                </a><br>
+            {% endfor %}
+            {% for page_price in page_prices %}
+                <a class="link-hover fw-normal" href="{% url 'edit_page_price' page_price.id %}"
+                    style="line-height: 2rem;">
+                    <cite>
+                        Bir-bet-uchun-narxlar&gt;
+                        {{ page_price.date|date:'d-m-Y' }}&gt;
+                        {{ page_price.type }}&gt;
+                        {{ page_price.size }}&gt;...
+                    </cite>
+                </a><br>
+            {% endfor %}
+        {% elif binding_prices and not page_prices %}
+            {% for binding_price in binding_prices %}
+                <a class="link-hover fw-normal" href="{% url 'edit_binding_price' binding_price.id %}"
+                    style="line-height: 2rem;">
+                    <cite>
+                        Ulash-narxlari&gt;
+                        {{ binding_price.date|date:'d-m-Y' }}&gt;
+                        {{ binding_price.type }}&gt;
+                        {{ binding_price.size }}&gt;...
+                    </cite>
+                </a><br>
+            {% endfor %}
+        {% elif not binding_prices and page_prices %}
+            {% for page_price in page_prices %}
+                <a class="link-hover fw-normal" href="{% url 'edit_page_price' page_price.id %}"
+                    style="line-height: 2rem;">
+                    <cite>
+                        Bir-bet-uchun-narxlar&gt;
+                        {{ page_price.date|date:'d-m-Y' }}&gt;
+                        {{ page_price.type }}&gt;
+                        {{ page_price.size }}&gt;...
+                    </cite>
+                </a><br>
+            {% endfor %}
+        {% else %}
+            {% for binding_price in binding_prices %}
+                <a class="link-hover fw-normal" href="{% url 'edit_binding_price' binding_price.id %}"
+                    style="line-height: 2rem;">
+                    <cite>
+                        Ulash-narxlari&gt;
+                        {{ binding_price.date|date:'d-m-Y' }}&gt;
+                        {{ binding_price.type }}&gt;
+                        {{ binding_price.size }}&gt;...
+                    </cite>
+                </a><br>
+            {% endfor %}
+            {% for page_price in page_prices %}
+                <a class="link-hover fw-normal" href="{% url 'edit_page_price' page_price.id %}"
+                    style="line-height: 2rem;">
+                    <cite>
+                        Bir-bet-uchun-narxlar&gt;
+                        {{ page_price.date|date:'d-m-Y' }}&gt;
+                        {{ page_price.type }}&gt;
+                        {{ page_price.size }}&gt;...
+                    </cite>
+                </a><br>
+            {% endfor %}
+        {% endif %}
         <a class="btn btn-warning fw-light mt-4" href="{% url 'pricing' %}">Orqaga qaytish</a>
     </div>
 </div>
