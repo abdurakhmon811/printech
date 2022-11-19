@@ -1,17 +1,19 @@
 from django import forms
 from .models import Account, \
     BindingPrice, BlogPost, Book, \
-    CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, CreateSite, CoverPrice, \
+    CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, Coupon, CoverPrice, CreateSite, \
+    Discount, \
     Expense, \
     GluePrice, \
     Income, \
     LType, Loss, \
     News, \
     Order, OrderOptions, OuterPrice, \
-    PagePrice, PaperPrice, PlaceToGet, \
-    Resource, RingPrice, RType, \
+    PagePrice, PaperPrice, PlaceToGet, Printer, \
+    RefillAndPageCount, Resource, RingPrice, RType, \
     SubCategoryEx, SubCategoryIn, \
     Transaction, \
+    Workforce, \
     YarnPrice
 import time
 
@@ -359,7 +361,7 @@ class ColorPriceForm(forms.ModelForm):
             'date': "Sana",
             'color': "Rang",
             'size': "Kitob o'lchami",
-            'price': "Narx",
+            'price': "Narx (bir bet uchun)",
         }
         error_messages = {
             'date': {
@@ -613,6 +615,55 @@ class ContactForm(forms.ModelForm):
         }
 
 
+class CouponForm(forms.ModelForm):
+    """A form for adding coupons for discounts."""
+
+    class Meta:
+
+        model = Coupon
+        fields = [
+            'date_release', 'type', 'lifetime', 'status',
+        ]
+        labels = {
+            'date_release': "Chiqarilgan sana",
+            'type': "Turi",
+            'lifetime': "Muddati",
+            'status': "Holati",
+        }
+        error_messages = {
+            'date_release': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'type': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'lifetime': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'status': {
+                'required': "Forma to'ldirilmadi!",
+            }
+        }
+        widgets = {
+            'date_release': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
+            }),
+            'type': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'lifetime': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
+            }),
+            'status': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+        }
+
+
 class CoverPriceForm(forms.ModelForm):
     """A form for adding prices to covers based on type and size (available to admins only)."""
 
@@ -757,6 +808,53 @@ class CreateSiteForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Xabar...',
                 'required': True,
+            }),
+        }
+
+
+class DiscountForm(forms.ModelForm):
+    """A form for adding discounts for orders from those who have got special coupons and in general."""
+
+    class Meta:
+
+        model = Discount
+        fields = [
+            'date', 'coupon', 'for_books', 'minus',
+        ]
+        labels = {
+            'date': "Sana",
+            'coupon': "Kupon",
+            'for_books': "Kitoblar soni",
+            'minus': "Chegirma foizi",
+        }
+        error_messages = {
+            'date': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'coupon': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'for_books': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'minus': {
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
+            }),
+            'coupon': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'for_books': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
+            'minus': forms.NumberInput(attrs={
+                'class': 'form-control',
             }),
         }
 
@@ -1509,17 +1607,17 @@ class OuterPriceForm(forms.ModelForm):
         ]
         labels = {
             'date': "Sana",
-            'staple_price': "Stepler o'qi narxi (1 donasi uchun)",
-            'packaging_expenses': "Qadoqlash xarajati (1 kitob uchun (A5))",
-            'delivery_expenses': "Yetkazib berish xarajatlari (1 kitob uchun)",
-            'workforce_expenses': "Ishchi kuchi xarajatlari (1 kitob uchun)",
-            'electricity_expenses': "Elektr toki xarajatlari (1 kitob uchun)",
-            'printer_expenses': "Printer xarajatlari (1 varoq uchun)",
+            'staple_price': "Stepler o'qi narxi",
+            'packaging_expenses': "Qadoqlash xarajati",
+            'delivery_expenses': "Yetkazib berish xarajatlari",
+            'workforce_expenses': "Ishchi kuchi xarajatlari",
+            'electricity_expenses': "Elektr toki xarajatlari",
+            'printer_expenses': "Printer xarajatlari (A4)",
             'profit': "Sof foyda (%)",
         }
         error_messages = {
             'date': {
-                'invalid': "Sana noto'g'ri kiritildi!",
+                'invalid': "Forma noto'g'ri to'ldirildi!",
                 'required': "Forma to'ldirilmadi!",
             },
             'staple_price': {
@@ -1557,21 +1655,27 @@ class OuterPriceForm(forms.ModelForm):
             }),
             'staple_price': MoneyWidget(attrs={
                 'class': 'form-control',
+                'placeholder': "Bir o'qi",
             }, choices=currencies),
             'packaging_expenses': MoneyWidget(attrs={
                 'class': 'form-control',
+                'placeholder': "Bir kitob uchun (o'rtacha narxi)",
             }, choices=currencies),
             'delivery_expenses': MoneyWidget(attrs={
                 'class': 'form-control',
+                'placeholder': "Bir kitob uchun",
             }, choices=currencies),
             'workforce_expenses': MoneyWidget(attrs={
                 'class': 'form-control',
+                'placeholder': "Bir kitob uchun",
             }, choices=currencies),
             'electricity_expenses': MoneyWidget(attrs={
                 'class': 'form-control',
+                'placeholder': "Bir kitob uchun",
             }, choices=currencies),
             'printer_expenses': MoneyWidget(attrs={
                 'class': 'form-control',
+                'placeholder':  "Bir bet uchun",
             }, choices=currencies),
             'profit': forms.NumberInput(attrs={
                 'class': 'form-control',
@@ -1645,7 +1749,7 @@ class PaperPriceForm(forms.ModelForm):
             'date': "Sana",
             'type': "Turi",
             'size': "O'lchami",
-            'price': "Narxi",
+            'price': "Narxi  (bir bet uchun)",
         }
         error_messages = {
             'date': {
@@ -1704,6 +1808,124 @@ class PlaceToGetForm(forms.ModelForm):
             }),
             'available': forms.CheckboxInput(attrs={
                 'class': 'form-check-input',
+            }),
+        }
+
+
+class PrinterForm(forms.ModelForm):
+    """A form for adding printer information."""
+
+    class Meta:
+
+        model = Printer
+        fields = [
+            'name', 'model', 'bought_at', 'status_when_bought',
+            'initial_page_count', 'current_page_count', 'current_status',
+        ]
+        labels = {
+            'name': "Nomi",
+            'model': "Modeli",
+            'bought_at': "Sotib olingan vaqti",
+            'status_when_bought': "Sotib olingandagi holati",
+            'initial_page_count': "Chop etgan betlari soni (boshlang'ich)",
+            'current_page_count': "Chop etgan betlari soni (ayni damdagi)",
+            'current_status': "Ayni damdagi holati",
+        }
+        error_messages = {
+            'name': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'model': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'bought_at': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'status_when_bought': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'initial_page_count': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'current_page_count': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'current_status': {
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'printer': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Canon',
+            }),
+            'model': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'ImageRUNNER 2206N',
+            }),
+            'bought_at': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
+            }),
+            'status_when_bought': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'initial_page_count': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
+            'current_page_count': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
+            'current_status': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+        }
+
+
+class RefillAndPageCountForm(forms.ModelForm):
+    """A form for adding counting information on the printers that are in service."""
+
+    class Meta:
+
+        model = RefillAndPageCount
+        fields = [
+            'printer', 'total_refill_count', 'last_refill', 'printed',
+        ]
+        labels = {
+            'printer': "Printer",
+            'total_refill_count': "Umumiy rang to'ldirishlar soni (sotib olinganidan beri)",
+            'last_refill': "So'nggi rang to'ldirish sanasi",
+            'printed': "Chop etgan betlari soni",
+        }
+        error_messages = {
+            'printer': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'total_refill_count': {
+                'required': "Forma to'ldirilmadi!",
+            },
+            'last_refill': {
+                'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'printed': {
+                'required': "Forma to'ldirilmadi!",
+            },
+        }
+        widgets = {
+            'printer': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'total_refill_count': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
+            'last_refill': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
+            }),
+            'printed': forms.NumberInput(attrs={
+                'class': 'form-control',
             }),
         }
 
@@ -2257,10 +2479,118 @@ class TransactionForm(forms.ModelForm):
         }
 
 
+class WorkforceForm(forms.ModelForm):
+    """A form for adding information on workers that are in service or out."""
+
+    class Meta:
+
+        currencies = [
+            ('EUR', 'EUR'),
+            ('RUB', 'RUB'),
+            ('USD', 'USD'),
+            ('UZS', 'UZS'),
+        ]
+
+        model = Workforce
+        fields = [
+            'name', 'surname', 'middle_name', 'age',
+            'address_living', 'career_status', 'joined_service', 'position',
+            'salary', 'last_salary_reception', 'last_salary_paid',
+        ]
+        labels = {
+            'name': "Ismi",
+            'surname': "Famliyasi",
+            'middle_name': "Sharifi (ixtiyoriy)",
+            'age': "Yoshi",
+            'address_living': "Yashash manzili",
+            'career_status': "Martabasi",
+            'joined_service': "Xizmatga qo'shilgan vaqti",
+            'position': "Lavozimi",
+            'salary': "Ish haqqi",
+            'last_salary_reception': "So'nggi marta ish haqqini qabul qilgan sana",
+            'last_salary_paid': "So'nggi ish haqqi to'landi",
+        }
+        error_messages = {
+            'name': {
+                'required': "Forma to'ldirilmadi!"
+            },
+            'surname': {
+                'required': "Forma to'ldirilmadi!"
+            },
+            'age': {
+                'required': "Forma to'ldirilmadi!"
+            },
+            'address_living': {
+                'required': "Forma to'ldirilmadi!"
+            },
+            'career_status': {
+                'required': "Forma to'ldirilmadi!"
+            },
+            'joined_service': {
+                'invalid': "Forma noto'g'ri to'ldirildi",
+                'required': "Forma to'ldirilmadi!"
+            },
+            'position': {
+                'required': "Forma to'ldirilmadi!"
+            },
+            'salary': {
+                'required': "Forma to'ldirilmadi!"
+            },
+            'last_salary_reception': {
+                'invalid': "Forma noto'g'ri to'ldirildi",
+                'required': "Forma to'ldirilmadi!"
+            },
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Rasul',
+            }),
+            'surname': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Rasulov',
+            }),
+            'middle_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Rasulovich',
+            }),
+            'age': forms.NumberInput(attrs={
+                'class': 'form-control',
+            }),
+            'address_living': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Qarshi shahri, XXXXX mahallasi, XXXXX ko'chasi 00-uy",
+            }),
+            'career_status': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Talaba/Hech qayerda o'qimaydi/...",
+            }),
+            'joined_service': forms.DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
+            }),
+            'position': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Ish boshqaruvchi/Kitob ulovchi/Kesuvchi/..."
+            }),
+            'salary': MoneyWidget(attrs={
+                'class': 'form-control',
+            }, choices=currencies),
+            'last_salary_reception': forms.DateInput(attrs={
+                'class': "form-control",
+                'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
+            }),
+            'last_salary_paid': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            })
+        }
+
+
 class YarnPriceForm(forms.ModelForm):
     """A form for adding prices to yarn based on type (available to admins only)."""
 
     class Meta:
+
         currencies = [
             ('EUR', 'EUR'),
             ('RUB', 'RUB'),

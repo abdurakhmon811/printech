@@ -56,7 +56,7 @@ class Book(models.Model):
     name_coded = models.CharField(max_length=50, null=True)
     picture = models.ImageField(default='user_loaded_images',
                                 null=True, blank=True, upload_to='user_loaded_images/')
-    pages = models.IntegerField(null=True)
+    pages = models.PositiveIntegerField(null=True)
     chars = models.TextField(default=None, null=True)
     telegram_link = models.URLField(default=None, null=True)
 
@@ -119,7 +119,7 @@ class CreateSite(models.Model):
     f_name = models.CharField(max_length=200, null=True)
     l_name = models.CharField(max_length=200, null=True)
     m_name = models.CharField(max_length=200, null=True)
-    age = models.IntegerField(default=18, null=True, blank=True)
+    age = models.PositiveIntegerField(default=18, null=True, blank=True)
     person = models.CharField(max_length=25, choices=person_choices, null=True)
     company = models.CharField(null=True, blank=True, max_length=200)
     mail = models.EmailField(default=None, null=True)
@@ -133,6 +133,56 @@ class CreateSite(models.Model):
     def __str__(self):
 
         return f'{self.f_name[:50]}...'
+
+
+# ========================================== A model for using in Discount ==========================================
+
+
+class Coupon(models.Model):
+    """A model handling coupons for discounting."""
+
+    statuses = [
+        ("Faol", "Faol"),
+        ("To'xtatilgan", "To'xtatilgan"),
+        ("Muddati o'tgan", "Muddati o'tgan"),
+    ]
+
+    types = [
+        ('Classic', 'Classic'),
+        ('Silver', 'Silver'),
+        ('Gold', 'Gold'),
+        ('Premium', 'Premium'),
+    ]
+
+    date_release = models.DateField(auto_now_add=False)
+    type = models.CharField(max_length=10, choices=types, null=True)
+    lifetime = models.DateField(auto_now_add=False, null=True)
+    code = models.CharField(max_length=15, null=True)
+    status = models.CharField(max_length=20, choices=statuses, null=True)
+
+    objects = models.Manager()
+
+    def __str__(self):
+
+        return f'*****{self.code[5:10]}*****'
+
+
+# ===================================================================================================================
+
+
+class Discount(models.Model):
+    """A model handling discounts for orders from those who have got special coupons and in general."""
+
+    date = models.DateField(auto_now_add=False, null=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.PROTECT)
+    for_books = models.PositiveIntegerField(null=True)
+    minus = models.PositiveIntegerField(null=True)
+
+    objects = models.Manager()
+
+    def __str__(self):
+
+        return str(self.date)
 
 
 # ================================== Models for using for Expense and Income models ==================================
@@ -502,6 +552,56 @@ class OrderOptions(models.Model):
         return str(self.date)
 
 
+class Printer(models.Model):
+    """A model handling information on the printers that exist in the service."""
+
+    statuses = [
+        ("Soz", "Soz"),
+        ("Mayda buzilishlari mavjud", "Mayda buzilishlari mavjud"),
+        ("Ta'mir talab", "Ta'mir talab"),
+    ]
+
+    statuses_when_bought = [
+        ("Yangi", "Yangi"),
+        ("Ishlatilgan", "Ishlatilgan"),
+    ]
+
+    name = models.CharField(max_length=150, null=True)
+    model = models.CharField(max_length=150, null=True)
+    bought_at = models.DateField(auto_now_add=False, null=True)
+    status_when_bought = models.CharField(max_length=20, choices=statuses_when_bought, null=True)
+    initial_page_count = models.PositiveIntegerField(null=True)
+    current_page_count = models.PositiveIntegerField(null=True)
+    current_status = models.CharField(max_length=50, choices=statuses, null=True)
+
+    objects = models.Manager()
+
+    def __str__(self):
+
+        return self.name
+
+
+# ========================================= A submodel for the model Printer =========================================
+
+
+class RefillAndPageCount(models.Model):
+    """A model handling some dynamic counting information from the model Printer."""
+
+    printer = models.ForeignKey(Printer, on_delete=models.PROTECT)
+    total_refill_count = models.PositiveIntegerField(null=True)
+    last_refill = models.DateTimeField(auto_now_add=False, null=True)
+    printed = models.PositiveIntegerField(null=True)
+
+    objects = models.Manager()
+
+    def __str__(self):
+
+        return str(self.printer.name)
+
+
+# ====================================================================================================================
+
+
 # ======================================== Models for using in Prices section ========================================
 
 
@@ -612,7 +712,7 @@ class OuterPrice(models.Model):
     workforce_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
     electricity_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
     printer_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
-    profit = models.IntegerField()
+    profit = models.PositiveIntegerField(null=True)
 
     objects = models.Manager()
 
@@ -658,8 +758,8 @@ class PaperPrice(models.Model):
         ('Premium', 'Premium'),
     ]
     sizes = [
-        ('A3', 'A3'),
         ('A4', 'A4'),
+        ('A5', 'A5'),
     ]
 
     date = models.DateField(auto_now_add=False, null=True)
@@ -786,7 +886,7 @@ class Resource(models.Model):
     worth = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS',
                        currency_choices=currencies, null=True)
     last_used_date = models.DateField(auto_now_add=False, null=True, blank=True)
-    amount_used = models.IntegerField(null=True, blank=True)
+    amount_used = models.PositiveIntegerField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     available = models.CharField(max_length=100, null=True)
 
@@ -818,3 +918,38 @@ class Transaction(models.Model):
     def __repr__(self):
 
         return self.amount
+
+
+class Workforce(models.Model):
+    """A model handling workforce information from those working for the service."""
+
+    class Meta:
+
+        verbose_name = 'Workforce'
+        verbose_name_plural = 'Workforce'
+
+    currencies = [
+        ('EUR', 'EUR'),
+        ('RUB', 'RUB'),
+        ('USD', 'USD'),
+        ('UZS', 'UZS'),
+    ]
+
+    name = models.CharField(max_length=200, null=True)
+    surname = models.CharField(max_length=200, null=True)
+    middle_name = models.CharField(max_length=200, null=True, blank=True)
+    age = models.PositiveIntegerField(null=True)
+    address_living = models.CharField(max_length=200, null=True)
+    career_status = models.CharField(max_length=200, null=True)
+    joined_service = models.DateField(auto_now_add=False, null=True)
+    position = models.CharField(max_length=200, null=True)
+    salary = MoneyField(max_digits=50, decimal_places=2,
+                        default_currency='UZS', currency_choices=currencies, null=True)
+    last_salary_reception = models.DateField(auto_now_add=False, null=True)
+    last_salary_paid = models.BooleanField(null=True)
+
+    objects = models.Manager()
+
+    def __str__(self):
+
+        return f'{self.name} {self.surname}'

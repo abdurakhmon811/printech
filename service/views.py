@@ -20,17 +20,19 @@ from .forms import AccountForm, \
     YarnPriceForm
 from .models import Account, \
     BindingPrice, BlogPost, Book, \
-    CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, CreateSite, CoverPrice, \
+    CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, Coupon, CoverPrice, CreateSite, \
+    Discount, \
     Expense, \
     GluePrice, \
     Income, \
     LType, Loss, \
     News, \
     Order, OrderOptions, OuterPrice, \
-    PagePrice, PaperPrice, PlaceToGet, \
-    Resource, RingPrice, RType, \
+    PagePrice, PaperPrice, PlaceToGet, Printer, \
+    RefillAndPageCount, Resource, RingPrice, RType, \
     SubCategoryEx, SubCategoryIn, \
     Transaction, \
+    Workforce, \
     YarnPrice
 import decimal
 import math
@@ -3302,34 +3304,34 @@ def edit_pprice(**kwargs):
         if hasattr(edited_price, 'color') and str(edited_price.size) == 'A4':
             if edited_price_val > initial_price_val:
                 gap = edited_price_val.amount - initial_price_val.amount
-                price_to_be_changed.price = price_to_be_changed.price.amount + (gap / 2)
+                price_to_be_changed.price = price_to_be_changed.price.amount + gap
                 price_to_be_changed.save()
             elif edited_price_val.amount < initial_price_val.amount:
                 gap = initial_price_val.amount - edited_price_val.amount
-                price_to_be_changed.price = price_to_be_changed.price.amount - (gap / 2)
+                price_to_be_changed.price = price_to_be_changed.price.amount - gap
                 price_to_be_changed.save()
             elif edited_price_val.amount == initial_price_val.amount:
                 pass
         elif hasattr(edited_price, 'type') and str(edited_price.size) == 'A3':
             if edited_price_val > initial_price_val:
                 gap = edited_price_val.amount - initial_price_val.amount
-                price_to_be_changed.price = price_to_be_changed.price.amount + (gap / 2)
+                price_to_be_changed.price = price_to_be_changed.price.amount + gap
                 price_to_be_changed.save()
             elif edited_price_val.amount < initial_price_val.amount:
                 gap = initial_price_val.amount - edited_price_val.amount
-                price_to_be_changed.price = price_to_be_changed.price.amount - (gap / 2)
+                price_to_be_changed.price = price_to_be_changed.price.amount - gap
                 price_to_be_changed.save()
             elif edited_price_val.amount == initial_price_val.amount:
                 pass
         elif hasattr(edited_price, 'color') and str(edited_price.size) == 'A5':
             if edited_price_val > initial_price_val:
                 gap = edited_price_val.amount - initial_price_val.amount
-                new_value = price_to_be_changed.price.amount + (gap / 4)
+                new_value = price_to_be_changed.price.amount + gap
                 price_to_be_changed.price = new_value
                 price_to_be_changed.save()
             elif edited_price_val.amount < initial_price_val.amount:
                 gap = initial_price_val.amount - edited_price_val.amount
-                new_value = price_to_be_changed.price.amount - (gap / 4)
+                new_value = price_to_be_changed.price.amount - gap
                 price_to_be_changed.price = new_value
                 price_to_be_changed.save()
             elif edited_price_val.amount == initial_price_val.amount:
@@ -3337,12 +3339,12 @@ def edit_pprice(**kwargs):
         elif hasattr(edited_price, 'type') and str(edited_price.size) == 'A4':
             if edited_price_val > initial_price_val:
                 gap = edited_price_val.amount - initial_price_val.amount
-                new_value = price_to_be_changed.price.amount + (gap / 4)
+                new_value = price_to_be_changed.price.amount + gap
                 price_to_be_changed.price = new_value
                 price_to_be_changed.save()
             elif edited_price_val.amount < initial_price_val.amount:
                 gap = initial_price_val.amount - edited_price_val.amount
-                new_value = price_to_be_changed.price.amount - (gap / 4)
+                new_value = price_to_be_changed.price.amount - gap
                 price_to_be_changed.price = new_value
                 price_to_be_changed.save()
             elif edited_price_val.amount == initial_price_val.amount:
@@ -3448,7 +3450,7 @@ def def_or_redef_page_price(price):
                                            size=price.size)
         pap_price = PaperPrice.objects.get(date=price.date,
                                            type__in=list(get_list_of_words(str(price.type))),
-                                           size='A3' if str(price.size) == 'A4' else 'A4')
+                                           size=price.size)
         outer_expenses = OuterPrice.objects.get(date=price.date)
         # Delivery and electricity expenses should be accounted while an order is being made
         printer_exp = outer_expenses.printer_expenses
@@ -3462,13 +3464,13 @@ def def_or_redef_page_price(price):
                 col_price.price.amount,
                 pap_price.price.amount,
                 printer_exp.amount,
-            ]) / 2
+            ])
         elif str(price.size) == 'A5':
             price.price = math.fsum([
                 col_price.price.amount,
                 pap_price.price.amount,
-                printer_exp.amount,
-            ]) / 4
+                printer_exp.amount / 2,
+            ])
 
         return price
 
@@ -3624,7 +3626,7 @@ def find_and_change_3(**kwargs):
     else:
         page_prices = PagePrice.objects.filter(date=edited_price.date,
                                                type__icontains=edited_price.type,
-                                               size='A4' if str(edited_price.size) == 'A3' else 'A5')
+                                               size=edited_price.size)
 
         # Get the list of page prices to check whether there are no duplicates
         list_of_dicts = get_price_dicts(page_prices)
@@ -3807,20 +3809,20 @@ def outex_edited_edit_pprice(**kwargs):
                 if str(pag_price.size) == 'A4':
                     if edited_printer_exp > initial_printer_exp:
                         gap = int(edited_printer_exp) - int(initial_printer_exp)
+                        pag_price.price = pag_price.price.amount + gap
+                        pag_price.save()
+                    elif edited_printer_exp < initial_printer_exp:
+                        gap = int(initial_printer_exp) - int(edited_printer_exp)
+                        pag_price.price = pag_price.price.amount - gap
+                        pag_price.save()
+                elif str(pag_price.size) == 'A5':
+                    if edited_printer_exp > initial_printer_exp:
+                        gap = int(edited_printer_exp) - int(initial_printer_exp)
                         pag_price.price = pag_price.price.amount + decimal.Decimal(gap / 2)
                         pag_price.save()
                     elif edited_printer_exp < initial_printer_exp:
                         gap = int(initial_printer_exp) - int(edited_printer_exp)
                         pag_price.price = pag_price.price.amount - decimal.Decimal(gap / 2)
-                        pag_price.save()
-                elif str(pag_price.size) == 'A5':
-                    if edited_printer_exp > initial_printer_exp:
-                        gap = int(edited_printer_exp) - int(initial_printer_exp)
-                        pag_price.price = pag_price.price.amount + decimal.Decimal(gap / 4)
-                        pag_price.save()
-                    elif edited_printer_exp < initial_printer_exp:
-                        gap = int(initial_printer_exp) - int(edited_printer_exp)
-                        pag_price.price = pag_price.price.amount - decimal.Decimal(gap / 4)
                         pag_price.save()
 
 
