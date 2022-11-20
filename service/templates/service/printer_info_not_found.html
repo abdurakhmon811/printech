@@ -1,0 +1,14 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/includes/admin_tab.html' %}
+    <div class="col-xl-5 mx-auto text-center pt-5 pb-5">
+        <img src="{% static 'images/attention.jpg' %}" height="150">
+        <h4 class="fw-light mt-4">So'rov rad etildi!</h4>
+        <h5 class="fw-light mt-3">Belgilangan printer haqida ma'lumotlar topilmadi!</h5>
+        <a class="btn btn-warning fw-light mt-4" href="{% url 'check_printer_info' %}">Orqaga qaytish</a>
+    </div>
+</div>
+{% endblock content %}

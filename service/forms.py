@@ -1819,11 +1819,11 @@ class PrinterForm(forms.ModelForm):
 
         model = Printer
         fields = [
-            'name', 'model', 'bought_at', 'status_when_bought',
+            'brand', 'model', 'bought_at', 'status_when_bought',
             'initial_page_count', 'current_page_count', 'current_status',
         ]
         labels = {
-            'name': "Nomi",
+            'brand': "Markasi",
             'model': "Modeli",
             'bought_at': "Sotib olingan vaqti",
             'status_when_bought': "Sotib olingandagi holati",
@@ -1832,7 +1832,7 @@ class PrinterForm(forms.ModelForm):
             'current_status': "Ayni damdagi holati",
         }
         error_messages = {
-            'name': {
+            'brand': {
                 'required': "Forma to'ldirilmadi!",
             },
             'model': {
@@ -1856,7 +1856,7 @@ class PrinterForm(forms.ModelForm):
             },
         }
         widgets = {
-            'printer': forms.TextInput(attrs={
+            'brand': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Canon',
             }),
@@ -1891,12 +1891,14 @@ class RefillAndPageCountForm(forms.ModelForm):
         model = RefillAndPageCount
         fields = [
             'printer', 'total_refill_count', 'last_refill', 'printed',
+            'accounted',
         ]
         labels = {
             'printer': "Printer",
             'total_refill_count': "Umumiy rang to'ldirishlar soni (sotib olinganidan beri)",
             'last_refill': "So'nggi rang to'ldirish sanasi",
             'printed': "Chop etgan betlari soni",
+            'accounted': "Chop etilgan betlar soni hisoblangan"
         }
         error_messages = {
             'printer': {
@@ -1926,6 +1928,9 @@ class RefillAndPageCountForm(forms.ModelForm):
             }),
             'printed': forms.NumberInput(attrs={
                 'class': 'form-control',
+            }),
+            'accounted': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
             }),
         }
 

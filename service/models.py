@@ -566,7 +566,7 @@ class Printer(models.Model):
         ("Ishlatilgan", "Ishlatilgan"),
     ]
 
-    name = models.CharField(max_length=150, null=True)
+    brand = models.CharField(max_length=150, null=True)
     model = models.CharField(max_length=150, null=True)
     bought_at = models.DateField(auto_now_add=False, null=True)
     status_when_bought = models.CharField(max_length=20, choices=statuses_when_bought, null=True)
@@ -578,7 +578,7 @@ class Printer(models.Model):
 
     def __str__(self):
 
-        return self.name
+        return f'{self.brand} {self.model}'
 
 
 # ========================================= A submodel for the model Printer =========================================
@@ -591,12 +591,13 @@ class RefillAndPageCount(models.Model):
     total_refill_count = models.PositiveIntegerField(null=True)
     last_refill = models.DateTimeField(auto_now_add=False, null=True)
     printed = models.PositiveIntegerField(null=True)
+    accounted = models.BooleanField(default=False, null=True)
 
     objects = models.Manager()
 
     def __str__(self):
 
-        return str(self.printer.name)
+        return str(self.printer.__str__())
 
 
 # ====================================================================================================================

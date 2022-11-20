@@ -70,6 +70,12 @@ urlpatterns = [
     # A page for deleting the chosen place
     path('admin/order-options/delete/placetoget/<int:placetoget_id>/',
          views.delete_placetoget, name='delete_placetoget'),
+    # A page for checking information about the staff
+    path('admin/staff/add-check/', views.check_staff_info, name='check_staff_info'),
+    # A page for editing the information about the chosen employee
+    path('admin/staff/edit-data/<int:workforce_id>/', views.edit_staff_info, name='edit_staff_info'),
+    # A page for deleting the information about the chosen employee
+    path('admin/staff/delete-data/<int:workforce_id>/', views.delete_staff_info, name='delete_staff_info'),
     # A page for checking available books in the library
     path('admin/check-books/', views.check_books, name="check_books"),
     # A page for adding books
@@ -211,6 +217,21 @@ urlpatterns = [
     # A page for deleting the chosen outer prices
     path('admin/pricing/outer-prices/delete/<int:outerprice_id>/',
          views.delete_outer_prices, name='delete_outer_prices'),
+    # A page for checking and adding printer information
+    path('admin/printer-information/add-check/', views.check_printer_info, name='check_printer_info'),
+    # A page for editing the chosen printer information
+    path('admin/printer-information/edit/<int:printer_id>/', views.edit_printer_info, name='edit_printer_info'),
+    # A page for deleting the chosen printer information
+    path('admin/printer-information/delete/<int:printer_id>/', views.delete_printer_info, name='delete_printer_info'),
+    # A page for adding refill and page count information for printers
+    path('admin/printer-information/refill-and-page-count/add/',
+         views.add_refill_page_count, name='add_refill_page_count'),
+    # A page for editing the chosen refill and page count information
+    path('admin/printer-information/refill-and-page-count/edit/<int:refillandpagecount_id>/',
+         views.edit_refill_page_count, name='edit_refill_page_count'),
+    # A page for deleting the chosen refill and page count information
+    path('admin/printer-information/refill-and-page-count/delete/<int:refillandpagecount_id>/',
+         views.delete_refill_page_count, name='delete_refill_page_count'),
     # A page for adding/checking a resource type
     path('admin/resources/types/add-check', views.rtypes, name='rtypes'),
     # A page for editing a resource type

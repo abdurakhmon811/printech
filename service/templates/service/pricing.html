@@ -26,7 +26,8 @@
                                 <th scope="col" style="width: 25%;">{{ page_price.date|date:'d-m-Y' }}</th>
                                 <td style="width: 25%;">{{ page_price.type }}</td>
                                 <td style="width: 25%;">{{ page_price.size }}</td>
-                                <td style="width: 25%;">{{ page_price.price.amount }} {{ page_price.price.currency }}</td>
+                                <td style="width: 25%;">{{ page_price.price.amount|separate_with_space }}
+                                    {{ page_price.price.currency }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -59,7 +60,7 @@
                                 <th scope="col" style="width: 25%;">{{ binding_price.date|date:'d-m-Y' }}</th>
                                 <td style="width: 25%;">{{ binding_price.type }}</td>
                                 <td style="width: 25%;">{{ binding_price.size }}</td>
-                                <td style="width: 25%;">{{ binding_price.price.amount }}
+                                <td style="width: 25%;">{{ binding_price.price.amount|separate_with_space }}
                                     {{ binding_price.price.currency }}</td>
                             </tr>
                         {% endfor %}
@@ -93,7 +94,8 @@
                                 <th scope="col" style="max-width: 25%;">{{ ring_price.date|date:'d-m-Y' }}</th>
                                 <td style="width: 25%;">{{ ring_price.type }}</td>
                                 <td style="width: 25%;">{{ ring_price.size }}</td>
-                                <td style="width: 25%;">{{ ring_price.price.amount }} {{ ring_price.price.currency }}</td>
+                                <td style="width: 25%;">{{ ring_price.price.amount|separate_with_space }}
+                                    {{ ring_price.price.currency }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -126,7 +128,8 @@
                                 <th scope="col" style="width: 25%;">{{ color_price.date|date:'d-m-Y' }}</th>
                                 <td style="width: 25%;">{{ color_price.color }}</td>
                                 <td style="width: 25%;">{{ color_price.size }}</td>
-                                <td style="width: 25%;">{{ color_price.price.amount }} {{ color_price.price.currency }}</td>
+                                <td style="width: 25%;">{{ color_price.price.amount|separate_with_space }}
+                                    {{ color_price.price.currency }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -159,7 +162,7 @@
                                 <th scope="col" style="width: 25%;">{{ cover_price.date|date:'d-m-Y' }}</th>
                                 <td style="width: 25%">{{ cover_price.type }}</td>
                                 <td style="width: 25%;">{{ cover_price.size }}</td>
-                                <td style="width: 25%;">{{ cover_price.price.amount }}
+                                <td style="width: 25%;">{{ cover_price.price.amount|separate_with_space }}
                                     {{ cover_price.price.currency }}</td>
                             </tr>
                         {% endfor %}
@@ -193,7 +196,7 @@
                                 <th scope="col" style="width: 25%;">{{ glue_price.date|date:'d-m-Y' }}</th>
                                 <td style="width: 25%;">{{ glue_price.type }}</td>
                                 <td style="width: 25%;">{{ glue_price.size }}</td>
-                                <td style="width: 25%;">{{ glue_price.price.amount }}
+                                <td style="width: 25%;">{{ glue_price.price.amount|separate_with_space }}
                                     {{ glue_price.price.currency }}</td>
                             </tr>
                         {% endfor %}
@@ -227,7 +230,7 @@
                                 <th scope="col" style="width: 25%;">{{ paper_price.date|date:'d-m-Y' }}</th>
                                 <td style="width: 25%;">{{ paper_price.type }}</td>
                                 <td style="width: 25%;">{{ paper_price.size }}</td>
-                                <td style="width: 25%;">{{ paper_price.price.amount }}
+                                <td style="width: 25%;">{{ paper_price.price.amount|separate_with_space }}
                                     {{ paper_price.price.currency }}</td>
                             </tr>
                         {% endfor %}
@@ -261,7 +264,7 @@
                                 <th scope="col" style="width: 25%;">{{ yarn_price.date|date:'d-m-Y' }}</th>
                                 <td style="width: 25%;">{{ yarn_price.type }}</td>
                                 <td style="width: 25%;">{{ yarn_price.size }}</td>
-                                <td style="width: 25%;">{{ yarn_price.price.amount }}
+                                <td style="width: 25%;">{{ yarn_price.price.amount|separate_with_space }}
                                     {{ yarn_price.price.currency }}</td>
                             </tr>
                         {% endfor %}
@@ -297,17 +300,17 @@
                         {% for out_price in out_prices %}
                             <tr class="clickable-row" data-href="{% url 'edit_outer_prices' out_price.id %}">
                                 <th scope="col" style="width: 12.5%;">{{ out_price.date|date:'d-m-Y' }}</th>
-                                <td style="width: 12.5%;">{{ out_price.staple_price.amount }}
+                                <td style="width: 12.5%;">{{ out_price.staple_price.amount|separate_with_space }}
                                     {{ out_price.staple_price.currency }}</td>
-                                <td style="width: 12.5%;">{{ out_price.packaging_expenses.amount }}
+                                <td style="width: 12.5%;">{{ out_price.packaging_expenses.amount|separate_with_space }}
                                     {{ out_price.packaging_expenses.currency }}</td>
-                                <td style="width: 12.5%;">{{ out_price.delivery_expenses.amount }}
+                                <td style="width: 12.5%;">{{ out_price.delivery_expenses.amount|separate_with_space }}
                                     {{ out_price.delivery_expenses.currency }}</td>
-                                <td style="width: 12.5%;">{{ out_price.workforce_expenses.amount }}
+                                <td style="width: 12.5%;">{{ out_price.workforce_expenses.amount|separate_with_space }}
                                     {{ out_price.workforce_expenses.currency }}</td>
-                                <td style="width: 12.5%;">{{ out_price.electricity_expenses.amount }}
+                                <td style="width: 12.5%;">{{ out_price.electricity_expenses.amount|separate_with_space }}
                                     {{ out_price.electricity_expenses.currency }}</td>
-                                <td style="width: 12.5%;">{{ out_price.printer_expenses.amount }}
+                                <td style="width: 12.5%;">{{ out_price.printer_expenses.amount|separate_with_space }}
                                     {{ out_price.printer_expenses.currency }}</td>
                                 <td style="width: 12.5%;">{{ out_price.profit }}%</td>
                             </tr>

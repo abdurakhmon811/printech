@@ -6,17 +6,19 @@ from django.shortcuts import redirect, render, get_object_or_404
 from .forms import AccountForm, \
     BindingPriceForm, BlogPostForm, BookForm, \
     CategoryExForm, CategoryInForm, ComplaintBookForm, ColorPriceForm, ComplaintOtherForm, ComplaintSiteForm, \
-    ContactForm, CoverPriceForm, CreateSiteForm, \
+    ContactForm, CouponForm, CoverPriceForm, CreateSiteForm, \
+    DiscountForm, \
     ExpenseForm, \
     GluePriceForm, \
     IncomeForm, \
     LossForm, LTypeForm, \
     NewsForm, \
     OrderOptionsForm, OrderSelfForm, OrderSiteForm, OuterPriceForm, \
-    PagePriceForm, PaperPriceForm, PlaceToGetForm, \
-    ResourceForm, RingPriceForm, RTypeForm, \
+    PagePriceForm, PaperPriceForm, PlaceToGetForm, PrinterForm, \
+    RefillAndPageCountForm, ResourceForm, RingPriceForm, RTypeForm, \
     SelfOrderForm, SiteOrderForm, SubCategoryExForm, SubCategoryInForm, \
     TransactionForm, \
+    WorkforceForm, \
     YarnPriceForm
 from .models import Account, \
     BindingPrice, BlogPost, Book, \
@@ -525,6 +527,94 @@ def delete_placetoget(request, placetoget_id):
         return render(request, 'service/placetoget_deleted.html')
 
 
+def check_staff_info(request):
+    """A view providing the content for the page for checking information on the staff."""
+
+    check_super_user(request)
+
+    staff_info = Workforce.objects.all()
+    list_of_dicts = get_name_dicts(staff_info)
+    staff_num = len(staff_info)
+
+    if request.method != 'POST':
+        form = WorkforceForm()
+    else:
+        form = WorkforceForm(data=request.POST)
+        if form.is_valid():
+            new_info = form.save(commit=False)
+            if match_with_existing_names(list_of_dicts, new_info):
+                form.add_error('name', "")
+                form.add_error('surname', "")
+                form.add_error('middle_name', "")
+                messages.error(request, "Kiritilgan ism, familiya va sharif bo'yicha ma'lumotlar mavjud!")
+            else:
+                new_info.save()
+                return redirect('check_staff_info')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+
+    context = {
+        'form': form,
+        'staff_info': staff_info,
+        'staff_num': staff_num,
+    }
+    return render(request, 'service/check_staff_info.html', context)
+
+
+def edit_staff_info(request, workforce_id):
+    """A view providing the content for the page for editing the chosen information on an employee."""
+
+    check_super_user(request)
+
+    staff_info = Workforce.objects.all()
+    list_of_dicts = get_name_dicts(staff_info)
+
+    employee_info = get_object_or_404(Workforce, pk=workforce_id)
+
+    if request.method != 'POST':
+        form = WorkforceForm(instance=employee_info)
+    else:
+        form = WorkforceForm(data=request.POST, instance=employee_info)
+        if form.is_valid():
+            edited_info = form.save(commit=False)
+            name_changed = 'name' in form.changed_data
+            surname_changed = 'surname' in form.changed_data
+            middle_name_changed = 'middle_name' in form.changed_data
+            array = [name_changed, surname_changed, middle_name_changed]
+            if not form.has_changed():
+                return redirect('check_staff_info')
+            elif form.has_changed() and True not in array:
+                edited_info.save()
+                return redirect('check_staff_info')
+            elif True in array and match_with_existing_names(list_of_dicts, edited_info):
+                form.add_error('name', "")
+                form.add_error('surname', "")
+                form.add_error('middle_name', "")
+                messages.error(request, "Kiritilgan ism, familiya va sharif bo'yicha ma'lumotlar mavjud!")
+            else:
+                edited_info.save()
+                return redirect('check_staff_info')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+
+    context = {
+        'employee_info': employee_info,
+        'form': form,
+    }
+    return render(request, 'service/edit_staff_info.html', context)
+
+
+def delete_staff_info(request, workforce_id):
+    """A view for deleting the chosen information on an employee and rendering the page telling
+    the delete process has gone successfully."""
+
+    check_super_user(request)
+
+    employee_info = get_object_or_404(Workforce, pk=workforce_id)
+    employee_info.delete()
+    return render(request, 'service/staff_info_deleted.html')
+
+
 def check_books(request):
     """A view providing the content for checking the existing books in the library."""
 
@@ -769,7 +859,7 @@ def edit_excategory(request, excategory_id):
                 edited_cat.save()
                 return redirect('expense_categories')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -859,7 +949,7 @@ def edit_exsubcat(request, exsubcategory_id):
                 edited_subcat.save()
                 return redirect('expense_subcats')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -949,7 +1039,7 @@ def edit_incategory(request, incategory_id):
                 edited_cat.save()
                 return redirect('income_categories')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1039,7 +1129,7 @@ def edit_insubcat(request, insubcategory_id):
                 edited_subcat.save()
                 return redirect('income_subcats')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1203,7 +1293,7 @@ def edit_income(request, income_id):
             edited_income.save()
             return redirect('choose_ex_in')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1262,7 +1352,7 @@ def make_transaction(request):
                 form.save()
                 return redirect('choose_ex_in')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1312,7 +1402,7 @@ def edit_transaction(request, transaction_id):
             edited_transfer.save()
             return redirect('make_transaction')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1369,7 +1459,7 @@ def add_blogpost(request):
             new_post.save()
             return redirect('check_blogposts')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1392,7 +1482,7 @@ def edit_blogpost(request, blogpost_id):
             form.save()
             return redirect('check_blogposts')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1571,7 +1661,7 @@ def page_price(request):
                 new_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1612,7 +1702,7 @@ def edit_page_price(request, pageprice_id):
                 edited_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1747,7 +1837,7 @@ def ring_price(request):
                 new_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1778,7 +1868,7 @@ def edit_ring_price(request, ringprice_id):
             array = [date_changed, type_changed, size_changed]
             if not form.has_changed():
                 return redirect('pricing')
-            elif form.has_changed() and all(array) is False and price_changed:
+            elif form.has_changed() and True not in array and price_changed:
                 edited_price.save()
                 return redirect('pricing')
             elif match_with_existing(list_of_dicts, edited_price):
@@ -1833,7 +1923,7 @@ def color_price(request):
                 new_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1866,7 +1956,7 @@ def edit_color_price(request, colorprice_id):
             array = [date_changed, color_changed, size_changed]
             if not form.has_changed():
                 return redirect('pricing')
-            elif form.has_changed() and all(array) is False and price_changed:
+            elif form.has_changed() and True not in array and price_changed:
                 try:
                     # Find the correlating page price and change its value according to the changes made in color price
                     # Also abort the request in case duplicate objects found
@@ -1896,7 +1986,7 @@ def edit_color_price(request, colorprice_id):
                     edited_price.save()
                     return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'c_price': c_price,
@@ -1955,7 +2045,7 @@ def cover_price(request):
                 new_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -1988,7 +2078,7 @@ def edit_cover_price(request, coverprice_id):
             array = [date_changed, type_changed, size_changed]
             if not form.has_changed():
                 return redirect('pricing')
-            elif form.has_changed() and all(array) is False and price_changed:
+            elif form.has_changed() and True not in array and price_changed:
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in cover price
@@ -2020,7 +2110,7 @@ def edit_cover_price(request, coverprice_id):
                     edited_price.save()
                     return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'c_price': c_price,
@@ -2111,7 +2201,7 @@ def glue_price(request):
                 new_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2144,7 +2234,7 @@ def edit_glue_price(request, glueprice_id):
             array = [date_changed, type_changed, size_changed]
             if not form.has_changed():
                 return redirect('pricing')
-            elif form.has_changed() and all(array) is False and price_changed:
+            elif form.has_changed() and True not in array and price_changed:
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in glue price
@@ -2176,7 +2266,7 @@ def edit_glue_price(request, glueprice_id):
                     edited_price.save()
                     return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2264,7 +2354,7 @@ def paper_price(request):
                 new_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2297,7 +2387,7 @@ def edit_paper_price(request, paperprice_id):
             array = [date_changed, type_changed, size_changed]
             if not form.has_changed():
                 return redirect('pricing')
-            elif form.has_changed() and all(array) is False and price_changed:
+            elif form.has_changed() and True not in array and price_changed:
                 try:
                     # Find the correlating page price and change its value according to the changes made in paper price
                     # Also abort the request in case duplicate objects found
@@ -2327,7 +2417,7 @@ def edit_paper_price(request, paperprice_id):
                     edited_price.save()
                     return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2346,7 +2436,7 @@ def delete_paper_price(request, paperprice_id):
 
     page_prices = PagePrice.objects.filter(date=p_price.date,
                                            type__icontains=p_price.type,
-                                           size='A4' if str(p_price.size) == 'A3' else 'A5')
+                                           size=p_price.size)
 
     # Get the list of page prices to check whether there are no duplicates
     list_of_dicts = get_price_dicts(page_prices)
@@ -2386,7 +2476,7 @@ def yarn_price(request):
                 new_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2419,7 +2509,7 @@ def edit_yarn_price(request, yarnprice_id):
             array = [date_changed, type_changed, size_changed]
             if not form.has_changed():
                 return redirect('pricing')
-            elif form.has_changed() and all(array) is False and price_changed:
+            elif form.has_changed() and True not in array and price_changed:
                 try:
                     # Find the correlating binding price and change its price according to the changes made
                     # in yarn price
@@ -2451,7 +2541,7 @@ def edit_yarn_price(request, yarnprice_id):
                     edited_price.save()
                     return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2527,7 +2617,7 @@ def outer_prices(request):
                 new_price.save()
                 return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2573,7 +2663,7 @@ def edit_outer_prices(request, outerprice_id):
                                                  edited_packaging=edited_packaging,
                                                  edited_prices=edited_prices,
                                                  edited_workforce=edited_workforce)
-                    elif printer_changed is True and all(bprice_to_be_changed) is False:
+                    elif printer_changed is True and True not in bprice_to_be_changed:
                         outex_edited_edit_pprice(initial_printer_exp=initial_printer,
                                                  edited_prices=edited_prices,
                                                  edited_printer_exp=edited_printer)
@@ -2602,7 +2692,7 @@ def edit_outer_prices(request, outerprice_id):
                                                  edited_packaging=edited_packaging,
                                                  edited_prices=edited_prices,
                                                  edited_workforce=edited_workforce)
-                    elif printer_changed is True and all(bprice_to_be_changed) is False:
+                    elif printer_changed is True and True not in bprice_to_be_changed:
                         outex_edited_edit_pprice(initial_printer_exp=initial_printer,
                                                  edited_prices=edited_prices,
                                                  edited_printer_exp=edited_printer)
@@ -2621,7 +2711,7 @@ def edit_outer_prices(request, outerprice_id):
                     edited_prices.save()
                     return redirect('pricing')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2658,6 +2748,225 @@ def delete_outer_prices(request, outerprice_id):
         return render(request, 'service/not_delete_out_exps.html', context)
 
 
+def check_printer_info(request):
+    """A view providing the content for the page for checking and adding information on printers."""
+
+    check_super_user(request)
+
+    printer_info = Printer.objects.all()
+    printers_num = len(printer_info)
+    list_of_printers = get_printer_brand_dicts(printer_info)
+
+    printer_refill_page_counts = RefillAndPageCount.objects.all()
+    list_of_printer_names = get_printer_names(printer_refill_page_counts)
+
+    if find_duplicates(list_of_printers):
+        messages.warning(request,
+                         "DIQQAT! Printerlar haqidagi ma'lumotlar "
+                         "bo'limida markasi va modeli bir xil bo'lgan "
+                         "ma'lumotlar topildi! Bu xatoliklarga sabab bo'lishi mumkin.")
+
+    if find_duplicates(list_of_printer_names):
+        messages.warning(request,
+                         "DIQQAT! Printer ranggini to'lidirish va chop etilgan betlar soni haqidagi ma'lumotlar "
+                         "bo'limida bir printerga ikki marta ma'lumot berilgani aniqlandi! "
+                         "Bu xatoliklarga sabab bo'lishi mumkin.")
+
+    if request.method != 'POST':
+        form = PrinterForm()
+    else:
+        form = PrinterForm(data=request.POST)
+        if form.is_valid():
+            new_info = form.save(commit=False)
+            if not form.has_changed():
+                return redirect('check_printer_info')
+            elif match_with_existing_printers(list_of_printers, new_info):
+                new_info.model += f' ({int(printers_num) + 1})'
+                new_info.save()
+                return redirect('check_printer_info')
+            else:
+                new_info.save()
+                return redirect('check_printer_info')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+
+    context = {
+        'form': form,
+        'printer_info': printer_info,
+        'printers_num': printers_num,
+        'printer_refill_page_counts': printer_refill_page_counts,
+    }
+    return render(request, 'service/check_printer_info.html', context)
+
+
+def edit_printer_info(request, printer_id):
+    """A view providing the content for the page for editing the chosen printer information."""
+
+    check_super_user(request)
+
+    printer_info_queryset = Printer.objects.all()
+    list_of_dicts = get_printer_brand_dicts(printer_info_queryset)
+
+    printer_info = get_object_or_404(Printer, pk=printer_id)
+
+    if request.method != 'POST':
+        form = PrinterForm(instance=printer_info)
+    else:
+        form = PrinterForm(data=request.POST, instance=printer_info)
+        if form.is_valid():
+            edited_info = form.save(commit=False)
+            brand_changed = 'brand' in form.changed_data
+            model_changed = 'model' in form.changed_data
+            if not form.has_changed():
+                return redirect('check_printer_info')
+            elif form.has_changed() and True not in [brand_changed, model_changed]:
+                edited_info.save()
+                return redirect('check_printer_info')
+            elif match_with_existing_printers(list_of_dicts, edited_info):
+                form.add_error('brand', "")
+                form.add_error('model', "")
+                messages.error(request, "Kiritilgan marka, model va uning raqami bo'yicha ma'lumotlar mavjud!")
+            else:
+                edited_info.save()
+                return redirect('check_printer_info')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+
+    context = {
+        'form': form,
+        'printer_info': printer_info,
+    }
+    return render(request, 'service/edit_printer_info.html', context)
+
+
+def delete_printer_info(request, printer_id):
+    """A view for deleting the chosen printer information and rendering the page telling
+    the delete process has gone successfully."""
+
+    check_super_user(request)
+
+    printer_info = get_object_or_404(Printer, pk=printer_id)
+
+    try:
+        printer_info.delete()
+    except ProtectedError:
+        return render(request, 'service/not_delete_printer_info.html')
+    else:
+        return render(request, 'service/printer_info_deleted.html')
+
+
+def add_refill_page_count(request):
+    """A view providing the content for the page for adding refill and page count information of printers."""
+
+    check_super_user(request)
+
+    counts = RefillAndPageCount.objects.all()
+    list_of_printers = get_printer_names(counts)
+
+    if request.method != 'POST':
+        form = RefillAndPageCountForm()
+    else:
+        form = RefillAndPageCountForm(data=request.POST)
+        if form.is_valid():
+            new_info = form.save(commit=False)
+            if str(new_info.printer) in list_of_printers:
+                form.add_error('printer', "")
+                messages.error(request,
+                               "Ushbu bo'limda bir printer uchun bir marta ma'lumot kiritiladi!")
+            else:
+                try:
+                    # Find the correlating printer information and change its CURRENT_PAGE_COUNT based on the newly
+                    # added information to refill and page count
+                    find_and_change_4(new_info=new_info)
+                except Http404:
+                    return render(request, 'service/printer_info_not_found.html')
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_5.html')
+                else:
+                    new_info.save()
+                    return redirect('check_printer_info')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'service/add_refill_page_count.html', context)
+
+
+def edit_refill_page_count(request, refillandpagecount_id):
+    """A view providing the content for the page for editing the chosen refill and page count information."""
+
+    check_super_user(request)
+
+    counts = RefillAndPageCount.objects.all()
+    list_of_printers = get_printer_names(counts)
+
+    info = get_object_or_404(RefillAndPageCount, pk=refillandpagecount_id)
+    info_printed = info.printed
+
+    if request.method != 'POST':
+        form = RefillAndPageCountForm(instance=info)
+    else:
+        form = RefillAndPageCountForm(data=request.POST, instance=info)
+        if form.is_valid():
+            edited_info = form.save(commit=False)
+            printer_changed = 'printer' in form.changed_data
+            date_changed = 'last_refill' in form.changed_data
+            if not form.has_changed():
+                return redirect('check_printer_info')
+            elif form.has_changed() and printer_changed is False:
+                try:
+                    # Find the correlating printer info and change its CURRENT_PAGE_COUNT based on the changes made
+                    # in refill and page count
+                    find_and_change_4(edited_info=edited_info,
+                                      initial_count=info_printed,
+                                      date_changed=date_changed)
+                except Http404:
+                    return render(request, 'service/printer_info_not_found.html')
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_5.html')
+                else:
+                    edited_info.save()
+                    return redirect('check_printer_info')
+            elif str(edited_info.printer) in list_of_printers:
+                form.add_error('printer', "")
+                messages.error(request, "Kiritilgan printer haqida ma'lumotlar mavjud!")
+            else:
+                try:
+                    # Find the correlating printer info and change its CURRENT_PAGE_COUNT based on the changes made
+                    # in refill and page count
+                    find_and_change_4(edited_info=edited_info,
+                                      initial_count=info_printed,
+                                      date_changed=date_changed)
+                except Http404:
+                    return render(request, 'service/printer_info_not_found.html')
+                except RequestAborted:
+                    return render(request, 'service/multiple_objects_5.html')
+                else:
+                    edited_info.save()
+                    return redirect('check_printer_info')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+
+    context = {
+        'form': form,
+        'info': info,
+    }
+    return render(request, 'service/edit_refill_page_count.html', context)
+
+
+def delete_refill_page_count(request, refillandpagecount_id):
+    """A view for deleting the chosen refill and page count information and rendering the page telling
+    the delete process has gone successfully."""
+
+    check_super_user(request)
+
+    info = get_object_or_404(RefillAndPageCount, pk=refillandpagecount_id)
+    info.delete()
+    return render(request, 'service/refill_page_count_deleted.html')
+
+
 def rtypes(request):
     """A view providing the content for the page for adding resource types."""
 
@@ -2683,7 +2992,7 @@ def rtypes(request):
                 new_type.save()
                 return redirect('resources')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2724,7 +3033,7 @@ def edit_rtype(request, rtype_id):
                 edited_type.save()
                 return redirect('rtypes')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2764,7 +3073,7 @@ def resources(request):
             form.save()
             return redirect('resources')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'dicts': dicts,
@@ -2791,7 +3100,7 @@ def edit_resource(request, resource_id):
             form.save()
             return redirect('resources')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'dicts': dicts,
@@ -2915,7 +3224,7 @@ def make_news(request):
             news.save()
             return redirect('check_news')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2940,7 +3249,7 @@ def edit_news(request, news_id):
             new_form.save()
             return redirect('check_news')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -2985,7 +3294,7 @@ def ltypes(request):
                 new_type.save()
                 return redirect('losses')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -3026,7 +3335,7 @@ def edit_ltype(request, ltype_id):
                 edited_type.save()
                 return redirect('ltypes')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'form': form,
@@ -3068,7 +3377,7 @@ def losses(request):
             form.save()
             return redirect('losses')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'dicts': dicts,
@@ -3096,7 +3405,7 @@ def edit_loss(request, loss_id):
             form.save()
             return redirect('losses')
         else:
-            messages.error(request, "Ma'lumotlar noto'g'ri kiritildi!")
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
 
     context = {
         'dicts': dicts,
@@ -3351,6 +3660,40 @@ def edit_pprice(**kwargs):
                 pass
 
 
+def edit_printercount(accounted=None,
+                      new_info=None,
+                      edited_info=None,
+                      initial_count=None,
+                      count_to_be_changed=None):
+    """
+
+    An assisting function editing the printer count based on the correlated count.
+
+    Accounted and new info attributes are used when a new count is added to the count information for printers.
+
+    Edited info and initial info attributes are used when an existing count information is edited.
+
+    An attribute count to be changed is used in both cases as it is the target to be changed.
+
+    """
+
+    if new_info is not None and accounted is False:
+        count_to_be_changed.current_page_count += int(new_info.printed)
+        count_to_be_changed.save()
+    elif edited_info is not None and initial_count is not None:
+        if int(edited_info.printed) > int(initial_count):
+            gap = int(edited_info.printed) - int(initial_count)
+            count_to_be_changed.current_page_count += int(gap)
+            count_to_be_changed.save()
+        elif int(edited_info.printed) < int(initial_count):
+            gap = int(initial_count) - int(edited_info.printed)
+            count_to_be_changed.current_page_count -= int(gap)
+            count_to_be_changed.save()
+    elif edited_info is not None and initial_count is None:
+        count_to_be_changed.current_page_count += int(edited_info.printed)
+        count_to_be_changed.save()
+
+
 def def_or_redef_binding_price(price):
     """An assisting function defining or redefining the chosen binding price based on the prices of other resources,
     and outer expenses."""
@@ -3446,10 +3789,10 @@ def def_or_redef_page_price(price):
     # PRICE parameter can take in either new price or edited price
     try:
         col_price = ColorPrice.objects.get(date=price.date,
-                                           color__in=list(get_list_of_words(str(price.type))),
+                                           color__in=list(get_list_of_words_1(str(price.type))),
                                            size=price.size)
         pap_price = PaperPrice.objects.get(date=price.date,
-                                           type__in=list(get_list_of_words(str(price.type))),
+                                           type__in=list(get_list_of_words_1(str(price.type))),
                                            size=price.size)
         outer_expenses = OuterPrice.objects.get(date=price.date)
         # Delivery and electricity expenses should be accounted while an order is being made
@@ -3643,7 +3986,53 @@ def find_and_change_3(**kwargs):
                             price_to_be_changed=pag_price)
 
 
-def find_duplicates(array):
+def find_and_change_4(new_info=None, edited_info=None, initial_count=None, date_changed=False):
+    """An assisting function the queried object and changing its value using EDIT_PRINTERCOUNT."""
+
+    if new_info is not None:
+        words = get_list_of_words_2(str(new_info.printer))
+        brand, *model_and_number = words
+        model = ' '.join(model_and_number)
+        try:
+            printer_info = get_object_or_404(Printer,
+                                             brand=brand,
+                                             model=model)
+        except MultipleObjectsReturned:
+            raise RequestAborted
+        else:
+            edit_printercount(accounted=bool(new_info.accounted),
+                              new_info=new_info,
+                              count_to_be_changed=printer_info)
+    elif edited_info is not None and initial_count is not None and date_changed is False:
+        words = get_list_of_words_2(str(edited_info.printer))
+        brand, *model_and_number = words
+        model = ' '.join(model_and_number)
+        try:
+            printer_info = get_object_or_404(Printer,
+                                             brand=brand,
+                                             model=model)
+        except MultipleObjectsReturned:
+            raise RequestAborted
+        else:
+            edit_printercount(edited_info=edited_info,
+                              initial_count=initial_count,
+                              count_to_be_changed=printer_info)
+    elif edited_info is not None and date_changed is True:
+        words = get_list_of_words_2(str(edited_info.printer))
+        brand, *model_and_number = words
+        model = ' '.join(model_and_number)
+        try:
+            printer_info = get_object_or_404(Printer,
+                                             brand=brand,
+                                             model=model)
+        except MultipleObjectsReturned:
+            raise RequestAborted
+        else:
+            edit_printercount(edited_info=edited_info,
+                              count_to_be_changed=printer_info)
+
+
+def find_duplicates(array) -> bool:
     """An assisting function finding the duplicate dictionaries and returning True or False based on the result."""
 
     items = []
@@ -3662,7 +4051,7 @@ def find_string_in_list(string, array):
             return string
 
 
-def get_color_price_dicts(prices):
+def get_color_price_dicts(prices) -> list:
     """An assisting function retrieving the data from the provided queryset and
     placing it to the list as dictionaries."""
 
@@ -3678,7 +4067,7 @@ def get_color_price_dicts(prices):
     return list_of_price_dicts
 
 
-def get_list_of_words(string):
+def get_list_of_words_1(string) -> list:
     """An assisting function taking in a string and returning a list, the items of which are words contained
     in the provided string."""
 
@@ -3692,7 +4081,33 @@ def get_list_of_words(string):
     return array
 
 
-def get_price_dates(prices):
+def get_list_of_words_2(string) -> list:
+    """An assisting function taking in a string and returning a list, the items of which are words contained
+    in the provided string."""
+
+    array = []
+    for word in string.split():
+        array.append(str(word))
+
+    return array
+
+
+def get_name_dicts(queryset) -> list:
+    """An assisting function getting people's names, surnames and middle names, and returning them as strings."""
+
+    list_of_dicts = []
+    for obj in queryset:
+        dictionary = {
+            'name': str(obj.name),
+            'surname': str(obj.surname),
+            'middle_name': str(obj.middle_name),
+        }
+        list_of_dicts.append(dictionary)
+
+    return list_of_dicts
+
+
+def get_price_dates(prices) -> list:
     """An assisting function retrieving dates from the provided queryset and
     placing them to the list."""
 
@@ -3703,7 +4118,7 @@ def get_price_dates(prices):
     return list_price_dates
 
 
-def get_price_dicts(prices):
+def get_price_dicts(prices) -> list:
     """An assisting function retrieving the data from the provided queryset and
     placing it to the list as dictionaries."""
 
@@ -3719,7 +4134,33 @@ def get_price_dicts(prices):
     return list_of_price_dicts
 
 
-def match_color_price_with_existing(list_of_dicts, price):
+def get_printer_brand_dicts(queryset) -> list:
+    """An assisting function retrieving the data from the provided queryset and
+    placing it to the list as dictionaries."""
+
+    list_of_dicts = []
+    for obj in queryset:
+        printer_info = {
+            'brand': str(obj.brand),
+            'model': str(obj.model),
+        }
+        list_of_dicts.append(printer_info)
+
+    return list_of_dicts
+
+
+def get_printer_names(queryset) -> list:
+    """An assisting function retrieving the data from the provided queryset and
+    placing them in the list as strings."""
+
+    list_of_printers = []
+    for obj in queryset:
+        list_of_printers.append(str(obj.printer))
+
+    return list_of_printers
+
+
+def match_color_price_with_existing(list_of_dicts, price) -> bool:
     """An assisting function determining if the information trying to be posted exists in the database."""
 
     price_dict = {
@@ -3733,7 +4174,7 @@ def match_color_price_with_existing(list_of_dicts, price):
         return False
 
 
-def match_with_existing(list_of_dicts, price):
+def match_with_existing(list_of_dicts, price) -> bool:
     """An assisting function determining if the information trying to be posted exists in the database."""
 
     price_dict = {
@@ -3747,11 +4188,40 @@ def match_with_existing(list_of_dicts, price):
         return False
 
 
-def match_with_existing_dates(list_of_dates, price):
+def match_with_existing_dates(list_of_dates, price) -> bool:
     """An assisting function determining if the information trying to be posted exists in the database
     based on the date."""
 
     if str(price.date) in list_of_dates:
+        return True
+    else:
+        return False
+
+
+def match_with_existing_names(list_of_dicts, info) -> bool:
+    """An assisting function determining if the information trying to be posted exists in the database
+    based on the names provided."""
+
+    info_dict = {
+        'name': str(info.name),
+        'surname': str(info.surname),
+        'middle_name': str(info.middle_name),
+    }
+    if info_dict in list_of_dicts:
+        return True
+    else:
+        return False
+
+
+def match_with_existing_printers(list_of_dicts, info) -> bool:
+    """An assisting function determining if the information trying to be posted exists in the database
+    based on the brands and models provided."""
+
+    printer_info = {
+        'brand': str(info.brand),
+        'model': str(info.model),
+    }
+    if printer_info in list_of_dicts:
         return True
     else:
         return False
