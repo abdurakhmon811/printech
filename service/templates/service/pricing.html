@@ -7,7 +7,7 @@
     <div class="container col-xl-12 pt-4 ps-4 pe-4 pb-4" style="max-width: 100%;">
         <h1 class="fw-light">Narxlar</h1>
     </div>
-    <div class="container col-xl-12 table-cont-dec text-center pt-3 pb-2 mb-5" style="max-width: 100%;">
+    <div class="container col-xl-12 table-cont-dec text-center pt-3 pb-2 mb-4" style="max-width: 100%;">
         {% if page_prices %}
             <h3 class="fw-light pb-3">Bir bet uchun narxlar</h3>
             <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
@@ -328,6 +328,9 @@
             </div>
         {% endif %}
     </div>
+    <a class="btn btn-warning fw-light ms-4 mb-5" href="{% url 'check_coupons' %}">
+        Kuponlar &raquo;
+    </a>
 </div>
 <script>
     jQuery(document).ready(function($) {

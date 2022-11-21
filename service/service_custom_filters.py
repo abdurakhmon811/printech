@@ -7,12 +7,14 @@ register = template.Library()
 @register.filter
 def truncate_20(text):
     """Show the first 20 characters of the text and at the end, put three dots."""
+
     return f'{text[:20]}...'
 
 
 @register.filter
 def truncate_without_dots_20(text):
     """Just show the first 20 characters of the text."""
+
     return f'{text[:20]}'
 
 
@@ -28,4 +30,18 @@ def highlight_searched(text, val):
 @register.filter
 def separate_with_space(value):
     """Separate money values with commas."""
+
     return format(value, ',').replace(',', ' ')
+
+
+@register.filter
+def hide_5_5(string):
+    """Hide some of the letters of the provided string."""
+
+    start = slice(0, 5)
+    middle = slice(5, 10)
+    end = slice(10, 16)
+
+    result = f'{"*" * len(string[start])}{string[middle]}{"*" * len(string[end])}'
+
+    return result

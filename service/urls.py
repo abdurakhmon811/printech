@@ -217,6 +217,12 @@ urlpatterns = [
     # A page for deleting the chosen outer prices
     path('admin/pricing/outer-prices/delete/<int:outerprice_id>/',
          views.delete_outer_prices, name='delete_outer_prices'),
+    # A page for checking or adding coupons for discounts
+    path('admin/pricing/coupons/add-check/', views.check_coupons, name='check_coupons'),
+    # A page for editing the chosen coupon for discounts
+    path('admin/pricing/coupon/edit/<int:coupon_id>/', views.edit_coupon, name='edit_coupon'),
+    # A page for deleting the chosen coupon for discounts
+    path('admin/pricing/coupon/delete/<int:coupon_id>/', views.delete_coupon, name='delete_coupon'),
     # A page for checking and adding printer information
     path('admin/printer-information/add-check/', views.check_printer_info, name='check_printer_info'),
     # A page for editing the chosen printer information

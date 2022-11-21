@@ -108,6 +108,42 @@ class Contact(models.Model):
         return f'{self.title[:50]}...'
 
 
+class Coupon(models.Model):
+    """A model handling coupons for discounting."""
+
+    statuses = [
+        ("Faol", "Faol"),
+        ("To'xtatilgan", "To'xtatilgan"),
+        ("Muddati o'tgan", "Muddati o'tgan"),
+    ]
+
+    types = [
+        ('Classic', 'Classic'),
+        ('Silver', 'Silver'),
+        ('Gold', 'Gold'),
+        ('Premium', 'Premium'),
+    ]
+
+    date_release = models.DateField(auto_now_add=False)
+    type = models.CharField(max_length=10, choices=types, null=True)
+    lifetime = models.DateField(auto_now_add=False, null=True)
+    for_books = models.PositiveIntegerField(null=True, blank=True)
+    minus = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    code_1 = models.CharField(max_length=12, null=True)
+    code_2 = models.CharField(max_length=15, null=True)
+    status = models.CharField(max_length=20, choices=statuses, default="Faol", null=True, blank=True)
+    for_retail = models.BooleanField(default=False, null=True)
+
+    objects = models.Manager()
+
+    def __str__(self):
+
+        if self.code_1:
+            return self.code_1
+        else:
+            return self.code_2
+
+
 class CreateSite(models.Model):
     """A model handling inquires for Web Development service provided by the main admin."""
 
@@ -133,56 +169,6 @@ class CreateSite(models.Model):
     def __str__(self):
 
         return f'{self.f_name[:50]}...'
-
-
-# ========================================== A model for using in Discount ==========================================
-
-
-class Coupon(models.Model):
-    """A model handling coupons for discounting."""
-
-    statuses = [
-        ("Faol", "Faol"),
-        ("To'xtatilgan", "To'xtatilgan"),
-        ("Muddati o'tgan", "Muddati o'tgan"),
-    ]
-
-    types = [
-        ('Classic', 'Classic'),
-        ('Silver', 'Silver'),
-        ('Gold', 'Gold'),
-        ('Premium', 'Premium'),
-    ]
-
-    date_release = models.DateField(auto_now_add=False)
-    type = models.CharField(max_length=10, choices=types, null=True)
-    lifetime = models.DateField(auto_now_add=False, null=True)
-    code = models.CharField(max_length=15, null=True)
-    status = models.CharField(max_length=20, choices=statuses, null=True)
-
-    objects = models.Manager()
-
-    def __str__(self):
-
-        return f'*****{self.code[5:10]}*****'
-
-
-# ===================================================================================================================
-
-
-class Discount(models.Model):
-    """A model handling discounts for orders from those who have got special coupons and in general."""
-
-    date = models.DateField(auto_now_add=False, null=True)
-    coupon = models.ForeignKey(Coupon, on_delete=models.PROTECT)
-    for_books = models.PositiveIntegerField(null=True)
-    minus = models.PositiveIntegerField(null=True)
-
-    objects = models.Manager()
-
-    def __str__(self):
-
-        return str(self.date)
 
 
 # ================================== Models for using for Expense and Income models ==================================

@@ -2,7 +2,6 @@ from django import forms
 from .models import Account, \
     BindingPrice, BlogPost, Book, \
     CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, Coupon, CoverPrice, CreateSite, \
-    Discount, \
     Expense, \
     GluePrice, \
     Income, \
@@ -622,13 +621,17 @@ class CouponForm(forms.ModelForm):
 
         model = Coupon
         fields = [
-            'date_release', 'type', 'lifetime', 'status',
+            'date_release', 'type', 'lifetime', 'for_books',
+            'minus', 'status', 'for_retail',
         ]
         labels = {
             'date_release': "Chiqarilgan sana",
             'type': "Turi",
             'lifetime': "Muddati",
+            'for_books': "Kitoblar soni (kuponni olish uchun xarid qilish kerak bo'lgan)",
+            'minus': "Chegirma foizi",
             'status': "Holati",
+            'for_retail': "Sotuv uchun",
         }
         error_messages = {
             'date_release': {
@@ -640,6 +643,9 @@ class CouponForm(forms.ModelForm):
             },
             'lifetime': {
                 'invalid': "Forma noto'g'ri to'ldirildi!",
+                'required': "Forma to'ldirilmadi!",
+            },
+            'minus': {
                 'required': "Forma to'ldirilmadi!",
             },
             'status': {
@@ -658,8 +664,19 @@ class CouponForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
+            'for_books': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0',
+            }),
+            'minus': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0',
+            }),
             'status': forms.Select(attrs={
                 'class': 'form-control',
+            }),
+            'for_retail': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
             }),
         }
 
@@ -808,53 +825,6 @@ class CreateSiteForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Xabar...',
                 'required': True,
-            }),
-        }
-
-
-class DiscountForm(forms.ModelForm):
-    """A form for adding discounts for orders from those who have got special coupons and in general."""
-
-    class Meta:
-
-        model = Discount
-        fields = [
-            'date', 'coupon', 'for_books', 'minus',
-        ]
-        labels = {
-            'date': "Sana",
-            'coupon': "Kupon",
-            'for_books': "Kitoblar soni",
-            'minus': "Chegirma foizi",
-        }
-        error_messages = {
-            'date': {
-                'invalid': "Forma noto'g'ri to'ldirildi!",
-                'required': "Forma to'ldirilmadi!",
-            },
-            'coupon': {
-                'required': "Forma to'ldirilmadi!",
-            },
-            'for_books': {
-                'required': "Forma to'ldirilmadi!",
-            },
-            'minus': {
-                'required': "Forma to'ldirilmadi!",
-            },
-        }
-        widgets = {
-            'date': forms.DateInput(attrs={
-                'class': 'form-control',
-                'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
-            }),
-            'coupon': forms.Select(attrs={
-                'class': 'form-control',
-            }),
-            'for_books': forms.NumberInput(attrs={
-                'class': 'form-control',
-            }),
-            'minus': forms.NumberInput(attrs={
-                'class': 'form-control',
             }),
         }
 

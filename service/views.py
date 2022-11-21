@@ -3,11 +3,11 @@ from django.db.models import ProtectedError, Q
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, RequestAborted
 from django.http import Http404
 from django.shortcuts import redirect, render, get_object_or_404
+from random import choice, shuffle
 from .forms import AccountForm, \
     BindingPriceForm, BlogPostForm, BookForm, \
     CategoryExForm, CategoryInForm, ComplaintBookForm, ColorPriceForm, ComplaintOtherForm, ComplaintSiteForm, \
     ContactForm, CouponForm, CoverPriceForm, CreateSiteForm, \
-    DiscountForm, \
     ExpenseForm, \
     GluePriceForm, \
     IncomeForm, \
@@ -23,7 +23,6 @@ from .forms import AccountForm, \
 from .models import Account, \
     BindingPrice, BlogPost, Book, \
     CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, Coupon, CoverPrice, CreateSite, \
-    Discount, \
     Expense, \
     GluePrice, \
     Income, \
@@ -2748,6 +2747,92 @@ def delete_outer_prices(request, outerprice_id):
         return render(request, 'service/not_delete_out_exps.html', context)
 
 
+def check_coupons(request):
+    """A view providing the content for the page for checking or adding coupons for discounts."""
+
+    check_super_user(request)
+
+    coupons = Coupon.objects.all().order_by('date_release')
+    codes = get_codes(coupons)
+
+    if request.method != 'POST':
+        form = CouponForm()
+    else:
+        form = CouponForm(data=request.POST)
+        if form.is_valid():
+            new_coupon = form.save(commit=False)
+            # The below functions call the code generator and return the codes as long as they do not exist
+            # in the database
+            code_1 = get_code_1(codes)
+            code_2 = get_code_2(codes)
+            if new_coupon.for_retail is False:
+                new_coupon.code_1 = code_1
+            elif new_coupon.for_retail is True:
+                new_coupon.code_2 = code_2
+            new_coupon.save()
+            return redirect('check_coupons')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+
+    context = {
+        'coupons': coupons,
+        'form': form,
+    }
+    return render(request, 'service/check_coupons.html', context)
+
+
+def edit_coupon(request, coupon_id):
+    """A view providing the content for the page for editing the chosen coupon for discounts."""
+
+    check_super_user(request)
+
+    coupons = Coupon.objects.all()
+    codes = get_codes(coupons)
+
+    coupon = get_object_or_404(Coupon, pk=coupon_id)
+
+    if request.method != 'POST':
+        form = CouponForm(instance=coupon)
+    else:
+        form = CouponForm(data=request.POST, instance=coupon)
+        if form.is_valid():
+            edited_coupon = form.save(commit=False)
+            # The below functions call the code generator and return the codes as long as they do not exist
+            # in the database
+            code_1 = get_code_1(codes)
+            code_2 = get_code_2(codes)
+            if not form.has_changed() and 'change_code' in request.POST:
+                if edited_coupon.code_1:
+                    edited_coupon.code_1 = code_1
+                elif edited_coupon.code_2:
+                    edited_coupon.code_2 = code_2
+            elif 'change_code' in request.POST and edited_coupon.code_1:
+                edited_coupon.code_1 = code_1
+            elif 'change_code' in request.POST and edited_coupon.code_2:
+                edited_coupon.code_2 = code_2
+            edited_coupon.save()
+            return redirect('check_coupons')
+        else:
+            messages.error(request, "Ma'lumotlar noto'g'ri to'ldirildi!")
+
+    context = {
+        'coupon': coupon,
+        'form': form,
+    }
+    return render(request, 'service/edit_coupon.html', context)
+
+
+def delete_coupon(request, coupon_id):
+    """A view for deleting the chosen coupon for discounts and rendering the page telling
+    the delete process has gone successfully."""
+
+    check_super_user(request)
+
+    coupon = get_object_or_404(Coupon, pk=coupon_id)
+    coupon.delete()
+    return render(request, 'service/coupon_deleted.html')
+
+
 def check_printer_info(request):
     """A view providing the content for the page for checking and adding information on printers."""
 
@@ -4049,6 +4134,86 @@ def find_string_in_list(string, array):
     for item in array:
         if re.fullmatch(string, item, flags=re.IGNORECASE):
             return string
+
+
+def generate_code(code_1=False, code_2=False) -> str:
+    """An assisting function generating random special code with 15 or 20 characters for coupons."""
+
+    capital_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    lower_letters = 'abcdefghijklmnopqrstuvwxyz'
+    digits = '0123456789'
+
+    code = ''
+    array = []
+
+    if code_1 is True and code_2 is False:
+        while len(array) < 12:
+            capital_letter = choice(capital_letters)
+            lower_letter = choice(lower_letters)
+            digit = choice(digits)
+            array.append(capital_letter)
+            array.append(lower_letter)
+            array.append(digit)
+
+        shuffle(array)
+        code += code.join(array)
+    elif code_2 is True and code_1 is False:
+        while len(array) < 15:
+            capital_letter = choice(capital_letters)
+            lower_letter = choice(lower_letters)
+            digit = choice(digits)
+            array.append(capital_letter)
+            array.append(lower_letter)
+            array.append(digit)
+
+        shuffle(array)
+        code += code.join(array)
+
+    return code
+
+
+def get_code_1(codes) -> str:
+    """An assisting function returning code 1 providing that it does not exist in the database."""
+
+    code = None
+
+    generate = True
+    while generate:
+        code = generate_code(code_1=True)
+        if code in codes:
+            continue
+        else:
+            generate = False
+
+    return code
+
+
+def get_code_2(codes) -> str:
+    """An assisting function returning code 2 providing that it does not exist in the database."""
+
+    code = None
+
+    generate = True
+    while generate:
+        code = generate_code(code_2=True)
+        if code in codes:
+            continue
+        else:
+            generate = False
+
+    return code
+
+
+def get_codes(queryset):
+    """An assisting function retrieving the data from the provided queryset and
+    placing it to the list."""
+
+    list_of_codes = []
+    for obj in queryset:
+        list_of_codes.append(str(obj.code_1))
+        list_of_codes.append(str(obj.code_2))
+
+    return list_of_codes
 
 
 def get_color_price_dicts(prices) -> list:
