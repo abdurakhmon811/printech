@@ -12,6 +12,13 @@ def truncate_20(text):
 
 
 @register.filter
+def truncate_200(text):
+    """Show the first 200 characters of the text and at the end, put three dots..."""
+
+    return f'{text[:200]}...'
+
+
+@register.filter
 def truncate_without_dots_20(text):
     """Just show the first 20 characters of the text."""
 

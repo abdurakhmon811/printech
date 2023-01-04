@@ -2,27 +2,46 @@
 {% load bootstrap5 %}
 
 {% block content %}
-{% block page_header %}
-<div class="container  mt-4 text-center">
-    <h1 class="fw-light">Sayt haqidagi norozichiliklar uchun murojaat</h1>
-</div>
-{% endblock page_header %}
 <div class="container put-footer-bottom">
-    <div class="container col-md-8 mt-4 mb-5 pt-4 pb-4"
-         style="border-top: 1px solid #d0d0d0; border-bottom: 1px solid #d0d0d0;">
+    <div class="container col-xl-8 text-center pt-4 pb-4">
+        <h1 class="fw-light">Sayt haqidagi shikoyatlar uchun</h1>
+    </div>
+    <div class="container col-xl-8 form-dec pt-4 pb-4 mb-5">
         <form action="{% url 'complain_site' %}" method="post" novalidate
               class="form-control bg-dark text-light fw-light">
             {% csrf_token %}
             {% bootstrap_form form %}
             {% buttons %}
-                <button type="submit" name="submit" class="btn btn-warning fw-light">
-                    Yuborish &raquo;
-                </button>
-                <a class="btn btn-warning button-fix-2 fw-light" href="/">
-                    Asosiy sahifaga qaytish
-                </a>
+                <div style="position: relative;">
+                    <button type="submit" name="submit" class="btn btn-warning fw-light">
+                        Yuborish
+                    </button>
+                    <a class="btn btn-warning fw-light align-r-2" href="/" id="mainpage">
+                        Asosiy sahifaga qaytish
+                    </a>
+                </div>
             {% endbuttons %}
         </form>
     </div>
 </div>
+<script>
+    $(window).resize(function (e) {
+        if (window.innerWidth < 316) {
+            $('#mainpage').removeClass('align-r-2');
+            $('#mainpage').addClass('top-m');
+        } else {
+            $('#mainpage').addClass('align-r-2');
+            $('#mainpage').removeClass('top-m');
+        }
+    });
+    $(window).on('load', function (e) {
+        if (window.innerWidth < 316) {
+            $('#mainpage').removeClass('align-r-2');
+            $('#mainpage').addClass('top-m');
+        } else {
+            $('#mainpage').addClass('align-r-2');
+            $('#mainpage').removeClass('top-m');
+        }
+    });
+</script>
 {% endblock content %}

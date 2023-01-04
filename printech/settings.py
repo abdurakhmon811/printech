@@ -42,6 +42,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     # My apps
     'service',
+    'users',
 
     # Third party apps
     'bootstrap5',
@@ -49,6 +50,8 @@ INSTALLED_APPS = [
     'haystack',
     'phonenumber_field',
     'django_static_jquery',
+    'bootstrap_datepicker_plus',
+    'captcha',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -147,9 +150,13 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    [os.path.join(BASE_DIR, 'service/static')])
-STATIC_ROOT = BASE_DIR / 'service/staticfiles'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'public/media')
+    [
+        os.path.join(BASE_DIR, 'service/static'),
+        os.path.join(BASE_DIR, 'users/static'),
+    ]
+)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
@@ -159,4 +166,23 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# My settings
+LOGIN_URL = 'users:login_with_username'
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'users.backends.CustomBackend',
+]
+
 PHONENUMBER_DEFAULT_REGION = 'UZ'
+
+BOOTSTRAP_DATEPICKER_PLUS = {
+    "options": {
+        "locale": "uz",
+    },
+}
+
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+RECAPTCHA_DOMAIN = 'www.recaptcha.net'

@@ -3,18 +3,24 @@
 
 {% block content %}
 <div class="container put-footer-bottom">
-    <div class="jumbotron pt-5">
-        <div class="container pb-4">
+    <div class="jumbotron pt-5 pb-5">
+        <div class="container ps-4 pt-5 pe-4 pb-5">
             <h1 class="text-light fw-light">PRINTECH xizmatining rasmiy sahifasiga xush kelibsiz!</h1>
             <p class="text-light fw-light">Ushbu saytdan kitob buyurtma berish orqali siz yo'lga ketadigan vaqt
             va mablag'laringizni tejash imkoniyatiga ega bo'lasiz. Shunchaki bir nechta tugmalarni bosing va
             kerakli deb hisoblaydigan kitobingizga ega bo'ling.</p>
-            <a class="btn btn-dark scale fw-light" role="button" href="{% url 'order_source' %}">Buyurtma berish &raquo;</a>
+            {% if user.is_authenticated %}
+                <a class="btn btn-warning scale fw-light mt-3"
+                   href="{% url 'order_source' %}">Buyurtma berish &raquo;</a>
+            {% else %}
+                <a class="btn btn-warning scale fw-light mt-3"
+                   href="{% url 'users:choose_registration_type' %}">Ro'yxatdan o'tish &raquo;</a>
+            {% endif %}
         </div>
     </div>
-    <div class="container text-light margin-set pb-5" style="border-bottom: 1px solid #d0d0d0">
+    <div class="container text-light ms-0 me-0 mb-5" style="max-width: 100%;">
         <div class="row">
-            <div class="col-md-6 pt-4 pb-4 content-printers">
+            <div class="col-md-6 ps-5 pt-5 pe-5 pb-5 content-printers">
                 <h2 class="fw-light">PRINTECH haqida</h2>
                 <p class="fw-light"><strong>PRINTECH kitob chop etish xizmati hisoblanadi.</strong><br>
                 Sifatni qadrlaydiganlar qayerdan qanaqa kitob sotib olishni bilishadi. Shuningdek, jamoamiz bilan birga
@@ -22,11 +28,11 @@
                 Bizning xizmatimizdan foydalanishni davom etsangiz, kelajakda so'ragan kitobingizni bepul chiqarib
                 berishdan ham qaytmaymiz. PRINTECH mijozlari haqida qayg' uradi!</p>
             </div>
-            <div class="col-md-6 pt-4 pb-4 content-contact">
+            <div class="col-md-6 ps-5 pt-5 pe-5 pb-5 content-contact">
                 <h2 class="fw-light">Murojaat uchun</h2>
                 <p class="fw-light">{% lorem %}</p>
                 <p>
-                   <a class="btn btn-warning fw-light"
+                   <a class="btn btn-warning fw-light mt-3"
                       href="{% url 'contact' %}" role="button">Bog'lanish &raquo;</a>
                 </p>
             </div>
@@ -35,23 +41,14 @@
 
     <div class="container col-xl-12 mb-5" style="max-width: 100%; border-bottom: 1px solid #d0d0d0;">
         <div class="row">
-            <div class="col-xl-2 ad-card-col"> <!-- This column is for advertisements -->
-                <div class="card ad-card text-center">
-                    <div class="card-body">
-                        <h3 class="card-text fw-light">Reklama</h3>
-                    </div>
-                </div>
-                <div class="card ad-card mt-3 mb-3 text-center">
-                    <div class="card-body">
-                        <h3 class="card-text fw-light">Reklama</h3>
-                    </div>
-                </div>
+            <div class="col-xl"> <!-- This column is for advertisements -->
+
             </div>
             <div class="col-xl-4 text-light">
                 <div class="container text-center mb-4">
                     <h3 class="fw-light text-dark">So'nggi yangiliklar</h3>
                 </div>
-                {% for new in news %}
+                {% for new in news_objects %}
                     <div class="card index-card bg-dark">
                         <img src="{{ new.picture_1.url }}" height="150" class="image-cust" style="object-fit: cover;">
                         <div class="card-body">
@@ -59,7 +56,7 @@
                             <p class="card-text">{{ new.short_body }}</p>
                             <p class="card-text fw-light">{{ new.date_added|date:'d-m-Y, H:i' }}</p>
                             <a class="btn btn-warning fw-light" style="width: 100%"
-                               href="{% url 'detailed_news' new.id %}">Batafsil &raquo;</a>
+                               href="{% url 'view_detailed_news' new.id %}">Batafsil &raquo;</a>
                         </div>
                     </div>
                 {% empty %}
@@ -79,26 +76,17 @@
                             <h3 class="card-title fw-light">{{ post.title }}</h3>
                             <p class="card-text fw-light">{{ post.date_published|date:'d-m-Y, H:i' }}</p>
                             <a class="btn btn-warning fw-light" style="width: 100%"
-                               href="{% url 'post' post.id %}">Batafsil &raquo;</a>
+                               href="{% url 'view_blogpost' post.id %}">Batafsil &raquo;</a>
                         </div>
                     </div>
                 {% empty %}
-                    <div class="container text-center mb-4">
+                    <div class="container text-center pb-2 mb-5">
                         <h3 class="fw-light text-dark">Hozircha, maqolalar mavjud emas...</h3>
                     </div>
                 {% endfor %}
             </div>
-            <div class="col-xl-2 ad-card-col"> <!-- This column is for advertisements -->
-                <div class="card ad-card text-center">
-                    <div class="card-body">
-                        <h3 class="card-text fw-light">Reklama</h3>
-                    </div>
-                </div>
-                <div class="card ad-card mt-3 mb-3 text-center">
-                    <div class="card-body">
-                        <h3 class="card-text fw-light">Reklama</h3>
-                    </div>
-                </div>
+            <div class="col-xl"> <!-- This column is for advertisements -->
+
             </div>
         </div>
     </div>

@@ -1,12 +1,12 @@
 {% extends 'service/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="container put-footer-bottom">
-    <div class="container text-center mt-5 mb-5 pb-4" style="border-bottom: 1px solid #d0d0d0;">
-        <h1 class="fw-light mt-4 ms-5 me-5 mb-4">Buyurtmangiz muvaffaqiyatli qabul qilindi! Tez orada qachon tayyor
-        bo'lishi haqida SMS xabarnoma olasiz!</h1>
+    <div class="container text-center pt-5 pb-5 mb-3" style="border-bottom: 1px solid #d0d0d0;">
+        <img src="{% static 'images/order_accepted.png' %}" height="400">
     </div>
-    <div class="container text-center mt-5 mb-5 pb-5">
+    <div class="container text-center mb-5">
         <a href="/" class="btn btn-warning fw-light">Asosiy sahifaga qaytish</a>
     </div>
 </div>

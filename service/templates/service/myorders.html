@@ -6,7 +6,7 @@
     <div class="container header-container text-center pt-4 pb-4 mb-4">
         <h1 class="fw-light">Mening buyurtmalarim</h1>
     </div>
-    {% if orders %}
+    {% if order_objects %}
         <div class="table-responsive-xl">
             <table class="table table-hover table-dark table-striped text-center fw-light">
                 <thead>
@@ -28,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in orders %}
+                    {% for order in order_objects %}
                         <tr>
                             <th scope="row">{{ order.order_number }}</th>
                             {% if order.book %}
@@ -86,7 +86,7 @@
                             </td>
                             {% if order.delivered %}
                                 <td><img src="{% static 'images/done.png' %}" height="25"></td>
-                            {% elif not order.delivered %}
+                            {% else %}
                                 <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
                             {% endif %}
                         </tr>
@@ -94,11 +94,11 @@
                 </tbody>
             </table>
         </div>
-    <a class="btn btn-warning fw-light mb-5" href="{% url 'order_source' %}">Buyurtma berish &raquo;</a>
-    {% elif not orders %}
+    <a class="btn btn-warning fw-light mb-5" href="{% url 'order_source' %}">Buyurtma berish</a>
+    {% else %}
         <div class="container text-center mt-5 mb-5" style="max-width: 100%">
-            <h2 class="fw-light">Voy! Hali ham buyurtma bermaganga o'xshaysiz...</h2>
-            <a class="btn btn-warning fw-light mt-5 mb-5" href="{% url 'order_source' %}">Buyurtma berish &raquo;</a>
+            <img src="{% static 'images/no_order.png' %}" class="d-block mx-auto prinobot-img">
+            <a class="btn btn-warning fw-light mt-5" href="{% url 'order_source' %}">Buyurtma berish &raquo;</a>
         </div>
     {% endif %}
 </div>

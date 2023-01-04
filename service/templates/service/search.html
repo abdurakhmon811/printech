@@ -5,10 +5,8 @@
 <div class="container put-footer-bottom">
     <div class="container col-xl-12 mb-5" style="max-width: 100%">
         <div class="row">
-            <div class="col-xl-2 ad-col">
-                <div class="card mx-auto ad-cards">
-                    <h4 class="fw-light">Reklama</h4>
-                </div>
+            <div class="col-xl">
+
             </div>
             <div class="col-xl-8 main-col">
                 {% block page_header %}
@@ -16,10 +14,10 @@
                     <h1 class="fw-light">Qidiruv natijalari</h1>
                 </div>
                 {% endblock page_header %}
-                {% if books %}
+                {% if book_objects %}
                     <div class="container mt-3" style="max-width: 90%">
                         <h2 class="fw-light pb-3 mb-4" style="border-bottom: 1px solid #d0d0d0;">Kitoblar</h2>
-                        {% for book in books %}
+                        {% for book in book_objects %}
                             <div class="card mx-auto pt-0" style="max-width: 100%;
                                                                   border-radius: .0rem;">
                                 <div class="card-body pt-0 pb-0">
@@ -129,16 +127,16 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                {% if news %}
+                {% if news_objects %}
                     <div class="container mt-4" style="max-width: 90%">
                         <h2 class="fw-light pb-3 mb-4" style="border-bottom: 1px solid #d0d0d0;">Yangiliklar</h2>
-                        {% for new in news %}
+                        {% for new in news_objects %}
                             <div class="card mx-auto" style="max-width: 100%;
                                                              border-radius: .9rem;">
                                 <div class="card-body pt-0 pb-0">
                                     <div class="card-title">
                                         <a class="link-hover fw-normal"
-                                                   href="{% url 'detailed_news' new.id %}">
+                                                   href="{% url 'view_detailed_news' new.id %}">
                                         <cite>Sarlavha</cite> - {{ new.title }} &gt;
                                         <cite>Qisqacha</cite>: {{ new.short_body|truncate_without_dots_20 }} &gt;
                                         <strong>{{ new.body_1|truncate_20 }}</strong>
@@ -158,7 +156,7 @@
                                 <div class="card-body pt-0 pb-0">
                                     <div class="card-title">
                                         <a class="link-hover fw-normal"
-                                                   href="{% url 'post' post.id %}">
+                                                   href="{% url 'view_blogpost' post.id %}">
                                         <cite>Sarlavha</cite> - {{ post.title }} &gt;
                                         <strong>{{ post.body_1|truncate_20 }}</strong>
                                         </a>
@@ -168,18 +166,16 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                {% if not books and not news and not posts %}
+                {% if not book_objects and not news and not posts %}
                     <div class="container mt-4 pt-3" style="max-width: 100%">
-                        <img src="{% static 'images/robot4042.png' %}" class="d-block mx-auto not-found-img">
-                        <h3 class="fw-light text-center" style="font-family: consolas; color: #95b4c8">
-                            {{ searched }} so'rovi bo'yicha ma'lumot topilmadi</h3>
+                        <img src="{% static 'images/Robot and 404 error.png' %}" class="d-block mx-auto prinobot-img">
+                        <h3 class="fw-bold text-center" style="color: #F04E23">
+                            Prinobot <cite>{{ searched }}</cite> so'rovi bo'yicha ma'lumot topa olmadi</h3>
                     </div>
                 {% endif %}
             </div>
-            <div class="col-xl-2 ad-col">
-                <div class="card mx-auto ad-cards">
-                    <h4 class="fw-light">Reklama</h4>
-                </div>
+            <div class="col-xl">
+
             </div>
         </div>
     </div>

@@ -6,36 +6,56 @@
 <div class="container put-footer-bottom">
     <div class="container col-xl-12 mb-5" style="max-width: 100%">
         <div class="row">
-            <div class="col-xl-2 ad-col">
-                <div class="card mx-auto ad-cards">
-                    <h4 class="fw-light">Reklama</h4>
-                </div>
+            <div class="col-xl">
+
             </div>
             <div class="col-xl-8 main-col">
-                {% block page_header %}
                 <div class="container header-container text-center mt-4 pb-3">
                     <h1 class="fw-light">Administratura bilan bog'lanish</h1>
                 </div>
-                {% endblock page_header %}
                 <form class="form-control form-itself bg-dark text-light fw-light"
                       novalidate action="{% url 'contact' %}" method="post">
                     {% csrf_token %}
                     {% bootstrap_form form %}
                     {% buttons %}
-                        <button class="btn btn-warning fw-light" type="submit">
-                            Yuborish &raquo;
-                        </button>
-                        <a class="btn btn-warning button-fix fw-light"
-                        href="/">Asosiy sahifaga qaytish</a>
+                        <div style="position: relative;">
+                            <button class="btn btn-warning fw-light"
+                                    type="submit">
+                                Yuborish
+                            </button>
+                            <a class="btn btn-warning button-fix fw-light align-r-2"
+                               href="/"
+                               id="mainpage">
+                                Asosiy sahifaga qaytish
+                            </a>
+                        </div>
                     {% endbuttons %}
                 </form>
             </div>
-            <div class="col-xl-2 ad-col">
-                <div class="card mx-auto ad-cards">
-                    <h4 class="fw-light">Reklama</h4>
-                </div>
+            <div class="col-xl">
+
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(window).resize(function (e) {
+        if (window.innerWidth < 324) {
+            $('#mainpage').removeClass('align-r-2');
+            $('#mainpage').addClass('top-m');
+        } else {
+            $('#mainpage').addClass('align-r-2');
+            $('#mainpage').removeClass('top-m');
+        }
+    });
+    $(window).on('load', function (e) {
+        if (window.innerWidth < 324) {
+            $('#mainpage').removeClass('align-r-2');
+            $('#mainpage').addClass('top-m');
+        } else {
+            $('#mainpage').addClass('align-r-2');
+            $('#mainpage').removeClass('top-m');
+        }
+    });
+</script>
 {% endblock content %}

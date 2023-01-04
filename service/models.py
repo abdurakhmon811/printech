@@ -1,9 +1,8 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 
 # Third party application fields
 from djmoney.models.fields import MoneyField
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 class BlogPost(models.Model):
@@ -13,14 +12,14 @@ class BlogPost(models.Model):
     subtitle_1 = models.CharField(max_length=100, default=None)
     subtitle_2 = models.CharField(max_length=100, null=True, blank=True, default=None)
     subtitle_3 = models.CharField(max_length=100, null=True, blank=True, default=None)
-    picture_1 = models.ImageField(upload_to='user_loaded_images/', default='user_loaded_images')
-    picture_2 = models.ImageField(upload_to='user_loaded_images/', null=True, blank=True, default='user_loaded_images')
-    picture_3 = models.ImageField(upload_to='user_loaded_images/', null=True, blank=True, default='user_loaded_images')
+    picture_1 = models.ImageField(upload_to='media/user_loaded_images/')
+    picture_2 = models.ImageField(upload_to='media/user_loaded_images/', null=True, blank=True)
+    picture_3 = models.ImageField(upload_to='media/user_loaded_images/', null=True, blank=True)
     body_1 = models.TextField(default=None)
     body_2 = models.TextField(null=True, blank=True, default=None)
     body_3 = models.TextField(null=True, blank=True, default=None)
     conclusion = models.TextField(default=None)
-    publisher = models.ForeignKey(User, on_delete=models.PROTECT)
+    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     publisher_tg = models.URLField(default=None)
     publisher_li = models.URLField(default=None)
     publisher_gm = models.EmailField(default=None)
@@ -54,8 +53,7 @@ class Book(models.Model):
 
     category = models.CharField(max_length=100, choices=categories, default=None, null=True)
     name_coded = models.CharField(max_length=50, null=True)
-    picture = models.ImageField(default='user_loaded_images',
-                                null=True, blank=True, upload_to='user_loaded_images/')
+    picture = models.ImageField(null=True, blank=True, upload_to='media/user_loaded_images/')
     pages = models.PositiveIntegerField(null=True)
     chars = models.TextField(default=None, null=True)
     telegram_link = models.URLField(default=None, null=True)
@@ -67,18 +65,18 @@ class Book(models.Model):
         return self.name_coded
 
     def image_url(self):
-        """Return the image URL if it does exist, otherwise return a default image."""
+        """Return an image URL if it does exist, otherwise return a default image."""
 
         if self.picture and hasattr(self.picture, 'url'):
             return self.picture.url
         else:
-            return 'service/static/images/books22.jpg'
+            return 'static/images/books22.jpg'
 
 
 class Complaint(models.Model):
     """A model handling complaints from users."""
 
-    complainant = models.ForeignKey(User, on_delete=models.PROTECT)
+    complainant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     title = models.CharField(max_length=50, default=None, null=True)
     book = models.ForeignKey(Book, on_delete=models.PROTECT, default=None, null=True)
     time_bought = models.DateField(auto_now_add=False, default=None, null=True)
@@ -94,11 +92,10 @@ class Complaint(models.Model):
 class Contact(models.Model):
     """A model handling inquiries from users."""
 
-    phone_number = PhoneNumberField(region='UZ', null=True)
     telegram = models.URLField(default=None, null=True)
     title = models.CharField(max_length=100, null=True)
     message = models.TextField(null=True)
-    applicant = models.ForeignKey(User, on_delete=models.PROTECT)
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_made = models.DateTimeField(auto_now_add=True, null=True)
 
     objects = models.Manager()
@@ -132,7 +129,9 @@ class Coupon(models.Model):
     code_1 = models.CharField(max_length=12, null=True)
     code_2 = models.CharField(max_length=15, null=True)
     status = models.CharField(max_length=20, choices=statuses, default="Faol", null=True, blank=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True)
     for_retail = models.BooleanField(default=False, null=True)
+    sold_given = models.BooleanField(default=False, null=True)
 
     objects = models.Manager()
 
@@ -144,49 +143,14 @@ class Coupon(models.Model):
             return self.code_2
 
 
-class CreateSite(models.Model):
-    """A model handling inquires for Web Development service provided by the main admin."""
-
-    person_choices = [
-        ("Jismoniy shaxs", "Jismoniy shaxs"),
-        ("Yuridik shaxs", "Yuridik shaxs"),
-    ]
-
-    f_name = models.CharField(max_length=200, null=True)
-    l_name = models.CharField(max_length=200, null=True)
-    m_name = models.CharField(max_length=200, null=True)
-    age = models.PositiveIntegerField(default=18, null=True, blank=True)
-    person = models.CharField(max_length=25, choices=person_choices, null=True)
-    company = models.CharField(null=True, blank=True, max_length=200)
-    mail = models.EmailField(default=None, null=True)
-    client_number = PhoneNumberField(region='UZ', default=None, null=True)
-    client = models.ForeignKey(User, on_delete=models.PROTECT)
-    site_description = models.CharField(max_length=400, null=True)
-    date_applied = models.DateTimeField(auto_now_add=True, null=True)
-
-    objects = models.Manager()
-
-    def __str__(self):
-
-        return f'{self.f_name[:50]}...'
-
-
 # ================================== Models for using for Expense and Income models ==================================
 
 
 class Account(models.Model):
     """A model handling accounts for incomes and expenses."""
 
-    currencies = [
-        ('EUR', 'EUR'),
-        ('RUB', 'RUB'),
-        ('USD', 'USD'),
-        ('UZS', 'UZS'),
-    ]
-
     name = models.CharField(max_length=100, null=True, default=None)
-    means = MoneyField(max_digits=50, decimal_places=2,
-                       default_currency='UZS', currency_choices=currencies, null=True)
+    means = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
 
     objects = models.Manager()
 
@@ -265,21 +229,13 @@ class SubCategoryIn(models.Model):
 class Expense(models.Model):
     """A model handling the expenses made within the business area."""
 
-    currencies = [
-        ('EUR', 'EUR'),
-        ('RUB', 'RUB'),
-        ('USD', 'USD'),
-        ('UZS', 'UZS'),
-    ]
-
     category = models.ForeignKey(CategoryEx, on_delete=models.PROTECT, null=True)
     subcategory = models.ForeignKey(SubCategoryEx, on_delete=models.PROTECT, null=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     account = models.ForeignKey(Account, on_delete=models.PROTECT, null=True)
     date_made = models.DateTimeField(auto_now_add=False, default=None, null=True)
     comment = models.TextField(null=True)
-    amount = MoneyField(max_digits=50, decimal_places=2,
-                        default_currency='UZS', currency_choices=currencies, null=True)
+    amount = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
 
     objects = models.Manager()
 
@@ -291,21 +247,13 @@ class Expense(models.Model):
 class Income(models.Model):
     """A model handling the incomes made within the business area."""
 
-    currencies = [
-        ('EUR', 'EUR'),
-        ('RUB', 'RUB'),
-        ('USD', 'USD'),
-        ('UZS', 'UZS'),
-    ]
-
     category = models.ForeignKey(CategoryIn, on_delete=models.PROTECT, null=True)
     subcategory = models.ForeignKey(SubCategoryIn, on_delete=models.PROTECT, null=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     account = models.ForeignKey(Account, on_delete=models.PROTECT, null=True)
     date_made = models.DateTimeField(auto_now_add=False, default=None, null=True)
     comment = models.TextField(null=True)
-    amount = MoneyField(max_digits=50, decimal_places=2,
-                        default_currency='UZS', currency_choices=currencies, null=True)
+    amount = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
 
     objects = models.Manager()
 
@@ -338,13 +286,6 @@ class LType(models.Model):
 class Loss(models.Model):
     """A model handling the losses in business."""
 
-    currencies = [
-        ('EUR', 'EUR'),
-        ('RUB', 'RUB'),
-        ('USD', 'USD'),
-        ('UZS', 'UZS'),
-    ]
-
     class Meta:
 
         verbose_name = 'Loss'
@@ -359,9 +300,8 @@ class Loss(models.Model):
     amount = models.CharField(max_length=50, null=True)
     reason = models.CharField(max_length=100, null=True)
     time_loss = models.DateField(auto_now_add=False, null=True)
-    loser = models.ForeignKey(User, on_delete=models.PROTECT)
-    worth = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS',
-                       currency_choices=currencies, null=True)
+    loser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    worth = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
 
     objects = models.Manager()
 
@@ -382,15 +322,15 @@ class News(models.Model):
     subtitle_1 = models.CharField(max_length=100, default=None, null=True)
     subtitle_2 = models.CharField(max_length=100, null=True, blank=True, default=None)
     subtitle_3 = models.CharField(max_length=100, null=True, blank=True, default=None)
-    picture_1 = models.ImageField(upload_to='user_loaded_images/', default='user_loaded_images', null=True)
-    picture_2 = models.ImageField(null=True, blank=True, upload_to='user_loaded_images/', default='user_loaded_images')
-    picture_3 = models.ImageField(null=True, blank=True, upload_to='user_loaded_images/', default='user_loaded_images')
+    picture_1 = models.ImageField(upload_to='media/user_loaded_images/', null=True)
+    picture_2 = models.ImageField(null=True, blank=True, upload_to='media/user_loaded_images/')
+    picture_3 = models.ImageField(null=True, blank=True, upload_to='media/user_loaded_images/')
     date_added = models.DateTimeField(auto_now_add=True, null=True)
     short_body = models.CharField(max_length=200, default=None, null=True)
     body_1 = models.TextField(default=None, null=True)
     body_2 = models.TextField(null=True, blank=True, default=None)
     body_3 = models.TextField(null=True, blank=True, default=None)
-    publisher = models.ForeignKey(User, on_delete=models.PROTECT)
+    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     publisher_tg = models.URLField(default=None, null=True)
     publisher_li = models.URLField(default=None, null=True)
     publisher_gm = models.EmailField(default=None, null=True)
@@ -465,10 +405,6 @@ class Order(models.Model):
         ("Sariq", "Sariq"),
         ("Yashil", "Yashil"),
     ]
-    sources = [
-        ("Saytdan", "Saytdan"),
-        ("O'zimdan", "O'zimdan"),
-    ]
     sizes = [
         ('A4', 'A4'),
         ('A5', 'A5'),
@@ -476,7 +412,7 @@ class Order(models.Model):
 
     order_number = models.AutoField(primary_key=True)
     book = models.ForeignKey(Book, on_delete=models.PROTECT, null=True)
-    custom_book = models.CharField(max_length=200, default=None, null=True)
+    custom_book = models.FileField(upload_to='media/user_loaded_files/', null=True)
     book_type = models.CharField(choices=book_types, max_length=100, null=True)
     ring_color = models.CharField(choices=colors_2, max_length=100, null=True, blank=True)
     back_cover_color = models.CharField(choices=colors, max_length=100, null=True, blank=True)
@@ -486,9 +422,7 @@ class Order(models.Model):
     number = models.PositiveIntegerField(default=1, null=True)
     user_needs = models.DateTimeField(auto_now_add=False, default=None, null=True)
     place_to_get = models.ForeignKey(PlaceToGet, on_delete=models.PROTECT, null=True)
-    customer = models.ForeignKey(User, on_delete=models.PROTECT)
-    customer_number = PhoneNumberField(region='UZ', default=None)
-    customer_email = models.EmailField(default=None, max_length=255, null=True, blank=True)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     payment = models.CharField(choices=payment_methods, max_length=50, default=None)
     date_ordered = models.DateTimeField(auto_now_add=True, null=True)
     status = models.CharField(max_length=50, choices=statuses, default="To'lovni kutmoqda", null=True)
@@ -699,7 +633,7 @@ class OuterPrice(models.Model):
     workforce_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
     electricity_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
     printer_expenses = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
-    profit = models.PositiveIntegerField(null=True)
+    profit = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 
     objects = models.Manager()
 
@@ -857,24 +791,16 @@ class RType(models.Model):
 class Resource(models.Model):
     """A model handling the available resources in the base."""
 
-    currencies = [
-        ('EUR', 'EUR'),
-        ('RUB', 'RUB'),
-        ('USD', 'USD'),
-        ('UZS', 'UZS'),
-    ]
-
     rtype = models.ForeignKey(RType, on_delete=models.PROTECT)
     size = models.CharField(max_length=10, null=True, blank=True)
     type = models.CharField(max_length=15, null=True, blank=True)
     color = models.CharField(max_length=50, null=True, blank=True)
     amount = models.CharField(max_length=50, null=True)
     time_bought = models.DateField(auto_now_add=False, null=True)
-    worth = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS',
-                       currency_choices=currencies, null=True)
+    worth = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
     last_used_date = models.DateField(auto_now_add=False, null=True, blank=True)
-    amount_used = models.PositiveIntegerField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    amount_used = models.DecimalField(max_digits=100, decimal_places=2, null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     available = models.CharField(max_length=100, null=True)
 
     objects = models.Manager()
@@ -887,18 +813,10 @@ class Resource(models.Model):
 class Transaction(models.Model):
     """A model handling transactions between money accounts."""
 
-    currencies = [
-        ('EUR', 'EUR'),
-        ('RUB', 'RUB'),
-        ('USD', 'USD'),
-        ('UZS', 'UZS'),
-    ]
-
     acc_1 = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='transactions_1', null=True)
     acc_2 = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='transactions_2', null=True)
     date_made = models.DateTimeField(auto_now_add=True, editable=True, null=True)
-    amount = MoneyField(max_digits=50, decimal_places=2,
-                        default_currency='UZS', currency_choices=currencies, null=True)
+    amount = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
 
     objects = models.Manager()
 
@@ -915,13 +833,6 @@ class Workforce(models.Model):
         verbose_name = 'Workforce'
         verbose_name_plural = 'Workforce'
 
-    currencies = [
-        ('EUR', 'EUR'),
-        ('RUB', 'RUB'),
-        ('USD', 'USD'),
-        ('UZS', 'UZS'),
-    ]
-
     name = models.CharField(max_length=200, null=True)
     surname = models.CharField(max_length=200, null=True)
     middle_name = models.CharField(max_length=200, null=True, blank=True)
@@ -930,8 +841,7 @@ class Workforce(models.Model):
     career_status = models.CharField(max_length=200, null=True)
     joined_service = models.DateField(auto_now_add=False, null=True)
     position = models.CharField(max_length=200, null=True)
-    salary = MoneyField(max_digits=50, decimal_places=2,
-                        default_currency='UZS', currency_choices=currencies, null=True)
+    salary = MoneyField(max_digits=50, decimal_places=2, default_currency='UZS', null=True)
     last_salary_reception = models.DateField(auto_now_add=False, null=True)
     last_salary_paid = models.BooleanField(null=True)
 

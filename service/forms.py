@@ -1,7 +1,7 @@
 from django import forms
 from .models import Account, \
     BindingPrice, BlogPost, Book, \
-    CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, Coupon, CoverPrice, CreateSite, \
+    CategoryEx, CategoryIn, ColorPrice, Complaint, Contact, Coupon, CoverPrice, \
     Expense, \
     GluePrice, \
     Income, \
@@ -17,8 +17,8 @@ from .models import Account, \
 import time
 
 # Third party application widgets
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput
 from djmoney.forms.widgets import MoneyWidget
-from phonenumber_field.formfields import RegionalPhoneNumberWidget
 
 
 class AccountForm(forms.ModelForm):
@@ -38,7 +38,7 @@ class AccountForm(forms.ModelForm):
             'name', 'means',
         ]
         labels = {
-            'name': 'Hisob raqam nomi',
+            'name': "Hisob raqam nomi",
             'means': "Summa",
         }
         error_messages = {
@@ -54,11 +54,20 @@ class AccountForm(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
             }),
-            'means': MoneyWidget(attrs={
-                'class': 'form-control',
-                'placeholder': 'Mavjud miqdor',
-                'required': True,
-            }, choices=currencies),
+            'means': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': "Mavjud miqdor",
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -89,7 +98,7 @@ class BindingPriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
@@ -115,21 +124,21 @@ class BlogPostForm(forms.ModelForm):
             'publisher_li', 'publisher_gm', 'publisher_tw', 'ref_links',
         ]
         labels = {
-            'title': 'Sarlavha',
-            'subtitle_1': 'Kichik sarlavha №1 (Majburiy)',
-            'subtitle_2': 'Kichik sarlavha №2 (Ixtiyoriy)',
-            'subtitle_3': 'Kichik sarlavha №3 (Ixtiyoriy)',
+            'title': "Sarlavha",
+            'subtitle_1': "Kichik sarlavha №1 (Majburiy)",
+            'subtitle_2': "Kichik sarlavha №2 (Ixtiyoriy)",
+            'subtitle_3': "Kichik sarlavha №3 (Ixtiyoriy)",
             'picture_1': "Fotorasm №1 (Majburiy)",
             'picture_2': "Fotorasm №2 (Ixtiyoriy)",
             'picture_3': "Fotorasm №3 (Ixtiyoriy)",
-            'body_1': 'Tafsilotlar №1 (Majburiy)',
-            'body_2': 'Tafsilotlar №2 (Ixtiyoriy)',
-            'body_3': 'Tafsilotlar №3 (Ixtiyoriy)',
-            'conclusion': 'Xulosa',
-            'publisher_tg': 'Nashriyotchining Telegram sahifasi',
-            'publisher_li': 'Nashriyotchining LinkedIn sahifasi',
-            'publisher_gm': 'Nashriyotchining Gmail pochta quttisi',
-            'publisher_tw': 'Nashriyotchining Twitter sahifasi',
+            'body_1': "Tafsilotlar №1 (Majburiy)",
+            'body_2': "Tafsilotlar №2 (Ixtiyoriy)",
+            'body_3': "Tafsilotlar №3 (Ixtiyoriy)",
+            'conclusion': "Xulosa",
+            'publisher_tg': "Nashriyotchining Telegram sahifasi",
+            'publisher_li': "Nashriyotchining LinkedIn sahifasi",
+            'publisher_gm': "Nashriyotchining Gmail pochta quttisi",
+            'publisher_tw': "Nashriyotchining Twitter sahifasi",
             'ref_links': "Foydalanilgan axborot vositalari",
         }
         error_messages = {
@@ -168,37 +177,39 @@ class BlogPostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
             }),
             'subtitle_1': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
-                'required': True,
             }),
             'subtitle_2': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
-                'required': False,
             }),
             'subtitle_3': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
-                'required': False,
+            }),
+            'picture_1': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
+            }),
+            'picture_2': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
+            }),
+            'picture_3': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
             }),
             'body_1': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 10,
-                'required': True,
             }),
             'body_2': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 10,
-                'required': False,
             }),
             'body_3': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 10,
-                'required': False,
             }),
             'conclusion': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -238,12 +249,12 @@ class BookForm(forms.ModelForm):
             'category', 'name_coded', 'picture', 'pages', 'chars', 'telegram_link',
         ]
         labels = {
-            'category': 'Kitob janri',
-            'name_coded': 'Kitob kodi',
-            'picture': 'Kitob muqovasi',
-            'pages': 'Betlar soni',
-            'chars': 'Kitob haqida qisqacha',
-            'telegram_link': 'Telegram havolasi',
+            'category': "Janri",
+            'name_coded': "Kodi",
+            'picture': "Muqovasi",
+            'pages': "Betlar soni",
+            'chars': "Kitob haqida qisqacha",
+            'telegram_link': "Telegram havolasi",
         }
         error_messages = {
             'category': {
@@ -253,14 +264,15 @@ class BookForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'pages': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'chars': {
                 'required': "Forma to'ldirilmadi!",
             },
             'telegram_link': {
-                'required': "Forma to'ldirilmadi!",
                 'invalid': "Telegram manzil noto'g'ri kiritildi!",
+                'required': "Forma to'ldirilmadi!",
             },
         }
         widgets = {
@@ -270,19 +282,17 @@ class BookForm(forms.ModelForm):
             'name_coded': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': '#100',
-                'cols': 20,
-                'rows': 1,
-                'required': True,
+            }),
+            'picture': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
             }),
             'pages': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'cols': 20,
-                'rows': 1,
-                'required': True,
+                'placeholder': '0',
             }),
             'chars': forms.Textarea(attrs={
                 'class': 'form-control',
-                'required': True,
                 'rows': 5,
             }),
             'telegram_link': forms.URLInput(attrs={
@@ -302,7 +312,7 @@ class CategoryExForm(forms.ModelForm):
             'category',
         ]
         labels = {
-            'category': 'Xarajat kategoriyasi',
+            'category': "Xarajat kategoriyasi",
         }
         error_messages = {
             'category': {
@@ -312,6 +322,7 @@ class CategoryExForm(forms.ModelForm):
         widgets = {
             'category': forms.TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': "Transport",
             }),
         }
 
@@ -325,7 +336,7 @@ class CategoryInForm(forms.ModelForm):
             'category',
         ]
         labels = {
-            'category': 'Daromad kategoriyasi',
+            'category': "Daromad kategoriyasi",
         }
         error_messages = {
             'category': {
@@ -379,7 +390,7 @@ class ColorPriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
             }),
@@ -389,9 +400,20 @@ class ColorPriceForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'price': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
+            'price': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -405,10 +427,10 @@ class ComplaintForm(forms.ModelForm):
             'title', 'book', 'time_bought', 'problem',
         ]
         labels = {
-            'title': 'Sarlavha',
-            'book': 'Kitob',
-            'time_bought': 'Sotib olingan vaqt',
-            'problem': 'Muammo',
+            'title': "Sarlavha",
+            'book': "Kitob",
+            'time_bought': "Sotib olingan vaqt",
+            'problem': "Muammo",
         }
         error_messages = {
             'title': {
@@ -428,19 +450,18 @@ class ComplaintForm(forms.ModelForm):
         widgets = {
               'title': forms.TextInput(attrs={
                   'class': 'form-control',
-                  'placeholder': 'Sarlavha',
-                  'rows': 1,
+                  'placeholder': "Sarlavha",
               }),
               'book': forms.Select(attrs={
                   'class': 'form-control',
               }),
-              'time_bought': forms.DateInput(attrs={
+              'time_bought': DatePickerInput(attrs={
                   'class': 'form-control',
                   'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
               }),
               'problem': forms.Textarea(attrs={
                   'class': 'form-control',
-                  'placeholder': 'Muammo...',
+                  'placeholder': "Muammo...",
                   'cols': 50,
                   'rows': 10,
               }),
@@ -457,9 +478,9 @@ class ComplaintBookForm(forms.ModelForm):
             'book', 'time_bought', 'problem',
         ]
         labels = {
-            'book': 'Kitob',
-            'time_bought': 'Sotib olingan vaqt',
-            'problem': 'Xabar',
+            'book': "Kitob",
+            'time_bought': "Sotib olingan vaqt",
+            'problem': "Xabar",
         }
         error_messages = {
             'book': {
@@ -477,13 +498,13 @@ class ComplaintBookForm(forms.ModelForm):
             'book': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'time_bought': forms.DateInput(attrs={
+            'time_bought': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
             'problem': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Muammo...'
+                'placeholder': "Muammo...",
             })
         }
 
@@ -498,8 +519,8 @@ class ComplaintOtherForm(forms.ModelForm):
             'title', 'problem',
         ]
         labels = {
-            'title': 'Sarlavha',
-            'problem': 'Xabar',
+            'title': "Sarlavha",
+            'problem': "Xabar",
         }
         error_messages = {
             'title': {
@@ -512,16 +533,15 @@ class ComplaintOtherForm(forms.ModelForm):
         widgets = {
             'custom_category': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
+                'placeholder': "Yetkazib berish",
             }),
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Sarlavha',
-                'rows': 1,
+                'placeholder': "Sarlavha",
             }),
             'problem': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Xabar...',
+                'placeholder': "Xabar...",
             }),
         }
 
@@ -536,8 +556,8 @@ class ComplaintSiteForm(forms.ModelForm):
             'title', 'problem',
         ]
         labels = {
-            'title': 'Sarlavha',
-            'problem': 'Xabar',
+            'title': "Sarlavha",
+            'problem': "Xabar",
         }
         error_messages = {
             'title': {
@@ -550,12 +570,11 @@ class ComplaintSiteForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Sarlavha',
-                'rows': 1,
+                'placeholder': "Sarlavha",
             }),
             'problem': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Muammo...',
+                'placeholder': "Muammo...",
                 'cols': 50,
                 'rows': 10,
             }),
@@ -569,19 +588,14 @@ class ContactForm(forms.ModelForm):
 
         model = Contact
         fields = [
-            'phone_number', 'telegram', 'title', 'message',
+            'telegram', 'title', 'message',
         ]
         labels = {
-            'phone_number': 'Telefon raqamingiz',
-            'telegram': 'Telegram manzilingiz (ixtiyoriy)',
-            'title': 'Sarlavha',
-            'message': 'Xabar',
+            'telegram': "Telegram manzilingiz (ixtiyoriy)",
+            'title': "Sarlavha",
+            'message': "Xabar",
         }
         error_messages = {
-            'phone_number': {
-                'invalid': "Telefon raqam noto'g'ri kiritildi!",
-                'required': "Forma to'ldirilmadi!",
-            },
             'telegram': {
                 'invalid': "Telegram manzil noto'g'ri kiritildi!",
                 'required': "Forma to'ldirilmadi!",
@@ -594,35 +608,30 @@ class ContactForm(forms.ModelForm):
             },
         }
         widgets = {
-            'phone_number': RegionalPhoneNumberWidget(attrs={
-                'class': 'form-control',
-                'placeholder': '+998901234567',
-                'required': True,
-            }),
             'telegram': forms.URLInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'https://telegram.me/foydalanuvchi-nomi',
+                'placeholder': "https://telegram.me/foydalanuvchi-nomi",
             }),
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'required': True,
             }),
             'message': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Xabar...',
+                'placeholder': "Xabar...",
             }),
         }
 
 
 class CouponForm(forms.ModelForm):
-    """A form for adding coupons for discounts."""
+    """A form for adding coupons for discounts (available to admins only)."""
 
     class Meta:
 
         model = Coupon
         fields = [
             'date_release', 'type', 'lifetime', 'for_books',
-            'minus', 'status', 'for_retail',
+            'minus', 'status', 'owner', 'for_retail',
+            'sold_given',
         ]
         labels = {
             'date_release': "Chiqarilgan sana",
@@ -631,7 +640,9 @@ class CouponForm(forms.ModelForm):
             'for_books': "Kitoblar soni (kuponni olish uchun xarid qilish kerak bo'lgan)",
             'minus': "Chegirma foizi",
             'status': "Holati",
+            'owner': "Egasi",
             'for_retail': "Sotuv uchun",
+            'sold_given': "Sotildi/Berildi",
         }
         error_messages = {
             'date_release': {
@@ -645,22 +656,25 @@ class CouponForm(forms.ModelForm):
                 'invalid': "Forma noto'g'ri to'ldirildi!",
                 'required': "Forma to'ldirilmadi!",
             },
+            'for_books': {
+                'invalid': "Butun son kiriting!"
+            },
             'minus': {
                 'required': "Forma to'ldirilmadi!",
             },
             'status': {
                 'required': "Forma to'ldirilmadi!",
-            }
+            },
         }
         widgets = {
-            'date_release': forms.DateInput(attrs={
+            'date_release': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
             'type': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'lifetime': forms.DateInput(attrs={
+            'lifetime': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
@@ -675,7 +689,13 @@ class CouponForm(forms.ModelForm):
             'status': forms.Select(attrs={
                 'class': 'form-control',
             }),
+            'owner': forms.Select(attrs={
+                'class': 'form-control',
+            }),
             'for_retail': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            }),
+            'sold_given': forms.CheckboxInput(attrs={
                 'class': 'form-check-input',
             }),
         }
@@ -719,7 +739,7 @@ class CoverPriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
             }),
@@ -729,103 +749,20 @@ class CoverPriceForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'price': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
-        }
-
-
-class CreateSiteForm(forms.ModelForm):
-    """A form for receiving inquires for Web Development services provided by the main admin."""
-
-    class Meta:
-
-        model = CreateSite
-        fields = [
-            'f_name', 'l_name', 'm_name', 'age', 'person', 'company',
-            'mail', 'client_number', 'site_description',
-        ]
-        labels = {
-            'f_name': "Ism",
-            'l_name': "Familiya",
-            'm_name': "Sharifi",
-            'age': "Yosh",
-            'person': "Shaxs turi",
-            'company': "Kompaniya (agar bo'lsa)",
-            'mail': "Email pochta",
-            'client_number': "Telefon raqam",
-            'site_description': "Saytni qisqa qilib tasvirlang",
-        }
-        error_messages = {
-            'f_name': {
-                'required': "Forma to'ldirilmadi!",
-            },
-            'l_name': {
-                'required': "Forma to'ldirilmadi!",
-            },
-            'm_name': {
-                'required': "Forma to'ldirilmadi!",
-            },
-            'person': {
-                'required': "Forma to'ldirilmadi!",
-            },
-            'mail': {
-                'invalid': "Email manzil noto'g'ri kiritildi!",
-                'required': "Forma to'ldirilmadi!",
-            },
-            'client_number': {
-                'invalid': "Telefon raqam noto'g'ri kiritildi!",
-                'required': "Forma to'ldirilmadi!",
-            },
-            'site_description': {
-                'required': "Forma to'ldirilmadi!",
-            },
-        }
-        widgets = {
-            'f_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Rasul',
-                'required': True,
-            }),
-            'l_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Rasulov',
-                'required': True,
-            }),
-            'm_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Rasulovich',
-                'required': True,
-            }),
-            'age': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': '18',
-                'required': True,
-            }),
-            'person': forms.Select(attrs={
-                'class': 'form-control',
-                'placeholder': 'Jismoniy shaxs',
-            }),
-            'company': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'PRINTECH',
-                'required': False,
-            }),
-            'mail': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'rasulovrasul@example.com',
-                'required': True,
-            }),
-            'client_number': RegionalPhoneNumberWidget(attrs={
-                'class': 'form-control',
-                'placeholder': '+998901234567',
-                'required': True,
-            }),
-            'site_description': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'Xabar...',
-                'required': True,
-            }),
+            'price': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -893,16 +830,27 @@ class ExpenseForm(forms.ModelForm):
             'account': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'date_made': forms.DateTimeInput(attrs={
+            'date_made': DateTimePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
             }),
-            'amount': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
+            'amount': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -944,7 +892,7 @@ class GluePriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
             }),
@@ -955,9 +903,20 @@ class GluePriceForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'price': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
+            'price': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -1025,16 +984,27 @@ class IncomeForm(forms.ModelForm):
             'account': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'date_made': forms.DateTimeInput(attrs={
+            'date_made': DateTimePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
             }),
-            'amount': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
+            'amount': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -1118,17 +1088,27 @@ class LossForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': "Elektr tarmoqdan uzilishi/E'tiborsizlik/..."
             }),
-            'time_loss': forms.DateInput(attrs={
+            'time_loss': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
             'loser': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'worth': MoneyWidget(attrs={
-                'class': 'form-control',
-                'required': True,
-            }, choices=currencies),
+            'worth': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -1178,21 +1158,21 @@ class NewsForm(forms.ModelForm):
             'publisher_li', 'publisher_gm', 'publisher_tw',
         ]
         labels = {
-            'title': 'Sarlavha',
-            'subtitle_1': 'Kichik sarlavha №1 (Majburiy)',
-            'subtitle_2': 'Kichik sarlavha №2 (Ixtiyoriy)',
-            'subtitle_3': 'Kichik sarlavha №3 (Ixtiyoriy)',
+            'title': "Sarlavha",
+            'subtitle_1': "Kichik sarlavha №1 (Majburiy)",
+            'subtitle_2': "Kichik sarlavha №2 (Ixtiyoriy)",
+            'subtitle_3': "Kichik sarlavha №3 (Ixtiyoriy)",
             'picture_1': "Fotorasm №1 (Majburiy)",
             'picture_2': "Fotorasm №2 (Ixtiyoriy)",
             'picture_3': "Fotorasm №3 (Ixtiyoriy)",
-            'short_body': 'Yangilik haqida qisqacha',
-            'body_1': 'Tafsilotlar №1 (Majburiy)',
-            'body_2': 'Tafsilotlar №2 (Ixtiyoriy)',
-            'body_3': 'Tafsilotlar №3 (Ixtiyoriy)',
-            'publisher_tg': 'Nashriyotchining Telegram sahifasi',
-            'publisher_li': 'Nashriyotchining LinkedIn sahifasi',
-            'publisher_gm': 'Nashriyotchining Gmail pochta quttisi',
-            'publisher_tw': 'Nashriyotchining Twitter sahifasi',
+            'short_body': "Yangilik haqida qisqacha",
+            'body_1': "Tafsilotlar №1 (Majburiy)",
+            'body_2': "Tafsilotlar №2 (Ixtiyoriy)",
+            'body_3': "Tafsilotlar №3 (Ixtiyoriy)",
+            'publisher_tg': "Nashriyotchining Telegram sahifasi",
+            'publisher_li': "Nashriyotchining LinkedIn sahifasi",
+            'publisher_gm': "Nashriyotchining Gmail pochta quttisi",
+            'publisher_tw': "Nashriyotchining Twitter sahifasi",
         }
         error_messages = {
             'title': {
@@ -1230,22 +1210,27 @@ class NewsForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
             }),
             'subtitle_1': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
-                'required': True,
             }),
             'subtitle_2': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
-                'required': False,
             }),
             'subtitle_3': forms.TextInput(attrs={
                 'class': 'form-control',
-                'rows': 1,
-                'required': False,
+            }),
+            'picture_1': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
+            }),
+            'picture_2': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
+            }),
+            'picture_3': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
             }),
             'short_body': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -1254,17 +1239,14 @@ class NewsForm(forms.ModelForm):
             'body_1': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 10,
-                'required': True,
             }),
             'body_2': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 10,
-                'required': False,
             }),
             'body_3': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 10,
-                'required': False,
             }),
             'publisher_tg': forms.URLInput(attrs={
                 'class': 'form-control',
@@ -1324,7 +1306,7 @@ class OrderOptionsForm(forms.ModelForm):
             }
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             })
@@ -1340,8 +1322,7 @@ class OrderSelfForm(forms.ModelForm):
         fields = [
             'custom_book', 'book_type', 'ring_color', 'front_cover_color',
             'back_cover_color', 'size', 'custom_page_number', 'number',
-            'user_needs', 'place_to_get', 'customer_number', 'customer_email',
-            'payment',
+            'user_needs', 'place_to_get', 'payment',
         ]
         labels = {
             'custom_book': 'Kitob',
@@ -1354,8 +1335,6 @@ class OrderSelfForm(forms.ModelForm):
             'number': "Soni",
             'user_needs': "Kitob kerak bo'ladigan vaqt",
             'place_to_get': "Buyurtmani olish mumkin bo'lgan joylar",
-            'customer_number': "Telefon raqamingiz",
-            'customer_email': "Email manzilingiz (agar mavjud bo'lsa)",
             'payment': "To'lov usuli",
         }
         error_messages = {
@@ -1378,9 +1357,11 @@ class OrderSelfForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'custom_page_number': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'number': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'user_needs': {
@@ -1390,21 +1371,14 @@ class OrderSelfForm(forms.ModelForm):
             'place_to_get': {
                 'required': "Forma to'ldirilmadi!",
             },
-            'customer_number': {
-                'invalid': "Telefon raqam noto'g'ri kiritildi!",
-                'required': "Forma to'ldirilmadi!",
-            },
-            'customer_email': {
-                'invalid': "Email manzil noto'g'ri kiritildi!",
-            },
             'payment': {
                 'required': "Forma to'ldirilmadi!",
             },
         }
         widgets = {
-            'custom_book': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Atomic Habits, James Clear'
+            'custom_book': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
             }),
             'book_type': forms.Select(attrs={
                 'class': 'form-control',
@@ -1423,25 +1397,18 @@ class OrderSelfForm(forms.ModelForm):
             }),
             'custom_page_number': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
             'number': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
-            'user_needs': forms.DateTimeInput(attrs={
+            'user_needs': DateTimePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
             'place_to_get': forms.Select(attrs={
                 'class': 'form-control',
-            }),
-            'customer_number': RegionalPhoneNumberWidget(attrs={
-                'class': 'form-control',
-                'placeholder': '+998901234567',
-            }),
-            'customer_email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'qwerty@example.com',
-                'required': False,
             }),
             'payment': forms.Select(attrs={
                 'class': 'form-control',
@@ -1458,7 +1425,7 @@ class OrderSiteForm(forms.ModelForm):
         fields = [
             'book', 'book_type', 'ring_color', 'front_cover_color',
             'back_cover_color', 'size', 'number', 'user_needs',
-            'place_to_get', 'customer_number', 'customer_email', 'payment',
+            'place_to_get', 'payment',
         ]
         labels = {
             'book': "Kitob",
@@ -1470,8 +1437,6 @@ class OrderSiteForm(forms.ModelForm):
             'number': "Soni",
             'user_needs': "Kitob kerak bo'ladigan vaqt",
             'place_to_get': "Buyurtmani olish mumkin bo'lgan joylar",
-            'customer_number': "Telefon raqamingiz",
-            'customer_email': "Email manzilingiz (agar mavjud bo'lsa)",
             'payment': "To'lov usuli",
         }
         error_messages = {
@@ -1494,6 +1459,7 @@ class OrderSiteForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'number': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'user_needs': {
@@ -1502,13 +1468,6 @@ class OrderSiteForm(forms.ModelForm):
             },
             'place_to_get': {
                 'required': "Forma to'ldirilmadi!",
-            },
-            'customer_number': {
-                'invalid': "Telefon raqam noto'g'ri kiritildi!",
-                'required': "Forma to'ldirilmadi!",
-            },
-            'customer_email': {
-                'invalid': "Email manzil noto'g'ri kiritildi!",
             },
             'payment': {
                 'required': "Forma to'ldirilmadi!",
@@ -1535,22 +1494,14 @@ class OrderSiteForm(forms.ModelForm):
             }),
             'number': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
-            'user_needs': forms.DateTimeInput(attrs={
+            'user_needs': DateTimePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
             'place_to_get': forms.Select(attrs={
                 'class': 'form-control',
-            }),
-            'customer_number': RegionalPhoneNumberWidget(attrs={
-                'class': 'form-control',
-                'placeholder': '+998901234567',
-            }),
-            'customer_email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'qwerty@example.com',
-                'required': False,
             }),
             'payment': forms.Select(attrs={
                 'class': 'form-control',
@@ -1619,36 +1570,97 @@ class OuterPriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
-            'staple_price': MoneyWidget(attrs={
-                'class': 'form-control',
-                'placeholder': "Bir o'qi",
-            }, choices=currencies),
-            'packaging_expenses': MoneyWidget(attrs={
-                'class': 'form-control',
-                'placeholder': "Bir kitob uchun (o'rtacha narxi)",
-            }, choices=currencies),
-            'delivery_expenses': MoneyWidget(attrs={
-                'class': 'form-control',
-                'placeholder': "Bir kitob uchun",
-            }, choices=currencies),
-            'workforce_expenses': MoneyWidget(attrs={
-                'class': 'form-control',
-                'placeholder': "Bir kitob uchun",
-            }, choices=currencies),
-            'electricity_expenses': MoneyWidget(attrs={
-                'class': 'form-control',
-                'placeholder': "Bir kitob uchun",
-            }, choices=currencies),
-            'printer_expenses': MoneyWidget(attrs={
-                'class': 'form-control',
-                'placeholder':  "Bir bet uchun",
-            }, choices=currencies),
+            'staple_price': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': "Bir o'qi",
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
+            'packaging_expenses': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': "Bir kitob uchun (o'rtacha narxi)",
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
+            'delivery_expenses': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': "Bir kitob uchun",
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
+            'workforce_expenses': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': "Bir kitob uchun",
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
+            'electricity_expenses': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': "Bir kitob uchun",
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
+            'printer_expenses': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': "Bir bet uchun",
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
             'profit': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
         }
 
@@ -1686,7 +1698,7 @@ class PagePriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
             }),
@@ -1738,7 +1750,7 @@ class PaperPriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
             }),
@@ -1748,9 +1760,20 @@ class PaperPriceForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'price': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
+            'price': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -1816,9 +1839,11 @@ class PrinterForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'initial_page_count': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'current_page_count': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'current_status': {
@@ -1834,7 +1859,7 @@ class PrinterForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'ImageRUNNER 2206N',
             }),
-            'bought_at': forms.DateInput(attrs={
+            'bought_at': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
@@ -1843,9 +1868,11 @@ class PrinterForm(forms.ModelForm):
             }),
             'initial_page_count': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
             'current_page_count': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
             'current_status': forms.Select(attrs={
                 'class': 'form-control',
@@ -1875,6 +1902,7 @@ class RefillAndPageCountForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'total_refill_count': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'last_refill': {
@@ -1882,6 +1910,7 @@ class RefillAndPageCountForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'printed': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
         }
@@ -1891,13 +1920,15 @@ class RefillAndPageCountForm(forms.ModelForm):
             }),
             'total_refill_count': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
-            'last_refill': forms.DateInput(attrs={
+            'last_refill': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
             'printed': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
             'accounted': forms.CheckboxInput(attrs={
                 'class': 'form-check-input',
@@ -1981,19 +2012,31 @@ class ResourceForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': '50 gram/50ta/...',
             }),
-            'time_bought': forms.DateInput(attrs={
+            'time_bought': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
-            'worth': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
-            'last_used_date': forms.DateInput(attrs={
+            'worth': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
+            'last_used_date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
             'amount_used': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
             'user': forms.Select(attrs={
                 'class': 'form-control',
@@ -2043,7 +2086,7 @@ class RingPriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d", time.localtime())}',
             }),
@@ -2053,9 +2096,20 @@ class RingPriceForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'price': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
+            'price': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -2100,26 +2154,24 @@ class SelfOrderForm(forms.ModelForm):
         fields = [
             'custom_book', 'book_type', 'ring_color', 'front_cover_color',
             'back_cover_color', 'size', 'custom_page_number', 'number',
-            'user_needs', 'place_to_get', 'customer', 'customer_number',
-            'customer_email', 'payment', 'status', 'delivered',
+            'user_needs', 'place_to_get', 'customer', 'payment',
+            'status', 'delivered',
         ]
         labels = {
-            'custom_book': 'Kitob',
-            'book_type': 'Kitob shakli',
-            'ring_color': 'Prujina ranggi',
-            'front_cover_color': 'Old muqova ranggi',
-            'back_cover_color': 'Orqa muqova ranggi',
+            'custom_book': "Kitob",
+            'book_type': "Kitob shakli",
+            'ring_color': "Prujina ranggi",
+            'front_cover_color': "Old muqova ranggi",
+            'back_cover_color': "Orqa muqova ranggi",
             'size': "O'lchami",
             'custom_page_number': "Betlari soni",
             'number': "Soni",
             'user_needs': "Kitob kerak bo'ladigan vaqt",
             'place_to_get': "Buyurtmani olish mumkin bo'lgan joylar",
-            'customer': 'Xaridor',
-            'customer_number': "Telefon raqamingiz",
-            'customer_email': "Email manzilingiz (agar mavjud bo'lsa)",
+            'customer': "Xaridor",
             'payment': "To'lov usuli",
             'status': "Holati",
-            'delivered': 'Yetkazildi',
+            'delivered': "Yetkazildi",
         }
         error_messages = {
             'custom_book': {
@@ -2141,9 +2193,11 @@ class SelfOrderForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'custom_page_number': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'number': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'user_needs': {
@@ -2156,13 +2210,6 @@ class SelfOrderForm(forms.ModelForm):
             'customer': {
                 'required': "Forma to'ldirilmadi!",
             },
-            'customer_number': {
-                'invalid': "Telefon raqam noto'g'ri kiritildi!",
-                'required': "Forma to'ldirilmadi!",
-            },
-            'customer_email': {
-                'invalid': "Email manzil noto'g'ri kiritildi!",
-            },
             'payment': {
                 'required': "Forma to'ldirilmadi!",
             },
@@ -2174,9 +2221,9 @@ class SelfOrderForm(forms.ModelForm):
             },
         }
         widgets = {
-            'custom_book': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Atomic Habits, James Clear',
+            'custom_book': forms.FileInput(attrs={
+                'class': 'custom-file-input',
+                'style': 'padding: 0;',
             }),
             'book_type': forms.Select(attrs={
                 'class': 'form-control',
@@ -2195,11 +2242,13 @@ class SelfOrderForm(forms.ModelForm):
             }),
             'custom_page_number': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
             'number': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
-            'user_needs': forms.DateTimeInput(attrs={
+            'user_needs': DateTimePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
@@ -2208,15 +2257,6 @@ class SelfOrderForm(forms.ModelForm):
             }),
             'customer': forms.Select(attrs={
                 'class': 'form-control',
-            }),
-            'customer_number': RegionalPhoneNumberWidget(attrs={
-                'class': 'form-control',
-                'placeholder': '+998901234567',
-            }),
-            'customer_email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'qwerty@example.com',
-                'required': False,
             }),
             'payment': forms.Select(attrs={
                 'class': 'form-control',
@@ -2239,25 +2279,23 @@ class SiteOrderForm(forms.ModelForm):
         fields = [
             'book', 'book_type', 'ring_color', 'front_cover_color',
             'back_cover_color', 'size', 'number', 'user_needs',
-            'place_to_get', 'customer', 'customer_number', 'customer_email',
-            'payment', 'status', 'delivered',
+            'place_to_get', 'customer',  'payment', 'status',
+            'delivered',
         ]
         labels = {
             'book': "Kitob",
-            'book_type': 'Kitob shakli',
-            'ring_color': 'Prujina ranggi',
-            'front_cover_color': 'Old muqova ranggi',
-            'back_cover_color': 'Orqa muqova ranggi',
+            'book_type': "Kitob shakli",
+            'ring_color': "Prujina ranggi",
+            'front_cover_color': "Old muqova ranggi",
+            'back_cover_color': "Orqa muqova ranggi",
             'size': "O'lchami",
             'number': "Soni",
             'user_needs': "Kitob kerak bo'ladigan vaqt",
             'place_to_get': "Buyurtmani olish mumkin bo'lgan joylar",
-            'customer': 'Xaridor',
-            'customer_number': "Telefon raqamingiz",
-            'customer_email': "Email manzilingiz (agar mavjud bo'lsa)",
+            'customer': "Xaridor",
             'payment': "To'lov usuli",
             'status': "Holati",
-            'delivered': 'Yetkazildi',
+            'delivered': "Yetkazildi",
         }
         error_messages = {
             'book': {
@@ -2279,6 +2317,7 @@ class SiteOrderForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!",
             },
             'number': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!",
             },
             'user_needs': {
@@ -2290,13 +2329,6 @@ class SiteOrderForm(forms.ModelForm):
             },
             'customer': {
                 'required': "Forma to'ldirilmadi!",
-            },
-            'customer_number': {
-                'invalid': "Telefon raqam noto'g'ri kiritildi!",
-                'required': "Forma to'ldirilmadi!",
-            },
-            'customer_email': {
-                'invalid': "Email manzil noto'g'ri kiritildi!",
             },
             'payment': {
                 'required': "Forma to'ldirilmadi!",
@@ -2329,8 +2361,9 @@ class SiteOrderForm(forms.ModelForm):
             }),
             'number': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': '0',
             }),
-            'user_needs': forms.DateTimeInput(attrs={
+            'user_needs': DateTimePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f'{time.strftime("%Y-%m-%d %H:%I", time.localtime())}',
             }),
@@ -2339,15 +2372,6 @@ class SiteOrderForm(forms.ModelForm):
             }),
             'customer': forms.Select(attrs={
                'class': 'form-control',
-            }),
-            'customer_number': RegionalPhoneNumberWidget(attrs={
-                'class': 'form-control',
-                'placeholder': '+998901234567',
-            }),
-            'customer_email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'qwerty@example.com',
-                'required': False,
             }),
             'payment': forms.Select(attrs={
                 'class': 'form-control',
@@ -2370,7 +2394,7 @@ class SubCategoryExForm(forms.ModelForm):
             'subcategory',
         ]
         labels = {
-            'subcategory': 'Xarajat quyi kategoriyasi',
+            'subcategory': "Xarajat quyi kategoriyasi",
         }
         error_messages = {
             'subcategory': {
@@ -2380,6 +2404,7 @@ class SubCategoryExForm(forms.ModelForm):
         widgets = {
             'subcategory': forms.TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': "Taksi",
             }),
         }
 
@@ -2403,7 +2428,7 @@ class SubCategoryInForm(forms.ModelForm):
         widgets = {
             'subcategory': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Kitob savdosi',
+                'placeholder': "Kitob savdosi",
             }),
         }
 
@@ -2448,9 +2473,20 @@ class TransactionForm(forms.ModelForm):
             'acc_2': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'amount': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
+            'amount': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
 
 
@@ -2493,6 +2529,7 @@ class WorkforceForm(forms.ModelForm):
                 'required': "Forma to'ldirilmadi!"
             },
             'age': {
+                'invalid': "Butun son kiriting!",
                 'required': "Forma to'ldirilmadi!"
             },
             'address_living': {
@@ -2519,18 +2556,19 @@ class WorkforceForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Rasul',
+                'placeholder': "Rasul",
             }),
             'surname': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Rasulov',
+                'placeholder': "Rasulov",
             }),
             'middle_name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Rasulovich',
+                'placeholder': "Rasulovich",
             }),
             'age': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': "18",
             }),
             'address_living': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -2540,7 +2578,7 @@ class WorkforceForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': "Talaba/Hech qayerda o'qimaydi/...",
             }),
-            'joined_service': forms.DateInput(attrs={
+            'joined_service': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
             }),
@@ -2548,10 +2586,21 @@ class WorkforceForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': "Ish boshqaruvchi/Kitob ulovchi/Kesuvchi/..."
             }),
-            'salary': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
-            'last_salary_reception': forms.DateInput(attrs={
+            'salary': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
+            'last_salary_reception': DatePickerInput(attrs={
                 'class': "form-control",
                 'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
             }),
@@ -2600,7 +2649,7 @@ class YarnPriceForm(forms.ModelForm):
             },
         }
         widgets = {
-            'date': forms.DateInput(attrs={
+            'date': DatePickerInput(attrs={
                 'class': 'form-control',
                 'placeholder': f"{time.strftime('%Y-%m-%d', time.localtime())}",
             }),
@@ -2610,7 +2659,18 @@ class YarnPriceForm(forms.ModelForm):
             'size': forms.Select(attrs={
                 'class': 'form-control',
             }),
-            'price': MoneyWidget(attrs={
-                'class': 'form-control',
-            }, choices=currencies),
+            'price': MoneyWidget(
+                amount_widget=forms.NumberInput(
+                    attrs={
+                        'class': 'form-control',
+                        'placeholder': '0',
+                        'style': 'border-radius: .7rem .7rem .0rem .0rem;',
+                    }),
+                currency_widget=forms.Select(
+                    attrs={
+                        'class': 'form-select form-control',
+                        'style': 'border-radius: .0rem .0rem .7rem .7rem; ',
+                    },
+                    choices=currencies)
+            ),
         }
