@@ -1,0 +1,84 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-12 ps-4 pt-4 pe-4 pb-4" style="max-width: 100%;">
+        <h1 class="fw-light">Yangiliklar</h1>
+        <h3 class="fw-light">Yangiliklar soni: {{ news_num }}</h3>
+    </div>
+    <div class="container col-xl-12 table-cont-dec ps-4 pt-4 pe-4 pb-4 mb-4" style="max-width: 100%;">
+        {% if news_objects %}
+            <div class="row">
+               {% for new in news_objects %}
+                    <div class="card post-card text-light fw-light">
+                        <img src="{{ new.picture_1 }}" class="card-image-top" height="200">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                {{ new.title }}
+                            </h3>
+                            <h4 class="fw-light">
+                                {{ new.subtitle_1 }}
+                            </h4>
+                            <p class="fw-light">
+                                {{ new.body_1|truncate_20 }}
+                            </p>
+                            <p class="fw-light">
+                                {{ new.date_added|date:'d-m-Y H:i' }}<br>
+                                Nashriyotchi - {{ new.publisher }}
+                            </p>
+                            <a class="fw-light link-hover-2" href="{% url 'edit_news' new.id %}">O'zgartirish</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="container text-center pb-4 mt-4">
+                <h2 class="fw-light">Ma'lumotlar mavjud emas...</h2>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container col-xl-8 ps-4 pt-4 pe-4 pb-4">
+        <h1 class="fw-light">Yangilik kiritish</h1>
+    </div>
+    <div class="container col-xl-8 form-dec pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark text-light fw-light" action="{% url 'news' %}"
+            novalidate method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-warning fw-light">Kiritish</button>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#id_picture_1').attr('data-before', "Faylni tanlash");
+        $('#id_picture_2').attr('data-before', "Faylni tanlash");
+        $('#id_picture_3').attr('data-before', "Faylni tanlash");
+        $('#id_picture_1').on('change', function (e) {
+            var fileName = $(this).val();
+            if(fileName.match(/fakepath/)) {
+                fileName = fileName.replace(/C:\\fakepath\\/i, '');
+            }
+            $(this).attr('data-before',fileName);
+        })
+        $('#id_picture_2').on('change', function (e) {
+            var fileName = $(this).val();
+            if(fileName.match(/fakepath/)) {
+                fileName = fileName.replace(/C:\\fakepath\\/i, '');
+            }
+            $(this).attr('data-before',fileName);
+        })
+        $('#id_picture_3').on('change', function (e) {
+            var fileName = $(this).val();
+            if(fileName.match(/fakepath/)) {
+                fileName = fileName.replace(/C:\\fakepath\\/i, '');
+            }
+            $(this).attr('data-before',fileName);
+        })
+    })
+</script>
+{% endblock content %}

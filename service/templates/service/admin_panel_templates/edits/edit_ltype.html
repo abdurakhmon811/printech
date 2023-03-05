@@ -1,0 +1,81 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-8 text-center pt-4 pb-4">
+        <h1 class="fw-light">Zararni o'zgartirish</h1>
+    </div>
+    <div class="container col-xl-8 form-dec pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark fw-light text-light" action="{% url 'edit_ltype' ltype.id %}"
+                novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <div style="position: relative;">
+                    <button type="submit" class="btn btn-warning fw-light">Kiritish</button>
+                    <a class="btn btn-danger fw-light"
+                       data-bs-toggle="modal"
+                       data-bs-target="#delmodal"
+                       id="delete">
+                        O'chirish
+                    </a>
+                    <a class="btn btn-warning fw-light align-r-2"
+                       href="{% url 'ltypes' %}"
+                       id="back">
+                        Orqaga qaytish
+                    </a>
+                </div>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="delmodal" aria-labelledby="delmodalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="border-color: #d0d0d0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="border-color: #d0d0d0">
+                <h4 class="fw-light text-light">Ma'lumotlarni o'chirishga ishonchingiz komilmi?</h4>
+            </div>
+            <div class="modal-footer" style="border-color: #d0d0d0">
+                <a class="btn btn-danger fw-light" data-bs-dismiss="modal">Yo'q</a>
+                <a class="btn btn-warning fw-light" href="{% url 'delete_ltype' ltype.id %}">Ha</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(window).resize(function (e) {
+        if (window.innerWidth < 208) {
+            $('#delete').addClass('top-m');
+        } else {
+            $('#delete').removeClass('top-m');
+        };
+        if (window.innerWidth < 340) {
+            $('#back').removeClass('align-r-2');
+            $('#back').addClass('top-m')
+        } else {
+            $('#back').addClass('align-r-2');
+            $('#back').removeClass('top-m')
+        }
+    });
+    $(window).on('load', function (e) {
+        if (window.innerWidth < 208) {
+            $('#delete').addClass('top-m');
+        } else {
+            $('#delete').removeClass('top-m');
+        };
+        if (window.innerWidth < 340) {
+            $('#back').removeClass('align-r-2');
+            $('#back').addClass('top-m')
+        } else {
+            $('#back').addClass('align-r-2');
+            $('#back').removeClass('top-m')
+        }
+    });
+</script>
+{% endblock content %}

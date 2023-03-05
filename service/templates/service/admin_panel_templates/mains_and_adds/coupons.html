@@ -1,0 +1,149 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-12 ps-4 pt-4 pe-4 pb-4" style="max-width: 100%;">
+        <h1 class="fw-light">Kuponlar</h1>
+    </div>
+    <div class="container col-xl-12 table-cont-dec text-center pt-4 pb-2 mb-3" style="max-width: 100%;">
+        {% if coupon_objects %}
+            <div class="table-responsive-xl text-start">
+                <table class="table table-hover table-striped table-dark text-light text-center fw-light">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 4%;">&numero;</th>
+                            <th scope="col" style="width: 8.72%;">Chiqarilgan sana</th>
+                            <th scope="col" style="width: 8.72%;">Turi</th>
+                            <th scope="col" style="width: 8.72%;">Muddati</th>
+                            <th scope="col" style="width: 8.72%;">(ta) kitoblar uchun</th>
+                            <th scope="col" style="width: 8.72%;">Chegirma</th>
+                            <th scope="col" style="width: 8.72%;">Maxsus kodi (12)</th>
+                            <th scope="col" style="width: 8.72%;">Maxsus kodi (15)</th>
+                            <th scope="col" style="width: 8.72%;">Holati</th>
+                            <th scope="col" style="width: 8.72%;">Egasi</th>
+                            <th scope="col" style="width: 8.72%;">Sotuv uchun</th>
+                            <th scope="col" style="width: 8.72%;">Sotildi/Berildi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for coupon in coupon_objects %}
+                            <tr class="clickable-row" data-href="{% url 'edit_coupon' coupon.id %}">
+                                <th scope="col" style="width: 4%;">{{ coupon.id }}</th>
+                                <td style="width: 8.72%;">{{ coupon.date_release|date:'d-m-Y' }}</td>
+                                <td style="width: 8.72%;">{{ coupon.type }}</td>
+                                <td style="width: 8.72%;">{{ coupon.lifetime|date:'d-m-Y' }}-gacha</td>
+                                {% if coupon.for_books %}
+                                    <td style="width: 8.72%;">{{ coupon.for_books }}</td>
+                                {% else %}
+                                    <td style="color: red; width: 8.72%;">Mavjud emas</td>
+                                {% endif %}
+                                <td style="width: 8.72%;">{{ coupon.minus }}%</td>
+                                {% if coupon.code_1 %}
+                                    <td style="width: 8.72%;">
+                                        <a class="fw-light l-3"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-custom-class="custom-tooltip"
+                                           data-bs-title="Maxsus kodi (12)"
+                                           data-bs-content="{{ coupon.code_1 }}">
+                                            Ko'rish
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td style="color: red; width: 8.72%">Mavjud emas</td>
+                                {% endif %}
+                                {% if coupon.code_2 %}
+                                    <td style="width: 8.72%;">
+                                        <a class="fw-light l-3"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-custom-class="custom-tooltip"
+                                           data-bs-title="Maxsus kodi (15)"
+                                           data-bs-content="{{ coupon.code_2 }}">
+                                            Ko'rish
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td style="color: red; width: 8.72%">Mavjud emas</td>
+                                {% endif %}
+                                <td style="width: 8.72%;">{{ coupon.status }}</td>
+                                {% if coupon.owner %}
+                                    <td style="width: 8.72%">{{ coupon.owner }}</td>
+                                {% else %}
+                                    <td style="color: red; width: 8.72%;">Mavjud emas</td>
+                                {% endif %}
+                                {% if coupon.for_retail %}
+                                    <td style="width: 8.72%;">
+                                        <img src="{% static 'images/done.png' %}" height="25">
+                                    </td>
+                                {% else %}
+                                    <td style="width: 8.72%;">
+                                        <img src="{% static 'images/undone2.png' %}" height="30">
+                                    </td>
+                                {% endif %}
+                                {% if coupon.sold_given %}
+                                    <td style="width: 8.72%;">
+                                        <img src="{% static 'images/done.png' %}" height="25">
+                                    </td>
+                                {% else %}
+                                    <td style="width: 8.72%;">
+                                        <img src="{% static 'images/undone2.png' %}" height="30">
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="mt-4 mb-4">
+                <h2 class="fw-light pb-4 mb-3">Kuponlar mavjud emas...</h2>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container col-xl-8 ps-4 pt-4 pb-4">
+        <h1 class="fw-light">Kupon kiritish</h1>
+    </div>
+    <div class="container col-xl-8 form-dec pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark text-light fw-light" action="{% url 'coupons' %}"
+            novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-warning fw-light">Kiritish</button>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('[data-bs-toggle="tooltip"]').popover({
+            placement : 'bottom',
+            trigger : 'hover'
+        });
+    });
+
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+
+    $(window).on('load', function (e) {
+        $('#id_status').parent().hide();
+        $('#id_owner').parent().hide();
+        $('#id_sold_given').parent().hide();
+    });
+
+    $('input').on('change', function (e) {
+        if ($('#id_for_retail').prop('checked') == true) {
+            $('#id_for_books').prop('disabled', true);
+            $('#id_for_books').parent().slideUp('slow');
+        } else {
+            $('#id_for_books').prop('disabled', false);
+            $('#id_for_books').parent().slideDown('slow');
+        };
+    });
+</script>
+{% endblock content %}

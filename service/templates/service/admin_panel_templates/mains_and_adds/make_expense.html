@@ -1,0 +1,53 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-8 text-center pt-4 pb-4">
+        <h1 class="fw-light">Xarajat kiritish</h1>
+    </div>
+    <div class="container col-xl-8 form-dec pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark text-light fw-light" action="{% url 'make_expense' %}"
+              novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button class="btn btn-warning fw-light" type="submit">Kiritish</button>
+                <a class="btn btn-warning fw-light"
+                   id="cats"
+                   href="{% url 'expense_categories' %}">Kategoriyalar</a>
+                <a class="btn btn-warning fw-light"
+                   id="subs"
+                   href="{% url 'expense_subcats' %}">Quyi kategoriyalar</a>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<script>
+    $(window).resize(function (e) {
+        if (window.innerWidth < 237) {
+            $('#cats').addClass('top-m');
+        } else {
+            $('#cats').removeClass('top-m');
+        }
+        if (window.innerWidth < 389) {
+            $('#subs').addClass('top-m');
+        } else {
+            $('#subs').removeClass('top-m');
+        }
+    });
+    $(window).on('load', function (e) {
+        if (window.innerWidth < 237) {
+            $('#cats').addClass('top-m');
+        } else {
+            $('#cats').removeClass('top-m');
+        }
+        if (window.innerWidth < 389) {
+            $('#subs').addClass('top-m');
+        } else {
+            $('#subs').removeClass('top-m');
+        }
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,25 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-8 text-center pt-5 pb-5">
+        <img src="{% static 'images/abort1.png' %}" class="d-block mx-auto prinobot-img">
+        <h5 class="fw-light mb-3">Ma'lumotlar bir bet uchun narx(lar)ni aniqlashda ishlatilgan va shu sababli o'chirish
+        ta'qiqlanadi. Ta'qiqni olish uchun quyidagi havola orqali bog'liq bo'lgan ulash narxini o'chiring</h5>
+        {% for page_price in page_prices %}
+            <a class="link-hover fw-normal" href="{% url 'edit_page_price' page_price.id %}"
+               style="line-height: 2rem;">
+                <cite>
+                    Bir-bet-uchun-narxlar&gt;
+                    {{ page_price.date|date:'d-m-Y' }}&gt;
+                    {{ page_price.type }}&gt;
+                    {{ page_price.size }}&gt;...
+                </cite>
+            </a><br>
+        {% endfor %}
+        <a class="btn btn-warning fw-light mt-4" href="{% url 'pricing' %}">Orqaga qaytish</a>
+    </div>
+</div>
+{% endblock content %}

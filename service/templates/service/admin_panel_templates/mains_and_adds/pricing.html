@@ -1,0 +1,342 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-12 pt-4 ps-4 pe-4 pb-4" style="max-width: 100%;">
+        <h1 class="fw-light">Narxlar</h1>
+    </div>
+    <div class="container col-xl-12 table-cont-dec text-center pt-3 pb-2 mb-4" style="max-width: 100%;">
+        {% if page_prices %}
+            <h3 class="fw-light pb-3">Bir bet uchun narxlar</h3>
+            <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%;">Sana</th>
+                            <th scope="col" style="width: 25%;">Turi</th>
+                            <th scope="col" style="width: 25%;">Kitob o'lchami</th>
+                            <th scope="col" style="width: 25%;">Narxi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for page_price in page_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_page_price' page_price.id %}">
+                                <th scope="col" style="width: 25%;">{{ page_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 25%;">{{ page_price.type }}</td>
+                                <td style="width: 25%;">{{ page_price.size }}</td>
+                                <td style="width: 25%;">{{ page_price.price.amount|separate_with_space }}
+                                    {{ page_price.price.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'page_price' %}">Yangi narx kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-4" style="border-bottom: 1px solid #d0d0d0;">
+                <h2 class="fw-light pt-2 pb-3">Bir bet uchun narxlar mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'page_price' %}">Kiritish</a>
+            </div>
+        {% endif %}
+        {% if binding_prices %}
+            <h3 class="fw-light pt-3 pb-3">Ulash narxlari</h3>
+            <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%;">Sana</th>
+                            <th scope="col" style="width: 25%;">Turi</th>
+                            <th scope="col" style="width: 25%;">O'lchami</th>
+                            <th scope="col" style="width: 25%;">Narxi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for binding_price in binding_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_binding_price' binding_price.id %}">
+                                <th scope="col" style="width: 25%;">{{ binding_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 25%;">{{ binding_price.type }}</td>
+                                <td style="width: 25%;">{{ binding_price.size }}</td>
+                                <td style="width: 25%;">{{ binding_price.price.amount|separate_with_space }}
+                                    {{ binding_price.price.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'binding_price' %}">Yangi narx kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-4" style="border-bottom: 1px solid #d0d0d0;">
+                <h2 class="fw-light pt-4 pb-3">Ulash narxlari mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                           href="{% url 'binding_price' %}">Kiritish</a>
+            </div>
+        {% endif %}
+        {% if ring_prices %}
+            <h3 class="fw-light pt-3 pb-3">Prujina narxlari</h3>
+            <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%;">Sana</th>
+                            <th scope="col" style="width: 25%;">Turi</th>
+                            <th scope="col" style="width: 25%;">O'lchami</th>
+                            <th scope="col" style="width: 25%;">Narxi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ring_price in ring_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_ring_price' ring_price.id %}">
+                                <th scope="col" style="max-width: 25%;">{{ ring_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 25%;">{{ ring_price.type }}</td>
+                                <td style="width: 25%;">{{ ring_price.size }}</td>
+                                <td style="width: 25%;">{{ ring_price.price.amount|separate_with_space }}
+                                    {{ ring_price.price.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'ring_price' %}">Yangi narx kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-4" style="border-bottom: 1px solid #d0d0d0;">
+                <h2 class="fw-light pt-4 pb-3">Prujina narxlari mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'ring_price' %}">Kiritish</a>
+            </div>
+        {% endif %}
+        {% if color_prices %}
+             <h3 class="fw-light pt-3 pb-3">Rang narxlari</h3>
+            <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%;">Sana</th>
+                            <th scope="col" style="width: 25%;">Rang</th>
+                            <th scope="col" style="width: 25%;">Qog'oz o'lchami</th>
+                            <th scope="col" style="width: 25%;">Narxi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for color_price in color_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_color_price' color_price.id %}">
+                                <th scope="col" style="width: 25%;">{{ color_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 25%;">{{ color_price.color }}</td>
+                                <td style="width: 25%;">{{ color_price.size }}</td>
+                                <td style="width: 25%;">{{ color_price.price.amount|separate_with_space }}
+                                    {{ color_price.price.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'color_price' %}">Yangi narx kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-4" style="border-bottom: 1px solid #d0d0d0;">
+                <h2 class="fw-light pt-4 pb-3">Rang narxlari mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'color_price' %}">Kiritish</a>
+            </div>
+        {% endif %}
+        {% if cover_prices %}
+            <h3 class="fw-light pt-3 pb-3">Muqova narxlari</h3>
+            <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%;">Sana</th>
+                            <th scope="col" style="width: 25%;">Turi</th>
+                            <th scope="col" style="width: 25%;">O'lchami</th>
+                            <th scope="col" style="width: 25%;">Narxi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cover_price in cover_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_cover_price' cover_price.id %}">
+                                <th scope="col" style="width: 25%;">{{ cover_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 25%">{{ cover_price.type }}</td>
+                                <td style="width: 25%;">{{ cover_price.size }}</td>
+                                <td style="width: 25%;">{{ cover_price.price.amount|separate_with_space }}
+                                    {{ cover_price.price.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'cover_price' %}">Yangi narx kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-4" style="border-bottom: 1px solid #d0d0d0;">
+                <h2 class="fw-light pt-4 pb-3">Muqova narxlari mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'cover_price' %}">Kiritish</a>
+            </div>
+        {% endif %}
+        {% if glue_prices %}
+            <h3 class="fw-light pt-3 pb-3">Yelim narxlari</h3>
+            <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%;">Sana</th>
+                            <th scope="col" style="width: 25%;">Turi</th>
+                            <th scope="col" style="width: 25%;">Kitob o'lchami</th>
+                            <th scope="col" style="width: 25%;">Narxi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for glue_price in glue_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_glue_price' glue_price.id %}">
+                                <th scope="col" style="width: 25%;">{{ glue_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 25%;">{{ glue_price.type }}</td>
+                                <td style="width: 25%;">{{ glue_price.size }}</td>
+                                <td style="width: 25%;">{{ glue_price.price.amount|separate_with_space }}
+                                    {{ glue_price.price.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'glue_price' %}">Yangi narx kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-4" style="border-bottom: 1px solid #d0d0d0;">
+                <h2 class="fw-light pt-4 pb-3">Yelim narxlari mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'glue_price' %}">Kiritish</a>
+            </div>
+        {% endif %}
+        {% if paper_prices %}
+            <h3 class="fw-light pt-3 pb-3">Qog'oz narxlari</h3>
+            <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%;">Sana</th>
+                            <th scope="col" style="width: 25%;">Turi</th>
+                            <th scope="col" style="width: 25%;">O'lchami</th>
+                            <th scope="col" style="width: 25%;">Narxi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paper_price in paper_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_paper_price' paper_price.id %}">
+                                <th scope="col" style="width: 25%;">{{ paper_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 25%;">{{ paper_price.type }}</td>
+                                <td style="width: 25%;">{{ paper_price.size }}</td>
+                                <td style="width: 25%;">{{ paper_price.price.amount|separate_with_space }}
+                                    {{ paper_price.price.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'paper_price' %}">Yangi narx kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-4" style="border-bottom: 1px solid #d0d0d0;">
+                <h2 class="fw-light pt-4 pb-3">Qog'oz narxlari mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'paper_price' %}">Kiritish</a>
+            </div>
+        {% endif %}
+        {% if yarn_prices %}
+            <h3 class="fw-light pt-3 pb-3">Ip narxlari</h3>
+            <div class="table-responsive-xl text-start pb-3" style="border-bottom: 1px solid #d0d0d0;">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%;">Sana</th>
+                            <th scope="col" style="width: 25%;">Turi</th>
+                            <th scope="col" style="width: 25%;">Kitob o'lchami</th>
+                            <th scope="col" style="width: 25%;">Narxi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for yarn_price in yarn_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_yarn_price' yarn_price.id %}">
+                                <th scope="col" style="width: 25%;">{{ yarn_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 25%;">{{ yarn_price.type }}</td>
+                                <td style="width: 25%;">{{ yarn_price.size }}</td>
+                                <td style="width: 25%;">{{ yarn_price.price.amount|separate_with_space }}
+                                    {{ yarn_price.price.currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'yarn_price' %}">Yangi narx kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-4" style="border-bottom: 1px solid #d0d0d0;">
+                <h2 class="fw-light pt-4 pb-3">Ip narxlari mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'yarn_price' %}">Kiritish</a>
+            </div>
+        {% endif %}
+        {% if out_prices %}
+            <h3 class="fw-light pt-3 pb-3">Tashqi xarajatlar va foyda</h3>
+            <div class="table-responsive-xl text-start pb-2">
+                <table class="table table-hover table-striped table-dark fw-light text-light text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 12.5%;">Sana</th>
+                            <th scope="col" style="width: 12.5%;">Stepler o'qi</th>
+                            <th scope="col" style="width: 12.5%;">Qadoqlash</th>
+                            <th scope="col" style="width: 12.5%;">Yetkazib berish</th>
+                            <th scope="col" style="width: 12.5%;">Ishchi kuchi</th>
+                            <th scope="col" style="width: 12.5%;">Elektr energiya</th>
+                            <th scope="col" style="width: 12.5%;">Printer xarajatlari</th>
+                            <th scope="col" style="width: 12.5%;">Foyda (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for out_price in out_prices %}
+                            <tr class="clickable-row" data-href="{% url 'edit_outer_prices' out_price.id %}">
+                                <th scope="col" style="width: 12.5%;">{{ out_price.date|date:'d-m-Y' }}</th>
+                                <td style="width: 12.5%;">{{ out_price.staple_price.amount|separate_with_space }}
+                                    {{ out_price.staple_price.currency }}</td>
+                                <td style="width: 12.5%;">{{ out_price.packaging_expenses.amount|separate_with_space }}
+                                    {{ out_price.packaging_expenses.currency }}</td>
+                                <td style="width: 12.5%;">{{ out_price.delivery_expenses.amount|separate_with_space }}
+                                    {{ out_price.delivery_expenses.currency }}</td>
+                                <td style="width: 12.5%;">{{ out_price.workforce_expenses.amount|separate_with_space }}
+                                    {{ out_price.workforce_expenses.currency }}</td>
+                                <td style="width: 12.5%;">{{ out_price.electricity_expenses.amount|separate_with_space }}
+                                    {{ out_price.electricity_expenses.currency }}</td>
+                                <td style="width: 12.5%;">{{ out_price.printer_expenses.amount|separate_with_space }}
+                                    {{ out_price.printer_expenses.currency }}</td>
+                                <td style="width: 12.5%;">{{ out_price.profit }}%</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'outer_prices' %}">Yangi narxlarni kiritish</a>
+            </div>
+        {% else %}
+            <div class="pb-3">
+                <h2 class="fw-light pt-4 pb-3">Tashqi xarajatlar va foyda mavjud emas...</h2>
+                <a class="btn btn-warning fw-light"
+                   href="{% url 'outer_prices' %}">Kiritish</a>
+            </div>
+        {% endif %}
+    </div>
+    <a class="btn btn-warning fw-light ms-4 mb-5" href="{% url 'coupons' %}">
+        Kuponlar &raquo;
+    </a>
+</div>
+<script>
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+</script>
+{% endblock content %}

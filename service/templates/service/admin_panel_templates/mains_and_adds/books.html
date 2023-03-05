@@ -1,0 +1,81 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-12 pt-4 ps-4 pe-4 pb-4" style="max-width: 100%;">
+        <h1 class="fw-light">Kitoblar</h1>
+        <h3 class="fw-light">Kitoblar soni: {{ books_num }}</h3>
+    </div>
+    <div class="container col-xl-12 table-cont-dec pt-4 pb-2 mb-4" style="max-width: 100%;">
+        {% if book_objects %}
+            <div class="table-responsive-xl">
+                <table class="table table-hover table-striped table-dark align-middle text-center text-light fw-light">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 16.6%;">Maxsus raqami</th>
+                            <th scope="col" style="width: 16.6%;">Janr</th>
+                            <th scope="col" style="width: 16.6%;">Muqovasi</th>
+                            <th scope="col" style="width: 16.6%;">Betlari soni</th>
+                            <th scope="col" style="width: 16.6%;">Kitob haqida</th>
+                            <th scope="col" style="width: 16.6%;">Telegram havolasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in book_objects %}
+                            <tr class="clickable-row" data-href="{% url 'edit_book' book.id %}">
+                                <td style="width: 16.6%;">{{ book.name_coded }}</td>
+                                <td style="width: 16.6%;">{{ book.category }}</td>
+                                {% if book.picture %}
+                                    <td style="width: 16.6%;">{{ book.image_url }}</td>
+                                {% else %}
+                                    <td style="color: red; width: 16.6%;">Mavjud emas</td>
+                                {% endif %}
+                                <td style="width: 16.6%;">{{ book.pages }}</td>
+                                <td style="width: 16.6%;">{{ book.chars|truncate_20 }}</td>
+                                <td style="width: 16.6%;">{{ book.telegram_link }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="pb-3">
+                <h2 class="fw-light text-center pt-4 pb-4">Ma'lumotlar mavjud emas...</h2>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container col-xl-8 ps-4 pt-4 pe-4 pb-4">
+        <h1 class="fw-light">Kitob kiritish</h1>
+    </div>
+    <div class="container col-xl-8 form-dec pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark text-light fw-light" action="{% url 'books' %}"
+            novalidate method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-warning fw-light">Kiritish</button>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<script>
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+    $(document).ready(function(){
+        $('#id_picture').attr('data-before', "Faylni tanlash");
+        $('#id_picture').on('change', function (e) {
+            var fileName = $(this).val();
+            if(fileName.match(/fakepath/)) {
+                fileName = fileName.replace(/C:\\fakepath\\/i, '');
+            }
+            $(this).attr('data-before',fileName);
+        })
+    })
+</script>
+{% endblock content %}

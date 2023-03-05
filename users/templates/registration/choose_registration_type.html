@@ -1,0 +1,29 @@
+{% extends 'registration/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    <div class="row" style="margin: 0; padding: 0; border: none;">
+        <div class="col-md-6" style="margin: 0; padding: 0; border: none; position: relative;">
+            <img src="{% static 'images/holding-book.jpg' %}"
+                 style="height: 100%; width: 100%"
+                 class="img-fluid content">
+            <a href="{% url 'users:register_individual' %}">
+                <div class="ae click-left">
+                    <h1 class="fw-light text-light">Shaxsiy hisob ochish</h1>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6" style="margin: 0; padding: 0; border: none; position: relative;">
+            <img src="{% static 'images/corporate-business.jpg' %}"
+                 style="height: 100%; width: 100%;"
+                 class="img-fluid content">
+            <a href="{% url 'users:register_legal_entity' %}">
+                <div class="ae click-right">
+                    <h1 class="fw-light text-light">Korporativ hisob ochish</h1>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

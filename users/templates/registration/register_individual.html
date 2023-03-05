@@ -1,0 +1,711 @@
+{% extends 'registration/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    <div class="container-fluid text-center p-0">
+        <div class="alert alert-danger alert-dismissible"
+             style="border-radius: .0rem; display: none;"
+             role="alert"
+             id="alert_danger">
+            <button type="button"
+                    class="btn-close"
+                    onclick="ToggleAlert(document.querySelector('#alert_danger'))"></button>
+            Ma'lumotlar noto'g'ri to'ldirildi!
+        </div>
+    </div>
+    <div class="container" id="cont">
+        <form class="form-control bg-dark text-light fw-light"
+              action="{% url 'users:register_individual' %}"
+              novalidate
+              method="post"
+              id="form">
+            {% csrf_token %}
+            <h2 class="fw-light text-light text-center mt-3 mb-3">Shaxsiy hisob ochish</h2>
+            <div class="mb-3">
+                <label class="form-label" for="id_first_name">Ism</label>
+                <input type="text"
+                       name="first_name"
+                       class="form-control"
+                       placeholder="Rasul"
+                       maxlength="100"
+                       required
+                       id="id_first_name"
+                       onkeyup="CheckInput(document.querySelector('#id_first_name'))">
+                <div class="invalid-feedback">
+                    Forma to'ldirilmadi!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="id_last_name">Familiya</label>
+                <input type="text"
+                       name="last_name"
+                       class="form-control"
+                       placeholder="Rasulov"
+                       maxlength="100"
+                       required
+                       id="id_last_name"
+                       onkeyup="CheckInput(document.querySelector('#id_last_name'))">
+                <div class="invalid-feedback">
+                    Forma to'ldirilmadi!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="id_middle_name">Sharif (ixtiyoriy)</label>
+                <input type="text"
+                       name="middle_name"
+                       class="form-control"
+                       placeholder="Rasulovich"
+                       maxlength="100"
+                       id="id_middle_name">
+                <div class="invalid-feedback">
+                    Forma to'ldirilmadi!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="id_phone_number">Telefon raqam</label>
+                <input type="tel"
+                       name="phone_number"
+                       value="+998"
+                       class="form-control"
+                       placeholder="+998901234567"
+                       maxlength="13"
+                       required
+                       id="id_phone_number"
+                       onkeyup="ValidatePhoneNumber(document.querySelector('#id_phone_number'),
+                                                    document.querySelector('#phone_number_required'),
+                                                    document.querySelector('#phone_number_invalid'),
+                                                    document.querySelector('#number_registered'))">
+                <div class="invalid-feedback" style="display: none;" id="phone_number_required">
+                    Forma to'ldirilmadi!
+                </div>
+                <div class="invalid-feedback" style="display: none;" id="phone_number_invalid">
+                    Telefon raqam noto'g'ri formatda kiritildi!
+                </div>
+                <div class="invalid-feedback" style="display: none;" id="number_registered">
+                    Telefon raqam bilan ro'yxatdan o'tilgan!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="id_username">Foydalanuvchi nomi (login)</label>
+                <input type="text"
+                       name="username"
+                       class="form-control"
+                       placeholder="rasul12345"
+                       maxlength="50"
+                       required
+                       id="id_username"
+                       onkeyup="ValidateUsername(document.querySelector('#id_username'),
+                                                 document.querySelector('#username_required'),
+                                                 document.querySelector('#username_exists'),
+                                                 document.querySelector('#username_length_invalid'))">
+                <div class="invalid-feedback" style="display: none;" id="username_required">
+                    Forma to'ldirilmadi!
+                </div>
+                <div class="invalid-feedback" style="display: none;" id="username_exists">
+                    Foydalanuvchi nomi egallangan!
+                </div>
+                <div class="invalid-feedback" style="display: none;" id="username_length_invalid">
+                    Foydalanuvchi nomi uzunligi 5ta belgidan ko'p bo'lishi kerak!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="id_password">Parol</label>
+                <input type="text"
+                       name="password"
+                       class="form-control needs-pwd-validation"
+                       placeholder="********"
+                       maxlength="30"
+                       required
+                       id="id_password"
+                       autocomplete="off"
+                       oncopy="return false"
+                       oncut="return false"
+                       onpaste="return false"
+                       onkeyup="ValidatePasswords(document.querySelector('#id_password'),
+                                                  document.querySelector('#id_password_confirmation'),
+                                                  document.querySelector('#hide_image'),
+                                                  document.querySelector('#show_image'),
+                                                  document.querySelector('#hide_image_2'),
+                                                  document.querySelector('#show_image_2'),
+                                                  document.querySelector('#nomatch'),
+                                                  document.querySelector('#nomatch_2'),
+                                                  document.querySelector('#required'),
+                                                  document.querySelector('#required_2'),
+                                                  document.querySelector('#nocapletters'),
+                                                  document.querySelector('#nocapletters_2'),
+                                                  document.querySelector('#nodigits'),
+                                                  document.querySelector('#nodigits_2'),
+                                                  document.querySelector('#lesschars'),
+                                                  document.querySelector('#lesschars_2'))">
+                <img src="{% static 'images/icons/HIDE.png' %}"
+                     height="15"
+                     id="hide_image"
+                     onclick="DisplayPassword(document.querySelector('#id_password'),
+                                              document.querySelector('#hide_image'),
+                                              document.querySelector('#show_image'))">
+                <img src="{% static 'images/icons/SHOW.png' %}"
+                     height="13"
+                     id="show_image"
+                     style="display: none;"
+                     onclick="DisplayPassword(document.querySelector('#id_password'),
+                                              document.querySelector('#hide_image'),
+                                              document.querySelector('#show_image'))">
+                <div class="invalid-feedback" id="required" style="display: none;">
+                    Forma to'ldirilmadi!
+                </div>
+                <div class="invalid-feedback" id="nomatch" style="display: none;">
+                    Parollar mos emas!
+                </div>
+                <div class="invalid-feedback" id="nocapletters" style="display: none;">
+                    Parolda bosh harflar mavjud emas!
+                </div>
+                <div class="invalid-feedback" id="nodigits" style="display: none;">
+                    Parolda sonlar mavjud emas!
+                </div>
+                <div class="invalid-feedback" id="lesschars" style="display: none;">
+                    Parolning uzunligi 8ta belgidan ko'p bo'lishi kerak!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="id_password_confirmation">Tasdiqlovchi parol</label>
+                <input type="text"
+                       name="password_confirmation"
+                       class="form-control needs-pwd-validation"
+                       placeholder="********"
+                       maxlength="30"
+                       required
+                       id="id_password_confirmation"
+                       autocomplete="off"
+                       oncopy="return false"
+                       oncut="return false"
+                       onpaste="return false"
+                       onkeyup="ValidatePasswords(document.querySelector('#id_password'),
+                                                  document.querySelector('#id_password_confirmation'),
+                                                  document.querySelector('#hide_image'),
+                                                  document.querySelector('#show_image'),
+                                                  document.querySelector('#hide_image_2'),
+                                                  document.querySelector('#show_image_2'),
+                                                  document.querySelector('#nomatch'),
+                                                  document.querySelector('#nomatch_2'),
+                                                  document.querySelector('#required'),
+                                                  document.querySelector('#required_2'),
+                                                  document.querySelector('#nocapletters'),
+                                                  document.querySelector('#nocapletters_2'),
+                                                  document.querySelector('#nodigits'),
+                                                  document.querySelector('#nodigits_2'),
+                                                  document.querySelector('#lesschars'),
+                                                  document.querySelector('#lesschars_2'))">
+                <img src="{% static 'images/icons/HIDE.png' %}"
+                     height="15"
+                     id="hide_image_2"
+                     style="display: block;"
+                     onclick="DisplayPassword(document.querySelector('#id_password_confirmation'),
+                                              document.querySelector('#hide_image_2'),
+                                              document.querySelector('#show_image_2'))">
+                <img src="{% static 'images/icons/SHOW.png' %}"
+                     height="13"
+                     id="show_image_2"
+                     style="display: none;"
+                     onclick="DisplayPassword(document.querySelector('#id_password_confirmation'),
+                                              document.querySelector('#hide_image_2'),
+                                              document.querySelector('#show_image_2'))">
+                <div class="invalid-feedback" id="required_2" style="display: none;">
+                    Forma to'ldirilmadi!
+                </div>
+                <div class="invalid-feedback" id="nomatch_2" style="display: none;">
+                    Parollar mos emas!
+                </div>
+                <div class="invalid-feedback" id="nocapletters_2" style="display: none;">
+                    Parolda bosh harflar mavjud emas!
+                </div>
+                <div class="invalid-feedback" id="nodigits_2" style="display: none;">
+                    Parolda sonlar mavjud emas!
+                </div>
+                <div class="invalid-feedback" id="lesschars_2" style="display: none;">
+                    Parolning uzunligi 8ta belgidan ko'p bo'lishi kerak!
+                </div>
+            </div>
+            <div class="mb-3">
+                <p class="fw-light text-light">Parol:</p>
+                <ul>
+                    <li>Bosh harflarni o'z ichiga olishiga</li>
+                    <li>Sonlar ishtirok etganiga</li>
+                    <li>Uzunligi 8ta belgidan kam emasligiga</li>
+                </ul>
+                <p class="fw-light text-light">ishonch hosil qiling.</p>
+            </div>
+            <!--<div class="mb-3" style="display: flex; justify-content: center;">
+                {{ captcha_form }}
+            </div>-->
+            <div class="mb-3" style="display: flex; align-items: center;">
+                <input type="checkbox"
+                       name="agreed_to_terms"
+                       class="form-check-input"
+                       id="id_agreed_to_terms"
+                       required
+                       onclick="CheckCheckBoxInput(document.querySelector('#id_agreed_to_terms'))">
+                <label class="form-check-label ms-2" for="id_agreed_to_terms">
+                    <a href="" style="color: #3FA8FF;">Qoida va shartlar</a> bilan tanishib chiqdim
+                </label>
+            </div>
+            {% buttons %}
+                <button type="submit" class="btn btn-warning fw-light">Kiritish</button>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<script>
+    function ToggleAlert(alert) {
+        if (alert.style.display === 'block') {
+            alert.style.display = 'none';
+        }
+    }
+
+    (() => {
+
+        const form = document.querySelector('#form');
+
+        form.addEventListener('submit', event => {
+
+            var form_valid = ValidateForm();
+
+            if (form_valid === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                //pass
+            }
+        })
+
+    })()
+
+    // VALIDATION METHOD FOR THE WHOLE FORM
+    function ValidateForm() {
+
+        var first_name = document.getElementById('id_first_name');
+        var last_name = document.getElementById('id_last_name');
+        var agreed_to_terms = document.getElementById('id_agreed_to_terms');
+
+        var first_name_valid = first_name.checkValidity();
+        var last_name_valid = last_name.checkValidity();
+
+        if (first_name_valid === false) {
+            first_name.classList.remove('is-valid');
+            first_name.classList.add('is-invalid');
+        } else {
+            first_name.classList.remove('is-invalid');
+            first_name.classList.add('is-valid');
+        }
+
+        if (last_name_valid === false) {
+            last_name.classList.remove('is-valid');
+            last_name.classList.add('is-invalid');
+        } else {
+            last_name.classList.remove('is-invalid');
+            last_name.classList.add('is-valid');
+        }
+
+        if (agreed_to_terms.checked === false) {
+            agreed_to_terms.classList.remove('is-valid');
+            agreed_to_terms.classList.add('is-invalid');
+        } else {
+            agreed_to_terms.classList.remove('is-invalid');
+            agreed_to_terms.classList.add('is-valid')
+        }
+
+        var phone_number_valid = ValidatePhoneNumber(document.querySelector('#id_phone_number'),
+                                                     document.querySelector('#phone_number_required'),
+                                                     document.querySelector('#phone_number_invalid'),
+                                                     document.querySelector('#number_registered'));
+        var username_valid = ValidateUsername(document.querySelector('#id_username'),
+                                              document.querySelector('#username_required'),
+                                              document.querySelector('#username_exists'),
+                                              document.querySelector('#username_length_invalid'));
+        var passwords_valid = ValidatePasswords(document.querySelector('#id_password'),
+                                                document.querySelector('#id_password_confirmation'),
+                                                document.querySelector('#hide_image'),
+                                                document.querySelector('#show_image'),
+                                                document.querySelector('#hide_image_2'),
+                                                document.querySelector('#show_image_2'),
+                                                document.querySelector('#nomatch'),
+                                                document.querySelector('#nomatch_2'),
+                                                document.querySelector('#required'),
+                                                document.querySelector('#required_2'),
+                                                document.querySelector('#nocapletters'),
+                                                document.querySelector('#nocapletters_2'),
+                                                document.querySelector('#nodigits'),
+                                                document.querySelector('#nodigits_2'),
+                                                document.querySelector('#lesschars'),
+                                                document.querySelector('#lesschars_2'));
+
+        var alert = document.querySelector('#alert_danger');
+
+        if (first_name_valid === true && last_name_valid === true && phone_number_valid === true &&
+            username_valid === true && username_valid === true && passwords_valid === true &&
+            agreed_to_terms.checked === true) {
+            return true
+        } else {
+            alert.style.display = 'block';
+            window.scroll(0, 0);
+            return false
+        }
+
+    }
+
+    // Validates the given element on keyup event
+    function CheckInput(element) {
+
+        if (element.classList.contains('is-invalid') === true && $(element).val()) {
+            element.classList.remove('is-invalid');
+            element.classList.add('is-valid');
+        } else if (element.classList.contains('is-valid') === true && !$(element).val()) {
+            element.classList.remove('is-valid');
+            element.classList.add('is-invalid');
+        }
+
+    }
+
+    // Validates the given checkbox on click event
+    function CheckCheckBoxInput(checkbox) {
+
+        if (checkbox.classList.contains('is-invalid') === true) {
+            checkbox.classList.remove('is-invalid');
+            checkbox.classList.add('is-valid');
+        } else if (checkbox.classList.contains('is-valid') === true && !checkbox.checked) {
+            checkbox.classList.remove('is-valid');
+            checkbox.classList.add('is-invalid');
+        }
+
+    }
+
+    // Validates the phone number under a couple of condition and returns boolean values based on the result
+    function ValidatePhoneNumber(phone_number, required_error, invalid_format_error, number_registered_error) {
+
+        var phone_numbers = {{ phone_numbers|safe }};
+
+        var result_1;
+        var result_2;
+        var result_3;
+
+        if (!phone_number.checkValidity() || $(phone_number).val() === '+998') {
+            $(required_error).css('display', 'block');
+            result_1 = false;
+        } else {
+            $(required_error).css('display', 'none');
+            result_1 = true;
+        }
+
+        if ($(phone_number).val().startsWith('+998') === false || $(phone_number).val().length < 13 ||
+            /[a-zA-Z]/.test($(phone_number).val()) === true) {
+            $(invalid_format_error).css('display', 'block');
+            result_2 = false;
+        } else {
+            $(invalid_format_error).css('display', 'none');
+            result_2 = true;
+        }
+
+        if (phone_numbers.indexOf($(phone_number).val()) > -1) {
+            $(number_registered_error).css('display', 'block');
+            result_3 = false;
+        } else {
+            $(number_registered_error).css('display', 'none');
+            result_3 = true;
+        }
+
+        if (result_1 === true && result_2 === true && result_3 === true) {
+            phone_number.classList.remove('is-invalid');
+            phone_number.classList.add('is-valid');
+            return true;
+        } else {
+            phone_number.classList.remove('is-valid');
+            phone_number.classList.add('is-invalid');
+            return false;
+        }
+
+    }
+
+    // Validates the username under the condition it does not exist in the database
+    function ValidateUsername(username, error, error_2, error_3) {
+
+        var usernames = {{ usernames|safe }};
+
+        var result_1;
+        var result_2;
+        var result_3;
+
+        if (!$(username).val()) {
+            $(error).css('display', 'block');
+            result_1 = false;
+        } else {
+            $(error).css('display', 'none');
+            result_1 = true;
+        }
+
+        if (usernames.indexOf($(username).val()) > -1) {
+            $(error_2).css('display', 'block');
+            result_2 = false;
+        } else {
+            $(error_2).css('display', 'none');
+            result_2 = true;
+        }
+
+        if ($(username).val().length <= 5 && $(username).val().length > 0) {
+            $(error_3).css('display', 'block');
+            result_3 = false;
+        } else {
+            $(error_3).css('display', 'none');
+            result_3 = true;
+        }
+
+        if (result_1 === true && result_2 === true && result_3 === true) {
+            username.classList.remove('is-invalid');
+            username.classList.add('is-valid');
+            return true
+        } else {
+            username.classList.remove('is-valid');
+            username.classList.add('is-invalid');
+            return false
+        }
+
+    }
+
+    // Validates the password under different conditions and returns boolean values based on the result
+    function ValidatePassword(pwd, required_error, nouppercase_error, nodigits_error, lesschars_error) {
+
+        if (ElementNotEmpty(pwd) === false) {
+            $(required_error).css('display', 'block');
+        } else {
+            $(required_error).css('display', 'none');
+        }
+
+        if (ContainsCapLetters(pwd) === false) {
+            $(nouppercase_error).css('display', 'block');
+        } else {
+            $(nouppercase_error).css('display', 'none');
+        }
+
+        if (ContainsDigits(pwd) === false) {
+            $(nodigits_error).css('display', 'block');
+        } else {
+            $(nodigits_error).css('display', 'none');
+        }
+
+        if (PasswordLengthValid(pwd) === false) {
+            $(lesschars_error).css('display', 'block');
+        } else {
+            $(lesschars_error).css('display', 'none');
+        }
+
+        // Functions
+        function ElementNotEmpty(element) {
+            if (!$(element).val()) {
+                return false
+            } else {
+                return true
+            }
+        }
+
+        function ContainsCapLetters(element) {
+            if (/[A-Z]/.test($(element).val())) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        function ContainsDigits(element) {
+            if (/\d/.test($(element).val())) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        function PasswordLengthValid(password) {
+            if ($(password).val().length >= 8) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        var pwd_has_cap_letters = ContainsCapLetters(pwd);
+        var pwd_has_digits = ContainsDigits(pwd);
+        var pwd_length_valid = PasswordLengthValid(pwd);
+
+        if (pwd_has_cap_letters === true && pwd_has_digits === true && pwd_length_valid === true) {
+            return true
+        } else {
+            return false
+        }
+
+    }
+
+    // Validates the password confirmation under different conditions and returns boolean values based on the result
+    function ValidatePasswordConfirmation(pwd_conf, required_error, nouppercase_error, nodigits_error, lesschars_error) {
+
+        if (ElementNotEmpty(pwd_conf) === false) {
+            $(required_error).css('display', 'block');
+        } else {
+            $(required_error).css('display', 'none');
+        }
+
+        if (ContainsCapLetters(pwd_conf) === false) {
+            $(nouppercase_error).css('display', 'block');
+        } else {
+            $(nouppercase_error).css('display', 'none');
+        }
+
+        if (ContainsDigits(pwd_conf) === false) {
+            $(nodigits_error).css('display', 'block');
+        } else {
+            $(nodigits_error).css('display', 'none');
+        }
+
+        if (PasswordLengthValid(pwd_conf) === false) {
+            $(lesschars_error).css('display', 'block');
+        } else {
+            $(lesschars_error).css('display', 'none');
+        }
+
+        // Assisting functions
+        function ElementNotEmpty(element) {
+            if (!$(element).val()) {
+                return false
+            } else {
+                return true
+            }
+        }
+
+        function ContainsCapLetters(element) {
+            if (/[A-Z]/.test($(element).val())) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        function ContainsDigits(element) {
+            if (/\d/.test($(element).val())) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        function PasswordLengthValid(password) {
+            if ($(password).val().length >= 8) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        var pwd_conf_has_cap_letters = ContainsCapLetters(pwd_conf);
+        var pwd_conf_has_digits = ContainsDigits(pwd_conf);
+        var pwd_conf_length_valid = PasswordLengthValid(pwd_conf);
+
+        if (pwd_conf_has_cap_letters === true && pwd_conf_has_digits === true && pwd_conf_length_valid === true) {
+            return true
+        } else {
+            return false
+        }
+
+    }
+
+    // Determines whether two passwords match or not, returning boolean values based on the result
+    function PasswordsMatch(pwd, pwd_conf, error, error_2) {
+
+        if ($(pwd).val() !== $(pwd_conf).val()) {
+            $(error).css('display', 'block');
+            $(error_2).css('display', 'block');
+            return false;
+        } else {
+            $(error).css('display', 'none');
+            $(error_2).css('display', 'none');
+            return true;
+        }
+
+    }
+
+    // Shows or Hides the password on click event
+    function DisplayPassword(password, hide_image, show_image) {
+
+        if (password.type === 'text') {
+            password.type = 'password';
+            hide_image.style.display = 'none';
+            show_image.style.display = 'block';
+        } else {
+            password.type = 'text';
+            hide_image.style.display = 'block';
+            show_image.style.display = 'none';
+        }
+
+    }
+
+    // Main validation method for password and password confirmation
+    function ValidatePasswords(pwd,
+                               pwd_conf,
+                               hide_image,
+                               show_image,
+                               hide_image_2,
+                               show_image_2,
+                               nomatch_error,
+                               nomatch_error_2,
+                               required_error,
+                               required_error_2,
+                               nouppercase_error,
+                               nouppercase_error_2,
+                               nodigits_error,
+                               nodigits_error_2,
+                               lesschars_error,
+                               lesschars_error_2) {
+
+        var pwd_valid = ValidatePassword(pwd,
+                                         required_error,
+                                         nouppercase_error,
+                                         nodigits_error,
+                                         lesschars_error);
+        var pwd_conf_valid = ValidatePasswordConfirmation(pwd_conf,
+                                                          required_error_2,
+                                                          nouppercase_error_2,
+                                                          nodigits_error_2,
+                                                          lesschars_error_2);
+        var passwords_match = PasswordsMatch(pwd, pwd_conf, nomatch_error, nomatch_error_2);
+
+        $(hide_image).css('margin-right', '35px');
+        $(show_image).css('margin-right', '35px');
+        $(hide_image_2).css('margin-right', '35px');
+        $(show_image_2).css('margin-right', '35px');
+
+        if (passwords_match === true && pwd_valid === true && pwd_conf_valid === true) {
+            pwd.classList.remove('is-invalid');
+            pwd_conf.classList.remove('is-invalid');
+            pwd.classList.add('is-valid');
+            pwd_conf.classList.add('is-valid');
+            return true;
+        } else if (passwords_match === true && pwd_valid === true && pwd_conf_valid === false) {
+            pwd.classList.remove('is-invalid');
+            pwd.classList.add('is-valid');
+            pwd_conf.classList.remove('is-valid');
+            pwd_conf.classList.add('is-invalid');
+            return false;
+        } else if (passwords_match === true && pwd_valid === false && pwd_conf_valid === true) {
+            pwd.classList.remove('is-valid');
+            pwd.classList.add('is-invalid');
+            pwd_conf.classList.remove('is-invalid');
+            pwd_conf.classList.add('is-valid');
+            return false;
+        } else {
+            pwd.classList.remove('is-valid');
+            pwd_conf.classList.remove('is-valid');
+            pwd.classList.add('is-invalid');
+            pwd_conf.classList.add('is-invalid');
+            return false;
+        }
+
+    }
+</script>
+{% endblock content %}

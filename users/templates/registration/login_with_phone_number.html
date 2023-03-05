@@ -1,0 +1,237 @@
+{% extends 'registration/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid text-center p-0" style="display: none;" id="alert_danger">
+    <div class="alert alert-danger alert-dismissible" style="border-radius: .0rem;" role="alert">
+        Foydalanuvchi nomi (login) yoki parol noto'g'ri kiritildi!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+<div class="container" id="cont-2">
+    <form class="form-control bg-dark fw-light text-light"
+          action="{% url 'users:login_with_phone_number' %}"
+          novalidate 
+          method="post" 
+          id="login_form">
+        {% csrf_token %}
+        <h2 class="fw-light text-light text-center mt-3 mb-3">Kabinetga kirish</h2>
+        <div class="mb-3">
+            <label class="form-label" for="id_phone_number">Telefon raqam</label>
+            <input type="text"
+                   name="phone_number"
+                   value="{{ posted_phone_number }}"
+                   class="form-control"
+                   placeholder="+998901234567"
+                   maxlength="13"
+                   id="id_phone_number"
+                   onkeyup="CheckInput(document.querySelector('#id_phone_number'),
+                                       document.querySelector('#phone_number_invalid'))">
+            <div class="invalid-feedback" style="display: none;" id="phone_number_invalid">
+                Telefon raqam noto'g'ri kiritildi!
+            </div>
+            <a class="fw-light"
+               href="{% url 'users:login_with_username' %}"
+               style="color: #3FA8FF;">
+                Foydalanuvchi nomi (login) orqali kirish
+            </a>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="id_password">Parol</label>
+            <input type="text"
+                   name="password"
+                   value="{{ posted_password }}"
+                   class="form-control"
+                   placeholder="********"
+                   maxlength="30"
+                   required
+                   id="id_password"
+                   autocomplete="off"
+                   oncopy="return false"
+                   onpaste="return false"
+                   oncut="return false"
+                   onkeyup="CheckInput(document.querySelector('#id_password'),
+                                       document.querySelector('#password_invalid'),
+                                       document.querySelector('#hide_image'),
+                                       document.querySelector('#show_image'))">
+            <img src="{% static 'images/icons/HIDE.png' %}"
+                 height="15"
+                 id="hide_image"
+                onclick="DisplayPassword(document.querySelector('#id_password'),
+                                         document.querySelector('#hide_image'),
+                                         document.querySelector('#show_image'))">
+            <img src="{% static 'images/icons/SHOW.png' %}"
+                 height="13"
+                 style="display: none;"
+                 id="show_image"
+                 onclick="DisplayPassword(document.querySelector('#id_password'),
+                                          document.querySelector('#hide_image'),
+                                          document.querySelector('#show_image'))">
+            <div class="invalid-feedback" style="display: none;" id="password_invalid">
+                Parol noto'g'ri kiritildi!
+            </div>
+        <a class="fw-light" href="" style="color: #3FA8FF;">Parolni unutdingizmi?</a>
+        </div>
+        <!--<div class="mb-3" style="display: flex; justify-content: center;">
+            {{ captcha_form }}
+        </div>-->
+        {% buttons %}
+            <button type="submit" class="btn btn-warning fw-light">Kirish</button>
+        {% endbuttons %}
+    </form>
+</div>
+<script defer data-server_results="{{ json_results }}" id="currentScript">
+    
+    const form = document.querySelector('#login_form');
+
+    $(document).ready(ValidateForm(
+        document.querySelector('#id_phone_number'),
+        document.querySelector('#id_password'),
+        document.querySelector('#phone_number_invalid'),
+        document.querySelector('#password_invalid'),
+        document.querySelector('#hide_image'),
+        document.querySelector('#show_image'),
+        document.querySelector('#currentScript'),
+    ));
+    form.addEventListener('submit', event => SecurityCheck(
+                                                        event, 
+                                                        document.querySelector('#id_phone_number'), 
+                                                        document.querySelector('#id_password'),
+                                                        document.querySelector('#phone_number_invalid'),
+                                                        document.querySelector('#password_invalid'),
+                                                        document.querySelector('#alert_danger'),
+                                                        document.querySelector('#hide_image'),
+                                                        document.querySelector('#show_image')
+                                                    ));
+
+    // Validates the form
+    function ValidateForm(
+        phone_number,
+        password,
+        phone_number_invalid_error,
+        password_invalid_error,
+        hide_image,
+        show_image,
+        script,
+    ) {
+
+        var server_results = JSON.parse(script.dataset.server_results);
+
+        var phone_number_valid = server_results['phone_number_valid'];
+        var password_valid = server_results['password_valid'];
+        var user_not_found = server_results['user_not_found'];
+
+        if (phone_number_valid !== null && password_valid !== null) {
+
+            if (phone_number_valid === true && password_valid === true) {
+                $(phone_number).removeClass('is-invalid');
+                $(password).removeClass('is-invalid');
+            } else {
+                $(phone_number).addClass('is-invalid');
+                $(phone_number_invalid_error).css('display', 'block');
+                $(password).addClass('is-invalid');
+                $(password_invalid_error).css('display', 'block');
+            }
+
+            // Push the hide and show images of password to left before adding validation classes
+            PushLeft(hide_image, show_image, password);
+
+        }
+
+        if (user_not_found !== null) {
+
+            if (user_not_found === false) {
+                $(phone_number).removeClass('is-invalid');
+                $(password).removeClass('is-invalid');
+            } else {
+                $(phone_number).addClass('is-invalid');
+                $(phone_number_invalid_error).css('display', 'block');
+                $(password).addClass('is-invalid');
+                $(password_invalid_error).css('display', 'block');
+            }
+
+            // Push the hide and show images of password to left before adding validation classes
+            PushLeft(hide_image, show_image, password);
+
+        }
+        
+    }
+
+    // Validates the given element on keyup event
+    function CheckInput(element, invalid_error, hide_image, show_image) {
+
+        if (element.classList.contains('is-invalid') === true && $(element).val()) {
+            $(element).removeClass('is-invalid');
+            $(invalid_error).css('display', 'none');
+        } else if (!$(element).val()) {
+            $(element).addClass('is-invalid');
+            $(invalid_error).css('display', 'block');
+        }
+
+        PushLeft(hide_image, show_image, element);
+
+    }
+
+    // Shows or Hides the password on click event
+    function DisplayPassword(password, hide_image, show_image) {
+
+        if (password.type === 'text') {
+            password.type = 'password';
+            $(hide_image).css('display', 'none');
+            $(show_image).css('display', 'block');
+        } else {
+            password.type = 'text';
+            $(hide_image).css('display', 'block');
+            $(show_image).css('display', 'none');
+        }
+
+    }
+
+    function PushLeft(hide_image, show_image, field) {
+
+        if (field.classList.contains('is-invalid') === true) {
+            $(hide_image).css('margin-right', '35px');
+            $(show_image).css('margin-right', '35px');
+        } else {
+            $(hide_image).css('margin-right', '12px');
+            $(show_image).css('margin-right', '12px');
+        }
+        
+    }
+
+    function SecurityCheck(
+        event, 
+        phone_number, 
+        password,
+        phone_number_invalid_error,
+        password_invalid_error,
+        hide_image,
+        show_image,) {
+
+        const re_for_phone_number = new RegExp('[^0-9+]');
+        var numeral_part = $(phone_number).val().slice(1);
+        var format_valid = ($(phone_number).val().startsWith('+998') === true && /[\d]{13}/.test(numeral_part) === true);
+        var phone_number_valid = (re_for_phone_number.test($(phone_number).val()) === false)
+        
+        const digit = new RegExp('\d');
+        const uppercase = new RegExp('[A-Z]');
+        const symbols = new RegExp('[!%^&*()-+:;\/]');
+        var hasdigit = (digit.test($(password).val()) === true);
+        var hasuppercase = (uppercase.test($(password).val()) === true);
+        var length_valid = ($(password).val().length > 8);
+        // Should be false as symbols are not allowed for now
+        var hassymbols = (symbols.test($(password).val()) === true);
+
+        var result_1 = (format_valid === true && phone_number_valid === true);
+        var result_2 = (hasdigit === true && hasuppercase === true && length_valid === true && hassymbols === false);
+        console.log(result_1)
+
+        if (result_1 === false && result_2 === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    
+    }
+</script>
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="col-xl-5 mx-auto text-center pt-5 pb-5">
+        <img src="{% static 'images/error.png' %}" class="d-block mx-auto prinobot-img">
+        <h4 class="fw-bold mt-4" style="color: #F04E23;">XATOLIK!</h4>
+        <h5 class="fw-light mt-3">Ma'lumotlari farqsiz o'zaro mos tushadigan <cite>muqova</cite> narxlari yoki
+            <cite>tashqi</cite> xarajatlar mavjud bo'lishi mumkin!
+            Xatolikni bartaraf etish uchun bir xil ma'lumotlarni o'chiring</h5>
+        <a class="btn btn-warning fw-light mt-4" href="{% url 'pricing' %}">Orqaga qaytish</a>
+    </div>
+</div>
+{% endblock content %}

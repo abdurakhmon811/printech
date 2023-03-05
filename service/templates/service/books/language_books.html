@@ -1,0 +1,95 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    <div class="container text-center pt-4 pb-4">
+        <h1 class="fw-light">Tillarga oid kitoblar bo'limi</h1>
+    </div>
+    <div class="container table-cont-dec set-width pt-4 pb-4 mb-5" id="cont">
+        {% if book_objects %}
+            <div class="row row-cols row-cols-4 g-3" id="row">
+                {% for book in book_objects %}
+                    <div class="col">
+                        <div class="card bg-dark h-100">
+                            <div class="row g-0">
+                                <div class="col-5 text-center">
+                                    <img src="{% static 'images/600.jpeg' %}"
+                                         height="140"
+                                         class="image-fluid"
+                                         style="padding: .4rem; border-radius: .9rem; max-width: 100%;">
+                                </div>
+                                <div class="col-7">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-light text-light">Kitob kodi: {{ book.name_coded }}</h5>
+                                        <p class="card-text fw-light text-light">Betlar soni - {{ book.pages }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body g-0" style="padding-top: 0px;">
+                                <h6 class="card-text fw-light text-light mt-3 mb-3">Kitob haqida</h6>
+                                <p class="card-text fw-light text-light">{{ book.chars|truncate_200 }}</p>
+                            </div>
+                            <div class="card-footer pb-3">
+                                <a class="link-hover-2 fw-light"
+                                   href="{{ book.telegram_link }}"
+                                   style="line-height: 2rem">Telegram uchun havola</a><br>
+                                <a class="link-hover-2 fw-light"
+                                   href="{% url 'order_site' book.id %}">Buyurtma berish</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center pt-3 pb-3 mt-3 mb-3">
+                <img src="{% static 'images/no_book.png' %}" class="d-block mx-auto prinobot-img">
+            </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+    $(window).resize(function (e) {
+        if (window.innerWidth < 1200 && window.innerWidth >= 768) {
+            $('#row').removeClass('row-cols-4');
+            $('#row').addClass('row-cols-3');
+        } else if (window.innerWidth <= 768 && window.innerWidth >= 576) {
+            $('#row').removeClass('row-cols-4');
+            $('#row').removeClass('row-cols-3');
+            $('#row').addClass('row-cols-2');
+        } else if (window.innerWidth <= 576) {
+            $('#row').removeClass('row-cols-4');
+            $('#row').removeClass('row-cols-3');
+            $('#row').removeClass('row-cols-2');
+            $('#row').addClass('row-cols-1');
+        } else {
+            $('#row').removeClass('row-cols-4');
+            $('#row').removeClass('row-cols-3');
+            $('#row').removeClass('row-cols-2');
+            $('#row').removeClass('row-cols-1');
+            $('#row').addClass('row-cols-4')
+        }
+    });
+    $(window).on('load', function (e) {
+        if (window.innerWidth < 1200 && window.innerWidth >= 768) {
+            $('#row').removeClass('row-cols-4');
+            $('#row').addClass('row-cols-3');
+        } else if (window.innerWidth <= 768 && window.innerWidth >= 576) {
+            $('#row').removeClass('row-cols-4');
+            $('#row').removeClass('row-cols-3');
+            $('#row').addClass('row-cols-2');
+        } else if (window.innerWidth <= 576) {
+            $('#row').removeClass('row-cols-4');
+            $('#row').removeClass('row-cols-3');
+            $('#row').removeClass('row-cols-2');
+            $('#row').addClass('row-cols-1');
+        } else {
+            $('#row').removeClass('row-cols-4');
+            $('#row').removeClass('row-cols-3');
+            $('#row').removeClass('row-cols-2');
+            $('#row').removeClass('row-cols-1');
+            $('#row').addClass('row-cols-4')
+        }
+    });
+</script>
+{% endblock content %}

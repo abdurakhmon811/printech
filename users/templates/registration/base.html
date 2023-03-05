@@ -1,0 +1,259 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="EI=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>{% block title %}PRINTECH{% endblock title %}</title>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/site.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/stylesheet.css' %}">
+        <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
+        <script language="JavaScript" type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <style type="text/css">
+            .ae {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: transparent;
+            }
+            .alert-warning {
+                text-align: start;
+                border-radius: .0rem;
+                background-color: #FFC500;
+                position: relative;
+                margin-bottom: 0px;
+                border-color: #FFC500;
+                font-weight: 600;
+                font-family: consolas;
+            }
+            .alert-danger {
+                text-align: start;
+                border-radius: 0px;
+                background-color: #D20000;
+                border-color: #D20000;
+                color: #680000;
+                margin-bottom: 0px;
+                font-weight: 600;
+                font-family: consolas;
+            }
+            body {
+                padding-top: 56px;
+                padding-bottom: 0;
+                background-color: #FFB400;
+            }
+            .btn-close:active {
+                box-shadow: none;
+            }
+            .btn-warning {
+                --bs-btn-color: #000000;
+                --bs-btn-bg: #FF9700;
+                --bs-btn-border-color: #FF9700;
+                --bs-btn-border-radius: .7rem;
+                --bs-btn-hover-color: #FFFFFF;
+                --bs-btn-hover-bg: #FF9700;
+                --bs-btn-hover-border-color: #FF9700;
+                --bs-btn-focus-shadow-rgb: #FFBA56;
+                --bs-btn-active-color: #FFFFFF;
+                --bs-btn-active-bg: #FFBA56;
+                --bs-btn-active-border-color: #FFBA56;
+                bottom: 0px;
+            }
+            .click-left {
+                display: flex;
+                flex-direction: row;
+                height: 100%;
+                width: 100%;
+                background: transparent;
+                overflow: hidden;
+                z-index: 1;
+                align-items: center;
+                justify-content: center;
+            }
+            .click-left::after {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                transition: opacity 0.2s ease;
+                background: linear-gradient(to left, transparent, #fff 250%);
+                opacity: 0;
+            }
+            .click-left:hover::after {
+                opacity: 1;
+            }
+            .click-left:active {
+                opacity: 0.7;
+            }
+            .click-right {
+                display: flex;
+                flex-direction: row;
+                height: 100%;
+                width: 100%;
+                background: transparent;
+                overflow: hidden;
+                z-index: 1;
+                align-items: center;
+                justify-content: center;
+            }
+            .click-right::after {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                transition: opacity 0.2s ease;
+                background: linear-gradient(to right, transparent, #fff 250%);
+                opacity: 0;
+            }
+            .click-right:hover::after {
+                opacity: 1;
+            }
+            .click-right:active {
+                opacity: 0.7;
+            }
+            .content {
+                background-repeat: no-repeat;
+                filter: brightness(50%);
+                object-fit: cover;
+            }
+            .form-check-input:checked {
+                background-color: #ed6a24;
+                border-color: #ed6a24;
+            }
+            .form-check-input:focus {
+                box-shadow: 0 0 0 0.3rem rgba(200,120,100,.25);
+            }
+            .form-control {
+                border-radius: .7rem;
+                background-color: #3d3d3d;
+                border-color: transparent;
+                color: #d0d0d0;
+            }
+            .form-control:focus {
+                background-color: #3d3d3d;
+                border-color: transparent;
+                color: #d0d0d0;
+                box-shadow: none;
+            }
+            .form-control:disabled {
+                background-color: #3d3d3d;
+                border-color: transparent;
+                color: #d0d0d0;
+                opacity: 50%;
+            }
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover,
+            input:-webkit-autofill:focus,
+            input:-webkit-autofill:active {
+                transition: background-color 5000s ease-in-out 0s;
+                -webkit-text-fill-color: #d0d0d0 !important;
+            }
+            input, select, textarea {
+                background: #3d3d3d;
+            }
+            .loader {
+                position: absolute;
+                top: 50%;
+                z-index: 99;
+                width: 40px;
+                height: 40px;
+                border: 5px solid transparent;
+                border-top-color: #FFB400;
+                border-bottom-color: #F04E23;
+                border-radius: 50%;
+                animation: loader 2s ease-in-out infinite alternate;
+            }
+            @keyframes loader {
+                to {
+                    transform: scale(1.5) rotate(4turn);
+                }
+            }
+            .put-footer-bottom {
+                min-height: calc(100% - 370px);
+                max-width: 100%;
+                padding: 0px;
+            }
+            #cont {
+                width: 450px;
+                margin-top: 5%;
+                margin-bottom: 5%;
+            }
+            @media only screen and (max-width: 470px) {
+                #cont {
+                    width: 100%;
+                }
+            }
+            #cont-2 {
+                width: 450px;
+                margin-top: 13%;
+            }
+            @media only screen and (max-width: 470px) {
+                #cont-2 {
+                    width: 100%;
+                }
+            }
+            #hide_image {
+                float: right;
+                margin-right: 12px;
+                margin-top: -27px;
+                z-index: 2;
+                position: relative;
+            }
+            #show_image {
+                float: right;
+                margin-right: 12px;
+                margin-top: -26px;
+                z-index: 2;
+                position: relative;
+            }
+            #hide_image_2 {
+                float: right;
+                margin-right: 12px;
+                margin-top: -27px;
+                z-index: 2;
+                position: relative;
+            }
+            #show_image_2 {
+                float: right;
+                margin-right: 12px;
+                margin-top: -26px;
+                z-index: 2;
+                position: relative;
+            }
+        </style>
+    </head>
+    <body>
+        {% include 'registration/includes/messages.html' %}
+        {% include 'service/includes/loader.html' %}
+        <div class="container fixed-top text-center"
+             style="max-width: 100%;
+                    height: 56px;
+                    background: #212529;
+                    margin: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'images/printech_mod.png' %}" width="130" height="30">
+            </a>
+        </div>
+        {% block content %}
+        {% endblock content %}
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script>
+            $(document).ready(function (e) {
+                $('#loader-container').hide();
+                $('.loader').hide();
+            });
+        </script>
+    </body>
+</html>

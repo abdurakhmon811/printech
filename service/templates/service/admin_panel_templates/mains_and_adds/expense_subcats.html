@@ -1,0 +1,81 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-8 ps-4 pt-4 pe-4 pb-4">
+        <h1 class="fw-light">Quyi kategoriyalar</h1>
+        <h3 class="fw-light">Quyi kategoriyalar soni: {{ subcats_num }}</h3>
+    </div>
+    <div class="container col-xl-8 table-cont-dec pt-4 pb-2">
+        {% if subcats %}
+            <div class="table-responsive-xl">
+                <table class="table table-hover table-striped table-dark align-middle fw-light text-light">
+                    <thead>
+                        <tr>
+                            <th scope="col">Quyi kategoriya raqami</th>
+                            <th scope="col">Quyi kategoriya nomi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subcat in subcats %}
+                            <tr class="clickable-row" data-href="{% url 'edit_exsubcat' subcat.id %}">
+                                <th scope="col">{{ subcat.id }}</th>
+                                <td>{{ subcat.subcategory }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="container text-center pt-4 pb-4 mb-3">
+                <h2 class="fw-light">Ma'lumotlar mavjud emas...</h2>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container col-xl-8 ps-4 pt-4 pe-4 pb-4">
+        <h1 class="fw-light">Quyi kategoriya kiritish</h1>
+    </div>
+    <div class="container form-dec col-xl-8 pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark text-light fw-light" action="{% url 'expense_subcats' %}"
+              novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <div style="position: relative;">
+                    <button type="submit" class="btn btn-warning fw-light">Kiritish</button>
+                    <a class="btn btn-warning fw-light align-r-2"
+                       id="back"
+                       href="{% url 'make_expense' %}">Orqaga qaytish</a>
+                </div>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<script>
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+    $(window).resize(function (e) {
+        if (window.innerWidth < 250) {
+            $('#back').removeClass('align-r-2');
+            $('#back').addClass('top-m');
+        } else {
+            $('#back').addClass('align-r-2');
+            $('#back').removeClass('top-m');
+        };
+    });
+    $(window).on('load', function (e) {
+        if (window.innerWidth < 250) {
+            $('#back').removeClass('align-r-2');
+            $('#back').addClass('top-m');
+        } else {
+            $('#back').addClass('align-r-2');
+            $('#back').removeClass('top-m');
+        };
+    });
+</script>
+{% endblock content %}

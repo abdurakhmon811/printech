@@ -1,0 +1,232 @@
+{% extends 'service/base.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container col-xl-12 ps-4 pt-4 pe-4 pb-4" style="max-width: 100%;">
+        <h1 class="fw-light">Mavjud kitob turlari</h1>
+    </div>
+    <div class="container col-xl-12 table-cont-dec mx-auto pt-4 pb-2" style="max-width: 100%;">
+        {% if res_s %}
+            <div class="table-responsive-xl">
+                <table class="table table-hover table-striped table-dark text-center text-light fw-light align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sana</th>
+                            <th scope="col">Plastik prujinalangan (rangsiz)</th>
+                            <th scope="col">Plastik prujinalangan (rangli)</th>
+                            <th scope="col">Metal prujinalangan (rangsiz)</th>
+                            <th scope="col">Metal prujinalangan (rangli)</th>
+                            <th scope="col">Yelimlangan yumshoq muqovali (rangsiz)</th>
+                            <th scope="col">Yelimlangan yumshoq muqovali (rangli)</th>
+                            <th scope="col">Yelimlangan qattiq muqovali (rangsiz)</th>
+                            <th scope="col">Yelimlangan qattiq muqovali (rangli)</th>
+                            <th scope="col">Steplerlangan (rangsiz)</th>
+                            <th scope="col">Steplerlangan (rangli)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in res_s %}
+                            <tr class="clickable-row" data-href="{% url 'edit_orderoptions' res.id %}">
+                                <th scope="row">{{ res.date|date:'d-M' }}</th>
+                                {% if res.ringed_colorless %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.ringed_color %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.metal_ringed_colorless %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.metal_ringed_color %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.g_soft_colorless %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.g_soft_color %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.g_hard_colorless %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.g_hard_color %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.stapled_colorless %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.stapled_color %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="pb-3">
+                <h2 class="fw-light text-center pt-4 pb-4">Ma'lumotlar mavjud emas...</h2>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container col-xl-12 ps-4 pt-4 pe-4 pb-4" style="max-width: 100%;">
+        <h1 class="fw-light">Mavjud ranglar</h1>
+    </div>
+    <div class="container col-xl-12 table-cont-dec mx-auto pt-4 pb-2" style="max-width: 100%;">
+        {% if res_s %}
+            <div class="table-responsive-xl">
+                <table class="table table-hover text-center table-dark table-striped fw-light text-light align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sana</th>
+                            <th scope="col">Ko'k</th>
+                            <th scope="col">Qizil</th>
+                            <th scope="col">Qora</th>
+                            <th scope="col">Rangsiz</th>
+                            <th scope="col">Sariq</th>
+                            <th scope="col">Yashil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in res_s %}
+                            <tr>
+                                <th scope="row">{{ res.date|date:'d-M' }}</th>
+                                {% if res.blue %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.red %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.black %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.transparent %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.yellow %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                                {% if res.green %}
+                                    <td><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="pb-3">
+                <h2 class="fw-light text-center pt-4 pb-4">Ma'lumotlar mavjud emas...</h2>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container col-xl-12 ps-4 pt-4 pe-4 pb-4" style="max-width: 100%;">
+        <h1 class="fw-light">Buyurtmalarni olish uchun mavjud manzillar</h1>
+        <h3 class="fw-light">Manzillar soni: {{ places_num }}</h3>
+    </div>
+    <div class="container col-xl-12 table-cont-dec mx-auto pt-4 pb-2 mb-4" style="max-width: 100%;">
+        {% if places %}
+            <div class="table-responsive-xl">
+                <table class="table table-hover text-center table-dark table-striped fw-light text-light align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 33%;">Manzil raqami</th>
+                            <th scope="col" style="width: 33%;">Manzil</th>
+                            <th scope="col" style="width: 33%;">Mavjud</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for place in places %}
+                            <tr class="clickable-row" data-href="{% url 'edit_placetoget' place.id %}">
+                                <th scope="col" style="width: 33%;">{{ place.id }}</th>
+                                <td style="width: 33%;">{{ place.place }}</td>
+                                {% if place.available %}
+                                    <td style="width: 33%;"><img src="{% static 'images/done.png' %}" height="25"></td>
+                                {% else %}
+                                    <td style="width: 33%;"><img src="{% static 'images/undone2.png' %}" height="30"></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="pb-3">
+                <h2 class="fw-light text-center pt-4 pb-4">Ma'lumotlar mavjud emas...</h2>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container col-xl-8 ps-4 pt-4 pe-4 pb-4">
+        <h1 class="fw-light">Kitob turlari va ranglarni yangilash</h1>
+    </div>
+    <div class="container col-xl-8 form-dec mx-auto pt-4 pb-4">
+        <form class="form-control bg-dark fw-light text-light" action="{% url 'order_options' %}"
+              novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form options_form %}
+            {% buttons %}
+                <button type="submit" name="optionssubmit" class="btn btn-warning fw-light">
+                    Kiritish
+                </button>
+            {% endbuttons %}
+        </form>
+    </div>
+    <div class="container col-xl-8 ps-4 pt-4 pe-4 pb-4">
+        <h1 class="fw-light">Buyurtmalarini olish mumkin bo'lgan manzillarni kiritish</h1>
+    </div>
+    <div class="container col-xl-8 form-dec mx-auto pt-4 pb-4 mb-5">
+        <form class="form-control bg-dark fw-light text-light" action="{% url 'order_options' %}"
+              novalidate method="post">
+            {% csrf_token %}
+            {% bootstrap_form places_form %}
+            {% buttons %}
+                <button type="submit" name="placessubmit" class="btn btn-warning fw-light">
+                    Kiritish
+                </button>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+<script>
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,103 @@
+{% load bootstrap5 %}
+{% load static %}
+
+<div class="container-fluid bg-dark fw-light" id="admin-panel-container" style="position: relative;">
+    <ul class="nav nav-pills nav-fill pt-3 pb-3">
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'main_page' %}">
+                <img src="{% static 'images/icons/home.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'orders' %}">
+                <img src="{% static 'images/icons/shopping_trolley.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'order_options' %}">
+                <img src="{% static 'images/icons/list.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale disabled"
+               href="">
+                <img src="{% static 'images/icons/users.png' %}" height="30" class="content">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale disabled"
+               href="">
+                <img src="{% static 'images/icons/reports.png' %}" height="30" class="content">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'staff_info' %}">
+                <img src="{% static 'images/icons/employee.png' %}" height="25">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'books' %}">
+                <img src="{% static 'images/icons/books.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'incomes_expenses' %}">
+                <img src="{% static 'images/icons/wallet.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'blogposts' %}">
+                <img src="{% static 'images/icons/blogpost.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'contacts' %}">
+                <img src="{% static 'images/icons/contact.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'pricing' %}">
+                <img src="{% static 'images/icons/price_tag.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'printer_info' %}">
+               <img src="{% static 'images/icons/printer.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'resources' %}">
+                <img src="{% static 'images/icons/resources.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'complaints' %}">
+                <img src="{% static 'images/icons/complaint.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'news' %}">
+                <img src="{% static 'images/icons/business_news.png' %}" height="30">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scale"
+               href="{% url 'losses' %}">
+                <img src="{% static 'images/icons/loss.png' %}" height="30">
+            </a>
+        </li>
+    </ul>
+</div>

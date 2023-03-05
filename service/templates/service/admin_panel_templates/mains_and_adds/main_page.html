@@ -1,0 +1,21 @@
+{% extends 'service/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container put-footer-bottom">
+    {% include 'service/admin_panel_templates/includes/admin_tab.html' %}
+    <div class="container image-overlay text-center"
+         id="cont"
+         style="padding: 0; margin: 0; height: 100%; max-width: 100%; border: none;">
+            <img src="{% static 'images/management.jpg' %}" class="image-fluid set-img content">
+            <div class="ae">
+                <h1 class="display-3 fw-light text-light" id="text">Admin paneliga xush kelibsiz!</h1>
+            </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('html, body').animate({scrollTop: $('#text').offset().left}, 'slow')
+    });
+</script>
+{% endblock content %}
